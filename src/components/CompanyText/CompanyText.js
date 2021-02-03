@@ -1,12 +1,10 @@
-import React from 'react';
-
 const CompanyText = () => {
   return (
-    <section className='CompanyText'>
-      <div className='container'>
-        <div className='row'>
-          <div className='col-md-12'>
-            <p className='text-center '>
+    <section className="CompanyText">
+      <div className="container">
+        <div className="row">
+          <div className="col-md-12">
+            <p className="text-center ">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
               alias qui iste sunt molestias vero quo unde eligendi, eius
               temporibus, illo delectus placeat, ad optio. Excepturi totam nobis

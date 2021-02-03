@@ -1,12 +1,14 @@
-import React from 'react';
-import bannerImg from '../../images/doctor.svg';
-import CommonBanner from '../CommonComponents/CommonBanner';
-const HeaderMain = () => {
+import CommonBanner from "../CommonComponents/CommonBanner";
+const DoctorBanner = () => {
   return (
-    <section className='headerMain'>
-      <CommonBanner img={bannerImg} banner='doctor' btnTxt='Join as a Doctor' />
+    <section className="headerMain">
+      <CommonBanner
+        img="/images/doctor.svg"
+        banner="doctor"
+        btnTxt="Join as a Doctor"
+      />
     </section>
   );
 };
 
-export default HeaderMain;
+export default DoctorBanner;

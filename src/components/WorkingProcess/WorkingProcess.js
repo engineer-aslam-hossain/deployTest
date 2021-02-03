@@ -1,13 +1,11 @@
-import React from 'react';
-import CommonBanner from '../CommonComponents/CommonBanner';
-import online from '../../images/online.svg';
+import CommonBanner from "../CommonComponents/CommonBanner";
 const WorkingProcess = () => {
   return (
-    <section className='workingProcess'>
+    <section className="workingProcess">
       <CommonBanner
-        img={online}
-        banner='headerMain'
-        btnTxt='Learn How Sobar Daktar Works'
+        img="/images/online.svg"
+        banner="headerMain"
+        btnTxt="Learn How Sobar Daktar Works"
       />
     </section>
   );

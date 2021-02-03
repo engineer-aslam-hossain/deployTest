@@ -1,70 +1,89 @@
-import React from 'react';
-import { Form, FormControl, InputGroup, Nav, Navbar } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import './Header.css';
-import logo from '../../images/SobarDaktar Logo_Desktop.png';
-import logo2 from '../../images/SobarDaktar Logo Mobile.png';
+import { Form, FormControl, InputGroup, Nav, Navbar } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 const Header = () => {
-  console.log(window.innerWidth);
+  const router = useRouter();
+  const isActive = (route) => {
+    if (route == router.pathname) {
+      return "active";
+    } else "";
+  };
+  const [windowWidth, setWindowWidth] = useState(null);
+  useEffect(() => {
+    setWindowWidth(window.innerWidth);
+  }, []);
   return (
     <header>
-      <div className='container p-0'>
-        <Navbar className='navbar' expand='lg'>
-          <Link to='/' className='logo '>
-            {window.innerWidth >= 768 ? (
-              <img src={logo} alt='#' className='logoImg mr-5' />
-            ) : (
-              <img src={logo2} alt='#' className='logoImg2' />
-            )}
+      <Navbar className="navbar" expand="lg">
+        <div className="logoContainer">
+          <Link href="/" className="logo ">
+            <a className="ml-3">
+              {windowWidth < 768 ? (
+                <img
+                  src="/images/SobarDaktar_Logo_Mobile.png"
+                  alt=""
+                  className="logoImg2 "
+                />
+              ) : (
+                <img
+                  src="/images/SobarDaktar_Logo_Desktop.png"
+                  alt=""
+                  className="logoImg "
+                />
+              )}
+            </a>
           </Link>
-          <Form inline className='mx-auto'>
-            <InputGroup className='searchInputGroup'>
-              <FormControl
-                placeholder='Search....'
-                aria-label='Search input'
-                aria-describedby='basic-addon2'
-                className='searchInput'
-              />
-              <InputGroup.Append>
-                <InputGroup.Text id='basic-addon2'>
-                  <FontAwesomeIcon icon={faSearch} />
-                </InputGroup.Text>
-              </InputGroup.Append>
-            </InputGroup>
-          </Form>
-          <Navbar.Toggle aria-controls='basic-navbar-nav' />
+        </div>
+        <Form inline className="mx-auto">
+          <InputGroup className="searchInputGroup">
+            <FormControl
+              placeholder="Search...."
+              aria-label="Search input"
+              aria-describedby="basic-addon2"
+              className="searchInput"
+            />
+            <InputGroup.Append>
+              <InputGroup.Text id="basic-addon2">
+                <FontAwesomeIcon icon={faSearch} />
+              </InputGroup.Text>
+            </InputGroup.Append>
+          </InputGroup>
+        </Form>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
-          <Navbar.Collapse id='basic-navbar-nav'>
-            <Nav className='d-flex justify-content-end align-items-center '>
-              <Form.Group
-                controlId='exampleForm.ControlSelect1'
-                className='mb-0'
-              >
-                <Form.Control as='select' className='selectLang'>
-                  <option>বাংলা</option>
-                  <option>English</option>
-                </Form.Control>
-              </Form.Group>
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="d-flex justify-content-end align-items-center ">
+            <Form.Group controlId="exampleForm.ControlSelect1" className="mb-0">
+              <Form.Control as="select" className="selectLang">
+                <option>বাংলা</option>
+                <option>English</option>
+              </Form.Control>
+            </Form.Group>
 
-              <Link to='/doctor' className='text-decoration-none'>
-                Find Doctor
-              </Link>
-              <Link to='/login' className='text-decoration-none '>
+            <Link href="/doctor">
+              <a className="text-decoration-none">Find Doctor</a>
+            </Link>
+            <Link href="/Login">
+              <a className={`text-decoration-none ${isActive("/Login")}`}>
                 Login
-              </Link>
-              <Link
-                to='/sign-up'
-                className='text-decoration-none LoginBtn mr-0'
+              </a>
+            </Link>
+            <Link href="/sign-up">
+              <a
+                className={`text-decoration-none LoginBtn mr-0 ${isActive(
+                  "/Login"
+                )}`}
               >
                 Sign Up
-              </Link>
-            </Nav>
-          </Navbar.Collapse>
-        </Navbar>
-      </div>
+              </a>
+            </Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
     </header>
   );
 };

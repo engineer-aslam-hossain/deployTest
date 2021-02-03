@@ -1,6 +1,6 @@
 import { Card } from "react-bootstrap";
 import Link from "next/link";
-function SignUpAs({ nextStep, nextStepForPatient }) {
+function LoginAsForm({ nextStep, nextStepForPatient }) {
   return (
     <Card
       style={{
@@ -11,8 +11,8 @@ function SignUpAs({ nextStep, nextStepForPatient }) {
         backgroundColor: "#FFF5F5",
       }}
     >
-      <h3 className="text-center font-weight-bold mb-5">Sign Up as? </h3>
-      <div className="signUpPerson d-flex flex-wrap justify-content-between">
+      <h3 className="text-center font-weight-bold mb-5">login as? </h3>
+      <div className="col-md-12 flex-wrap px-0 signUpPerson d-flex justify-content-between">
         <div className="doctorPerson col-md-5" onClick={nextStep}>
           <img src="/images/femaledoc.svg" alt="#" className="img-fluid" />
           <h3 className="personName">
@@ -38,12 +38,10 @@ function SignUpAs({ nextStep, nextStepForPatient }) {
       </div>
 
       <div className="mt-5 loginFormFooter">
-        <p className="text-center m-0 text-decoration-none">
-          Already have an account ?
-        </p>
+        <p className="text-center m-0 text-decoration-none">No account ?</p>
         <p className="text-center">
           <Link href="/">
-            <a>Login Instead</a>
+            <a>Create Account</a>
           </Link>
         </p>
       </div>
@@ -51,4 +49,4 @@ function SignUpAs({ nextStep, nextStepForPatient }) {
   );
 }
 
-export default SignUpAs;
+export default LoginAsForm;

@@ -1,56 +1,28 @@
 import { Card, Form } from "react-bootstrap";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import cookie from "cookie";
-import Cookies from "js-cookie";
-import { parseCookies, setCookie, destroyCookie } from "nookies";
-import { useEffect } from "react";
 
-const LoginForm = ({ inputChange, values, data, cookies }) => {
+const DoctorLoginForm = ({ inputChange, values }) => {
   const router = useRouter();
-  console.log(cookies);
-  const test = () => {
-    console.log("clicked");
-    Cookies.set("sobar_daktar_session", "hello");
-  };
-  const test2 = () => {
-    const getc = Cookies.get("sobar_daktar_session");
-    console.log(getc);
-  };
-
-  useEffect(() => {
-    const getc = Cookies.get("sobar_daktar_session");
-    console.log(getc);
-  }, []);
 
   const submitHandler = async (e) => {
     e.preventDefault();
     e.target.reset();
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/auth/user_signin`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/auth/doctor_signin`,
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(values),
       }
     );
-    console.log(res);
     const data = await res.json();
-    if (data.success === "yes") {
-      Cookies.set(
-        "sobar_daktar",
-        Cookies.get("sobar_daktar_session", {
-          domain: "https://sleepy-island-99039.herokuapp.com/auth/user_signin",
-        }),
-        {
-          expires: 30,
-        }
-      );
-    }
+    data.success && data.success == "yes" && router.push("/");
     console.log(data);
-    // data.success && data.success == "yes" && router.push("/");
-    console.log(data.success);
     // setDoctorInfo({ ...values, success: data.success });
   };
 
@@ -65,7 +37,7 @@ const LoginForm = ({ inputChange, values, data, cookies }) => {
       <Form noValidate onSubmit={submitHandler}>
         <div>
           <h3 className="formTitle text-center">Login</h3>
-          <p className="text-center">( as Patient )</p>
+          <p className="text-center">( as Doctor )</p>
         </div>
         <Form.Group className="basicFormInput">
           <Form.Label>Email</Form.Label>
@@ -95,9 +67,7 @@ const LoginForm = ({ inputChange, values, data, cookies }) => {
           <Link href="/">
             <a className="forgetPass"> forget password ?</a>
           </Link>
-          <p className="text-secondary" onClick={test}>
-            Or Sign Up with...
-          </p>
+          <p className="text-secondary">Or Sign Up with...</p>
         </div>
         <div className="d-flex justify-content-around">
           <Link href="https://sleepy-island-99039.herokuapp.com/auth/facebook">
@@ -130,7 +100,7 @@ const LoginForm = ({ inputChange, values, data, cookies }) => {
         </div>
       </Form>
       <div className="mt-5 loginFormFooter">
-        <p className="text-center m-0 text-decoration-none" onClick={test2}>
+        <p className="text-center m-0 text-decoration-none">
           don't have an account ?
         </p>
         <p className="text-center">
@@ -143,40 +113,4 @@ const LoginForm = ({ inputChange, values, data, cookies }) => {
   );
 };
 
-export default LoginForm;
-
-// export function parseCookies(req) {
-//   return cookie.parse(req ? req.headers.cookie || "" : document.cookie);
-// }
-
-// LoginForm.getInitialProps = async ({ req }) => {
-//   const data = parseCookies(req);
-
-//   if (res) {
-//     if (Object.keys(data).length === 0 && data.constructor === Object) {
-//       res.writeHead(301, { Location: "/" });
-//       res.end();
-//     }
-//   }
-
-//   console.log(data);
-
-//   return {
-//     data: data,
-//   };
-// };
-// export async function getServerSideProps(ctx) {
-//   // Parse
-//   const cookies = nookies.get(ctx);
-
-//   // Set
-//   nookies.set(ctx, "fromGetInitialProps", "value", {
-//     maxAge: 30 * 24 * 60 * 60,
-//     path: "/",
-//   });
-
-//   // Destroy
-//   // nookies.destroy(ctx, 'cookieName')
-
-//   return { cookies };
-// }
+export default DoctorLoginForm;
