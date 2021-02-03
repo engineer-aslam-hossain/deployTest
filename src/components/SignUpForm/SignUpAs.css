@@ -1,0 +1,35 @@
+.doctorPerson {
+  background-color: #f5f9ff;
+  border-radius: 16px;
+  padding: 1rem;
+  margin: 1rem;
+  width: 10rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  box-shadow: var(--box-shadow);
+  cursor: pointer;
+}
+
+h3.personName {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #3a61c3;
+  text-align: center;
+  margin: 1rem 0;
+}
+.doctorPerson img {
+  width: 4rem;
+}
+
+.signUpDetailsText p {
+  font-size: 14px;
+  color: #8e99bd;
+}
+
+.signUpDetailsText p a {
+  color: gray;
+  font-weight: 700;
+  font-weight: 1rem;
+}

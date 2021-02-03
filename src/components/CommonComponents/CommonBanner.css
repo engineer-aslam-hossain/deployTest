@@ -1,0 +1,75 @@
+.alignItemsEnd {
+  align-items: flex-end;
+}
+.alignItemsStart {
+  align-items: flex-start;
+}
+h1.textLeft.bannerTitle,
+p.textLeft.bannerText {
+  text-align: left;
+}
+img.img-fluid.bannerImg {
+  display: flex;
+  margin: 0 auto;
+  max-width: 85%;
+}
+h1.bannerTitle {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 50px;
+  margin-bottom: 1.3rem;
+  text-align: right;
+}
+
+p.bannerText {
+  font-size: 14px;
+  line-height: 25px;
+  font-weight: 400;
+  max-width: 19rem;
+  text-align: right;
+  margin-bottom: 1.3rem;
+}
+button.findDocBtn {
+  border: none;
+  outline: none;
+  background: #3a61c3;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: white;
+  padding: 1rem 2rem;
+  /* width: 10rem;
+  height: 2.5rem; */
+  border-radius: var(--border-radius);
+  box-shadow: 2px 5px 5px rgba(0, 0, 0, 0.2);
+  transition: 0.6s ease;
+}
+
+button.findDocBtn:hover {
+  background: #eaecff;
+  color: black;
+}
+
+@media (max-width: 767px) {
+  h1.bannerTitle,
+  p.bannerText,
+  h1.textLeft.bannerTitle,
+  p.textLeft.bannerText {
+    text-align: center;
+  }
+  h1.bannerTitle {
+    font-size: 2.5rem;
+  }
+  .alignItemsEnd,
+  .alignItemsStart {
+    align-items: center;
+  }
+  .col-md-6.imgDiv {
+    position: absolute;
+    opacity: 0.1;
+    z-index: -1;
+    left: 0;
+  }
+  img.img-fluid.bannerImg {
+    max-width: 20rem;
+  }
+}

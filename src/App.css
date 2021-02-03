@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Exo 2', sans-serif;
+}
+/* body {
+  background: #e5e5e5;
+} */
+
+:root {
+  --text-color: #000000;
+  --text-color-secondary: #ffffff;
+  --text-color-optional: gray;
+
+  --primary-color: #21b6b7;
+
+  --background-color: #f9f9f9;
+  --background-color-dark: #eef3f6;
+  --background-color-light: white;
+  --border-radius: 8px;
+  --box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+section {
+  margin: 5rem 0 !important;
+}
+section.CompanyText {
+  margin-top: 10rem !important;
+  margin-bottom: 20rem !important;
+}
+@media (max-width: 767px) {
+  section {
+    margin-bottom: 8rem !important;
+  }
+}

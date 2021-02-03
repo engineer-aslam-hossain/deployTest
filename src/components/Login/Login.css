@@ -1,0 +1,35 @@
+.loginPageLeft::before {
+  content: '';
+  background-image: url('../../images/family.jpg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  opacity: 0.3;
+}
+h1.loginPageTitle {
+  font-size: 3.2rem;
+  font-weight: 700;
+  margin: 2rem 0;
+}
+p.loginPageText {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+.LoginPageLeftSection {
+  max-width: 35rem;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  h1.loginPageTitle {
+    font-size: 2.5rem;
+  }
+  p.loginPageText {
+    font-size: 1rem;
+  }
+}
