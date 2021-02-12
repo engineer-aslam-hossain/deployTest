@@ -1,5 +1,4 @@
-import { Card, Dropdown, Form, InputGroup, Modal } from "react-bootstrap";
-import Link from "next/link";
+import { Card, Dropdown, Form, Modal } from "react-bootstrap";
 import { useState } from "react";
 import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
@@ -7,64 +6,27 @@ import MailOutlineIcon from "@material-ui/icons/MailOutline";
 const SkipForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
   const genders = ["Male", "Female", "Others"];
 
-  const continueForm = (e) => {
-    e.preventDefault();
-    nextStep();
-  };
-  //   const inputHandler = (e) => {
-  //     e.preventDefault();
-  //     let isInputValid;
-
-  //     if (e.target.name === "name") {
-  //       const nameValidation = /^([a-zA-Z]{3,30}\s*)+/;
-  //       isInputValid = nameValidation.test(e.target.value);
-
-  //       !isInputValid &&
-  //         document.querySelector(".name").style.setProperty("display", "block");
-  //     }
-  //     if (e.target.name === "phone") {
-  //       isInputValid = e.target.value.length > 10 ? e.target.value : "";
-  //       !isInputValid &&
-  //         document.querySelector(".phone").style.setProperty("display", "block");
-  //     }
-  //     if (e.target.name === "email") {
-  //       const validation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //       isInputValid = validation.test(e.target.value);
-  //       !isInputValid &&
-  //         document.querySelector(".email").style.setProperty("display", "block");
-  //     }
-  //     if (e.target.name === "password") {
-  //       const passValidation = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
-  //       isInputValid = passValidation.test(e.target.value);
-  //       !isInputValid &&
-  //         document
-  //           .querySelector(".password")
-  //           .style.setProperty("display", "block");
-  //     }
-  //     if (isInputValid) {
-  //       const newUser = { ...CreateUser };
-  //       newUser[e.target.name] = e.target.value;
-  //       SetCreateUser(newUser);
-  //     }
-  //   };
-
   const submitHandler = async (e) => {
     e.preventDefault();
     e.target.reset();
-
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/auth/doctor_signin`,
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      }
-    );
-    const data = await res.json();
-    console.log(data);
+    try {
+      const getToken = JSON.parse(localStorage.getItem("loginToken"));
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/user/change_personal_info`,
+        {
+          method: "PUT",
+          headers: {
+            sobar_daktar_session: getToken,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        }
+      );
+      const data = await res.json();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const [show, setShow] = useState(false);
@@ -104,19 +66,16 @@ const SkipForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
           <Form.Control
             type="number"
             placeholder="Enter NID no."
-            name="nid_no"
+            name="nid"
             onBlur={inputChange}
           />
-          <Form.Control.Feedback type="invalid" className="phone">
-            {!values.phone ? "must have atleast 11 number" : ""}
-          </Form.Control.Feedback>
         </Form.Group>
         <Form.Group className="basicFormInput">
           <Form.Label>Date of Birth</Form.Label>
           <Form.Control
             type="date"
             placeholder="Date of Birth"
-            name="birth_date"
+            name="date_of_birth"
             onChange={inputChange}
           />
           <Form.Control.Feedback type="invalid" className="phone">
@@ -132,8 +91,23 @@ const SkipForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
             placeholder="Residence / Address"
           />
         </Form.Group>
+        <Form.Group className="basicFormInput">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            onBlur={inputChange}
+            type="password"
+            name="password"
+            placeholder="Password"
+            required
+          />
+          <Form.Control.Feedback type="invalid" className="mb-3 password">
+            {!values.password
+              ? "Must have minimum 6 character with number"
+              : ""}
+          </Form.Control.Feedback>
+        </Form.Group>
         <div className="d-flex flex-column align-items-center mt-5">
-          <button type="submit" className="sign-up-btn">
+          <button type="submit" className="findDocBtn">
             Save & Continue
           </button>
         </div>

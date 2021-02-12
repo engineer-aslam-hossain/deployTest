@@ -1,10 +1,13 @@
-import { Card, Form } from "react-bootstrap";
+import { Alert, Card, Form, Overlay } from "react-bootstrap";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useContext } from "react";
+import DaktarContext from "../Context/Context";
 
-const DoctorLoginForm = ({ inputChange, values }) => {
+const DoctorLoginForm = ({ inputChange, values, show, target }) => {
   const router = useRouter();
-
+  const { loggedInUser, setLoggedInUser } = useContext(DaktarContext);
+  // console.log(loggedInUser);
   const submitHandler = async (e) => {
     e.preventDefault();
     e.target.reset();
@@ -21,9 +24,33 @@ const DoctorLoginForm = ({ inputChange, values }) => {
       }
     );
     const data = await res.json();
-    data.success && data.success == "yes" && router.push("/");
-    console.log(data);
-    // setDoctorInfo({ ...values, success: data.success });
+
+    if (data.sobar_daktar_session) {
+      localStorage.setItem(
+        "loginToken",
+        JSON.stringify(data.sobar_daktar_session)
+      );
+      try {
+        const getToken = JSON.parse(localStorage.getItem("loginToken"));
+        // console.log(values, getToken);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user`, {
+          method: "GET",
+          headers: {
+            sobar_daktar_session: getToken,
+          },
+          mode: "cors",
+        });
+        const data = await res.json();
+        setLoggedInUser(data);
+        if (data.account_verifyed) {
+          router.push("/profile");
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    } else if ((data.success = "no")) {
+      setLoggedInUser(data);
+    }
   };
 
   return (
@@ -35,7 +62,21 @@ const DoctorLoginForm = ({ inputChange, values }) => {
       }}
     >
       <Form noValidate onSubmit={submitHandler}>
-        <div>
+        <div ref={target}>
+          <Overlay target={target.current} show={show} placement="top">
+            {({
+              placement,
+              scheduleUpdate,
+              arrowProps,
+              outOfBoundaries,
+              show,
+              ...props
+            }) => (
+              <Alert variant="danger" {...props}>
+                Email or Password Doesn't match
+              </Alert>
+            )}
+          </Overlay>
           <h3 className="formTitle text-center">Login</h3>
           <p className="text-center">( as Doctor )</p>
         </div>
@@ -48,6 +89,9 @@ const DoctorLoginForm = ({ inputChange, values }) => {
             onBlur={inputChange}
             required
           />
+          <Form.Control.Feedback type="invalid" className="email">
+            {!values.email ? "please provide an valid email" : ""}
+          </Form.Control.Feedback>
         </Form.Group>
         <Form.Group className="basicFormInput">
           <Form.Label>Password</Form.Label>
@@ -58,10 +102,15 @@ const DoctorLoginForm = ({ inputChange, values }) => {
             placeholder="Password"
             required
           />
+          <Form.Control.Feedback type="invalid" className="mb-3 password">
+            {values.password.length < 6
+              ? "must have minimum 6 character with number"
+              : ""}
+          </Form.Control.Feedback>
         </Form.Group>
 
         <div className="d-flex flex-column align-items-center mt-5">
-          <button type="submit" className="sign-up-btn">
+          <button type="submit" className="findDocBtn">
             Login
           </button>
           <Link href="/">

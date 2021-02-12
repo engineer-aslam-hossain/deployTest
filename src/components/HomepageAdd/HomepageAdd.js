@@ -1,11 +1,8 @@
 import { Form, FormControl, InputGroup } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTelegramPlane } from "@fortawesome/free-brands-svg-icons";
-import Cookies from "js-cookie";
-import cookie from "cookie";
 
-const HomepageAdd = ({ data }) => {
-  console.log(data);
+const HomepageAdd = () => {
   return (
     <section className="homepage-add">
       <div className="container">
@@ -63,24 +60,3 @@ const HomepageAdd = ({ data }) => {
 };
 
 export default HomepageAdd;
-
-export function parseCookies(req) {
-  return cookie.parse(req ? req.headers.cookie || "" : document.cookie);
-}
-
-HomepageAdd.getServerSideProps = async ({ req }) => {
-  const data = parseCookies(req);
-
-  if (res) {
-    if (Object.keys(data).length === 0 && data.constructor === Object) {
-      res.writeHead(301, { Location: "/" });
-      res.end();
-    }
-  }
-
-  console.log(data);
-
-  return {
-    data: data,
-  };
-};

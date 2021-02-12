@@ -1,27 +1,13 @@
-import { Card, Form } from "react-bootstrap";
+import { Alert, Card, Form, Overlay } from "react-bootstrap";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import cookie from "cookie";
-import Cookies from "js-cookie";
-import { parseCookies, setCookie, destroyCookie } from "nookies";
-import { useEffect } from "react";
+import { useContext } from "react";
+import DaktarContext from "../Context/Context";
 
-const LoginForm = ({ inputChange, values, data, cookies }) => {
+const LoginForm = ({ inputChange, values, show, target }) => {
   const router = useRouter();
-  console.log(cookies);
-  const test = () => {
-    console.log("clicked");
-    Cookies.set("sobar_daktar_session", "hello");
-  };
-  const test2 = () => {
-    const getc = Cookies.get("sobar_daktar_session");
-    console.log(getc);
-  };
-
-  useEffect(() => {
-    const getc = Cookies.get("sobar_daktar_session");
-    console.log(getc);
-  }, []);
+  // console.log(router);
+  const { setLoggedInUser } = useContext(DaktarContext);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -35,23 +21,32 @@ const LoginForm = ({ inputChange, values, data, cookies }) => {
         body: JSON.stringify(values),
       }
     );
-    console.log(res);
+
     const data = await res.json();
-    if (data.success === "yes") {
-      Cookies.set(
-        "sobar_daktar",
-        Cookies.get("sobar_daktar_session", {
-          domain: "https://sleepy-island-99039.herokuapp.com/auth/user_signin",
-        }),
-        {
-          expires: 30,
-        }
+    if (data.sobar_daktar_session) {
+      localStorage.setItem(
+        "loginToken",
+        JSON.stringify(data.sobar_daktar_session)
       );
+      try {
+        const getToken = JSON.parse(localStorage.getItem("loginToken"));
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user`, {
+          method: "GET",
+          headers: { sobar_daktar_session: getToken },
+          mode: "cors",
+        });
+        const data = await res.json();
+        // console.log(data);
+        setLoggedInUser(data);
+        if (data.account_verifyed) {
+          router.push("/profile");
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    } else if ((data.success = "no")) {
+      setLoggedInUser(data);
     }
-    console.log(data);
-    // data.success && data.success == "yes" && router.push("/");
-    console.log(data.success);
-    // setDoctorInfo({ ...values, success: data.success });
   };
 
   return (
@@ -63,7 +58,21 @@ const LoginForm = ({ inputChange, values, data, cookies }) => {
       }}
     >
       <Form noValidate onSubmit={submitHandler}>
-        <div>
+        <div ref={target}>
+          <Overlay target={target.current} show={show} placement="top">
+            {({
+              placement,
+              scheduleUpdate,
+              arrowProps,
+              outOfBoundaries,
+              show,
+              ...props
+            }) => (
+              <Alert variant="danger" {...props}>
+                Email or Password Doesn't match
+              </Alert>
+            )}
+          </Overlay>
           <h3 className="formTitle text-center">Login</h3>
           <p className="text-center">( as Patient )</p>
         </div>
@@ -76,6 +85,9 @@ const LoginForm = ({ inputChange, values, data, cookies }) => {
             onBlur={inputChange}
             required
           />
+          <Form.Control.Feedback type="invalid" className="email">
+            {!values.email ? "please provide an valid email" : ""}
+          </Form.Control.Feedback>
         </Form.Group>
         <Form.Group className="basicFormInput">
           <Form.Label>Password</Form.Label>
@@ -86,18 +98,21 @@ const LoginForm = ({ inputChange, values, data, cookies }) => {
             placeholder="Password"
             required
           />
+          <Form.Control.Feedback type="invalid" className="mb-3 password">
+            {values.password.length < 6
+              ? "must have minimum 6 character with number"
+              : ""}
+          </Form.Control.Feedback>
         </Form.Group>
 
         <div className="d-flex flex-column align-items-center mt-5">
-          <button type="submit" className="sign-up-btn">
+          <button type="submit" className="findDocBtn">
             Login
           </button>
           <Link href="/">
             <a className="forgetPass"> forget password ?</a>
           </Link>
-          <p className="text-secondary" onClick={test}>
-            Or Sign Up with...
-          </p>
+          <p className="text-secondary">Or Sign Up with...</p>
         </div>
         <div className="d-flex justify-content-around">
           <Link href="https://sleepy-island-99039.herokuapp.com/auth/facebook">
@@ -130,7 +145,7 @@ const LoginForm = ({ inputChange, values, data, cookies }) => {
         </div>
       </Form>
       <div className="mt-5 loginFormFooter">
-        <p className="text-center m-0 text-decoration-none" onClick={test2}>
+        <p className="text-center m-0 text-decoration-none">
           don't have an account ?
         </p>
         <p className="text-center">
@@ -144,39 +159,3 @@ const LoginForm = ({ inputChange, values, data, cookies }) => {
 };
 
 export default LoginForm;
-
-// export function parseCookies(req) {
-//   return cookie.parse(req ? req.headers.cookie || "" : document.cookie);
-// }
-
-// LoginForm.getInitialProps = async ({ req }) => {
-//   const data = parseCookies(req);
-
-//   if (res) {
-//     if (Object.keys(data).length === 0 && data.constructor === Object) {
-//       res.writeHead(301, { Location: "/" });
-//       res.end();
-//     }
-//   }
-
-//   console.log(data);
-
-//   return {
-//     data: data,
-//   };
-// };
-// export async function getServerSideProps(ctx) {
-//   // Parse
-//   const cookies = nookies.get(ctx);
-
-//   // Set
-//   nookies.set(ctx, "fromGetInitialProps", "value", {
-//     maxAge: 30 * 24 * 60 * 60,
-//     path: "/",
-//   });
-
-//   // Destroy
-//   // nookies.destroy(ctx, 'cookieName')
-
-//   return { cookies };
-// }

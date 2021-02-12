@@ -32,7 +32,7 @@ a {
 }
 
 section {
-  margin: 5rem 0 !important;
+  padding: 5rem 0 !important;
 }
 section.CompanyText {
   margin-top: 10rem !important;
@@ -113,6 +113,18 @@ a.text-decoration-none.LoginBtn:hover {
 }
 form.mx-auto.form-inline {
   width: 55%;
+}
+
+.navbar-nav svg.MuiSvgIcon-root {
+  font-size: 2.5rem;
+  margin: 0 2rem;
+  color: #3a61c3;
+}
+button.headerBtn {
+  border: 0;
+  background: transparent;
+  margin: 0 1rem;
+  outline: none;
 }
 
 @media (min-width: 767px) {
@@ -350,18 +362,7 @@ button.google img,
 button.linkedin img {
   width: 2.5rem;
 }
-.sign-up-btn {
-  border: none;
-  outline: none !important;
-  padding: 0.5rem 2rem;
-  font-size: 1.15rem;
-  font-weight: 600;
-  font-family: "Dosis", sans-serif;
-  color: white;
-  background: #3a61c3;
-  border-radius: 8px;
-  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.4);
-}
+
 a.forgetPass {
   margin: 1.2rem 0;
   color: black;
@@ -373,7 +374,7 @@ a.forgetPass {
   border: 1px solid #b794f6;
   height: 3rem;
   border-radius: 16px;
-  box-shadow: none;
+  box-shadow: none !important;
 }
 label {
   font-weight: 600;
@@ -488,15 +489,20 @@ input#formBasicMobile {
   font-weight: 700;
 }
 
-button#GenderDropdown {
+button#GenderDropdown,
+button.GenderDropdown {
   height: 3rem;
   border: 1px solid #b794f6;
   border-radius: 16px;
-  background: white;
-  color: gray;
+  background: white !important;
+  color: gray !important;
   text-align: start;
-  box-shadow: none;
+  box-shadow: none !important;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+
 .Gender .dropdown-menu {
   width: 100%;
 }
@@ -539,7 +545,6 @@ button#GenderDropdown {
 .modalMsgIcon h4 {
   font-size: 24px;
   font-weight: 700;
-  text-align: center;
 }
 .modalFooter {
   margin-top: 5rem;
@@ -552,3 +557,410 @@ button#GenderDropdown {
   line-height: 28px;
 }
 /*Modal styles end */
+
+/* Carousel styles start */
+
+button.slick-arrow.slick-next,
+button.slick-arrow.slick-prev {
+  background: rgba(0, 0, 0, 0.1);
+  font-size: 5rem;
+  width: 8rem;
+  height: 99%;
+  margin: auto;
+  z-index: 10000;
+}
+.slick-prev:before,
+.slick-next:before {
+  font-size: 3rem !important;
+}
+
+/* Carousel styles end */
+
+/* button animation start*/
+.pulse {
+  animation: pulse 0.5s ease-in;
+}
+@keyframes pulse {
+  25% {
+    transform: scale(0.9);
+  }
+  75% {
+    transform: scale(1.1);
+  }
+}
+p.number::before {
+  content: "";
+  position: absolute;
+  border: 1px solid #505050;
+  background: #ffa9a9;
+  height: 3rem;
+  width: 3rem;
+  border-radius: 50%;
+  font-weight: 600;
+  z-index: -1;
+  top: 0;
+  left: 0;
+}
+p.number {
+  border: none;
+  margin-right: 3rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  z-index: 1000;
+}
+
+/* button animation  end*/
+
+/* Profile section styles start */
+section.profile {
+  background-color: #e5e5e5;
+}
+.docInfo {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: var(--box-shadow);
+  border: 1px solid #ababab;
+  overflow: hidden;
+}
+.docInfo img {
+  width: 12rem;
+}
+button.editProfile {
+  border: 1px solid #ababab;
+  background: transparent;
+  border-radius: 8px;
+  margin: 0 1rem;
+  padding: 0.3rem 0;
+  padding-left: 0.5rem;
+  padding-right: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+button.editProfile svg.svg-inline--fa.fa-edit.fa-w-18 {
+  font-size: 1rem;
+  margin: 0 0.3rem;
+}
+
+button.editProfile img {
+  width: 2rem;
+  margin-right: 0.5rem;
+}
+@media (max-width: 768px) {
+  button.editProfile {
+    margin: 2rem;
+    margin-left: 0;
+  }
+}
+
+.docInfo h3 {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 38px;
+}
+
+.docPractice {
+  font-size: 1rem;
+  color: #474747;
+}
+
+span.expertise {
+  margin: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #d6e9ff;
+  border-radius: 8px;
+  border: 1px solid #aaaaaa;
+}
+@media (min-width: 576px) {
+  span.expertise:first-child {
+    margin-left: 0;
+  }
+}
+.docInfoRight h5 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f9635;
+  text-align: right;
+}
+.docInfoRight h6 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ababab;
+  text-align: right;
+}
+
+.Credits {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: var(--box-shadow);
+  border: 1px solid #ababab;
+}
+
+h4.creditTitle {
+  color: #505050;
+  font-size: 24px;
+  line-height: 36px;
+  margin-bottom: 1rem;
+  margin-left: 1rem;
+}
+
+p.visibility {
+  color: #ababab;
+  font-size: 20px;
+}
+h5.colorHeader {
+  color: #ffa9a9;
+  font-size: 20px;
+}
+.warningDiv {
+  background: #fff5f5;
+  padding: 0.8rem 2rem;
+  border-radius: 8px;
+  border: 1px solid #ababab;
+}
+.warningDiv h3 {
+  color: #ff0000;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+}
+.warningDiv p {
+  color: #ff0000;
+  font-size: 14px;
+
+  margin-bottom: 0;
+}
+.warningDiv svg.MuiSvgIcon-root {
+  margin-right: 1rem;
+}
+.col-md-4.d-flex.justify-content-center {
+  background: transparent;
+  border: 1px solid #ababab;
+  color: #3a61c3;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  padding: 1rem 0;
+}
+.col-md-4.d-flex.justify-content-center:hover {
+  cursor: pointer;
+}
+.col-md-12.d-flex.px-0 > .col-md-4.d-flex.justify-content-center {
+  border-left: 0 !important;
+}
+.col-md-12.d-flex.px-0 .col-md-4.d-flex.justify-content-center.l {
+  border-right: 0 !important;
+}
+.col-md-4.d-flex.justify-content-center.active {
+  background-color: #3a61c3;
+  color: white;
+  border: 1px solid #3a61c3;
+}
+
+.singleAppointments img {
+  width: 8rem;
+  margin-bottom: 1rem;
+}
+.singleAppointments {
+  border: 1px solid #dddddd;
+  padding: 2rem 0;
+  transition: all 0.6s ease;
+}
+
+.singleAppointments:hover {
+  background-color: #eaeaea;
+  cursor: pointer;
+}
+
+.singleAppointments h3 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 0;
+}
+.singleAppointments h5 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0;
+  color: #0f9635;
+}
+.singleAppointments h6 {
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+}
+.singleAppointments h6:last-child {
+  margin-bottom: 0;
+}
+
+.singleAppointments h6 svg.MuiSvgIcon-root {
+  color: #ffc107;
+  margin-right: 0.5rem;
+}
+
+button.searchFriends {
+  background-color: #3a61c3;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  width: 12rem;
+  height: 3rem;
+  border: 0;
+  border-radius: 0px 8px 8px 0;
+}
+
+input.searchFriends.form-control {
+  height: 3rem;
+  box-shadow: none;
+}
+button.friendsApointmentBtn {
+  background-color: #3a61c3;
+  color: white;
+  font-size: 14px;
+  border: 0;
+  padding: 0.4rem 0.8em;
+  border-radius: 6px;
+}
+.friendsApoint h3 {
+  font-size: 20px;
+  font-weight: 700;
+}
+.friendsApoint h3 {
+  font-size: 1rem;
+}
+.singleFiends {
+  box-shadow: var(--box-shadow);
+  padding: 1rem;
+  border-radius: 4px;
+  margin: 0.69rem;
+  border: 1px solid #dddddd;
+}
+
+@media (min-width: 768px) {
+  .singleFiends {
+    max-width: 48% !important;
+    width: 48% !important;
+    flex: 0 0 48% !important;
+  }
+}
+
+.singleFiends img {
+  width: 8rem;
+}
+button.removeFriendsBtn {
+  background-color: #dddddd;
+  border: 0;
+  outline: 0;
+  padding: 0.2rem 0.5rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+}
+
+/* Patient Edit Modal styles start*/
+.PatientEditModal .MuiCard-root {
+  margin: 0 !important;
+}
+.PatientEditModal .modal-dialog {
+  max-width: 30rem !important;
+}
+button.cancelBtn {
+  border: 0;
+  outline: 0;
+  color: #3a61c3;
+  background-color: transparent;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+button.removeBtn {
+  width: 100%;
+  border: 1px solid #b794f6;
+  background: transparent;
+  height: 3rem;
+  display: flex;
+  border-radius: 16px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+  font-size: 1rem;
+  margin: 1rem 0;
+}
+button.removeBtn svg.MuiSvgIcon-root {
+  color: #ff0000;
+}
+
+button.addNewEmail {
+  border: 0;
+  outline: 0;
+  color: #3a61c3;
+  background-color: transparent;
+  font-weight: 700;
+  margin: 1rem 0;
+}
+button.changePass {
+  border: 1px solid #b794f6;
+  background: transparent;
+  border-radius: 16px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  margin: 1rem 0;
+}
+
+p.text-success.notification,
+p.text-danger.notification {
+  /* display: none; */
+}
+p.bmdcP {
+  border: 1px solid #b794f6;
+  height: 3rem;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  font-weight: 700;
+}
+/* Patient Edit Modal styles end*/
+
+/* Doctor Edit Modal styles start*/
+
+button.removeBtn2 {
+  width: 100%;
+  border: 1px solid #b794f6;
+  background: transparent;
+  height: 4rem;
+  display: flex;
+  border-radius: 16px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+  font-size: 1rem;
+  margin: 1rem 0;
+}
+button.removeBtn2 svg.MuiSvgIcon-root {
+  color: #ff0000;
+}
+
+button.removeBtn2 h6 {
+  margin-bottom: 0.3rem;
+  text-align: start;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+button.removeBtn2 p {
+  margin: 0;
+  font-size: 14px;
+  text-align: start;
+}
+label.form-label {
+  font-size: 1rem;
+}
+
+.yearDropDownMenu.dropdown-menu {
+  max-height: 15rem;
+  overflow-y: scroll;
+}
+/* Doctor Edit Modal styles end*/
+
+/* Profile section styles end */

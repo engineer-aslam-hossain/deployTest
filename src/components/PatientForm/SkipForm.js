@@ -1,62 +1,33 @@
 import { Card, Dropdown, Form, InputGroup, Modal } from "react-bootstrap";
-import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CheckIcon from "@material-ui/icons/Check";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 
-const PatientSkipForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
+const PatientSkipForm = ({ inputChange, values, setDoctorInfo }) => {
   const genders = ["Male", "Female", "Others"];
   const bankProvider = ["NAGAD", "BKASH", "ROCKET", "NONE"];
 
-  const continueForm = (e) => {
-    e.preventDefault();
-    nextStep();
-  };
-  //   const inputHandler = (e) => {
-  //     e.preventDefault();
-  //     let isInputValid;
-
-  //     if (e.target.name === "name") {
-  //       const nameValidation = /^([a-zA-Z]{3,30}\s*)+/;
-  //       isInputValid = nameValidation.test(e.target.value);
-
-  //       !isInputValid &&
-  //         document.querySelector(".name").style.setProperty("display", "block");
-  //     }
-  //     if (e.target.name === "phone") {
-  //       isInputValid = e.target.value.length > 10 ? e.target.value : "";
-  //       !isInputValid &&
-  //         document.querySelector(".phone").style.setProperty("display", "block");
-  //     }
-  //     if (e.target.name === "email") {
-  //       const validation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //       isInputValid = validation.test(e.target.value);
-  //       !isInputValid &&
-  //         document.querySelector(".email").style.setProperty("display", "block");
-  //     }
-  //     if (e.target.name === "password") {
-  //       const passValidation = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
-  //       isInputValid = passValidation.test(e.target.value);
-  //       !isInputValid &&
-  //         document
-  //           .querySelector(".password")
-  //           .style.setProperty("display", "block");
-  //     }
-  //     if (isInputValid) {
-  //       const newUser = { ...CreateUser };
-  //       newUser[e.target.name] = e.target.value;
-  //       SetCreateUser(newUser);
-  //     }
-  //   };
+  useEffect(() => {
+    !values.mobile_banking_info &&
+      setDoctorInfo({
+        ...values,
+        mobile_banking_info: {
+          ...values.mobile_banking_info,
+          provider: "NAGAD",
+        },
+      });
+  }, []);
 
   const submitHandler = async (e) => {
     e.preventDefault();
     e.target.reset();
+    const getToken = JSON.parse(localStorage.getItem("loginToken"));
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/auth/user_signin`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/user/change_personal_info`,
       {
-        method: "POST",
+        method: "PUT",
         headers: {
+          sobar_daktar_session: getToken,
           Accept: "application/json",
           "Content-Type": "application/json",
         },
@@ -90,7 +61,7 @@ const PatientSkipForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
               {genders.map((item, index) => (
                 <Dropdown.Item
                   key={index}
-                  onSelect={() => setDoctorInfo({ ...values, gender: item })}
+                  // onSelect={() => setDoctorInfo({ ...values, gender: item })}
                 >
                   {item}
                 </Dropdown.Item>
@@ -104,24 +75,18 @@ const PatientSkipForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
           <Form.Control
             type="number"
             placeholder="Enter NID no."
-            name="nid_no"
+            name="nid"
             onBlur={inputChange}
           />
-          <Form.Control.Feedback type="invalid" className="phone">
-            {!values.phone ? "must have atleast 11 number" : ""}
-          </Form.Control.Feedback>
         </Form.Group>
         <Form.Group className="basicFormInput">
           <Form.Label>Date of Birth</Form.Label>
           <Form.Control
             type="date"
             placeholder="Date of Birth"
-            name="birth_date"
+            name="date_of_birth"
             onChange={inputChange}
           />
-          <Form.Control.Feedback type="invalid" className="phone">
-            {!values.phone ? "must have atleast 11 number" : ""}
-          </Form.Control.Feedback>
         </Form.Group>
         <Form.Group controlId="formBasicMobile">
           <Form.Label>Mobile Bank Info.</Form.Label>
@@ -130,14 +95,16 @@ const PatientSkipForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
               <Form.Control
                 type="number"
                 placeholder="Enter your phone no."
-                name="mobile_bank_no"
+                name="number"
                 onBlur={inputChange}
                 required
               />
               <InputGroup.Append>
                 <Dropdown className="d-flex flex-column justify-content-center">
                   <Dropdown.Toggle id="Mobile-Bank-Dropdown">
-                    {values.mobile_bank}
+                    {values.mobile_banking_info
+                      ? values.mobile_banking_info.provider
+                      : "NAGAD"}
                   </Dropdown.Toggle>
 
                   <Dropdown.Menu>
@@ -145,7 +112,13 @@ const PatientSkipForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
                       <Dropdown.Item
                         key={index}
                         onSelect={() =>
-                          setDoctorInfo({ ...values, mobile_bank: item })
+                          setDoctorInfo({
+                            ...values,
+                            mobile_banking_info: {
+                              ...values.mobile_banking_info,
+                              provider: item,
+                            },
+                          })
                         }
                       >
                         {item}
@@ -154,7 +127,7 @@ const PatientSkipForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
                   </Dropdown.Menu>
                 </Dropdown>
               </InputGroup.Append>
-              <Form.Control.Feedback type="invalid" className="phone">
+              <Form.Control.Feedback type="invalid" className="number">
                 {!values.phone ? "must have atleast 11 number" : ""}
               </Form.Control.Feedback>
             </InputGroup>
@@ -169,12 +142,27 @@ const PatientSkipForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
             onBlur={inputChange}
             required
           />
-          <Form.Control.Feedback type="invalid" className="phone">
-            {!values.phone ? "must have atleast 11 number" : ""}
+          <Form.Control.Feedback type="invalid" className="phone_number">
+            {!values.phone_number ? "Must have atleast 11 number" : ""}
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group className="basicFormInput">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            onBlur={inputChange}
+            type="password"
+            name="password"
+            placeholder="Password"
+            required
+          />
+          <Form.Control.Feedback type="invalid" className="mb-3 password">
+            {!values.password
+              ? "Must have minimum 6 character with number"
+              : ""}
           </Form.Control.Feedback>
         </Form.Group>
         <div className="d-flex flex-column align-items-center mt-5">
-          <button type="submit" className="sign-up-btn">
+          <button type="submit" className="findDocBtn">
             Save & Continue
           </button>
         </div>

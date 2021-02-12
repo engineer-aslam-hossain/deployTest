@@ -7,6 +7,10 @@ import theme from "../theme/theme";
 import "../styles/globals.css";
 import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import Layout from "../components/Layout/Layout";
+import "../../node_modules/slick-carousel/slick/slick.css";
+import "../../node_modules/slick-carousel/slick/slick-theme.css";
+
+import { ContextProvider } from "../components/Context/Context";
 
 export default function MyApp(props) {
   const { Component, pageProps } = props;
@@ -31,9 +35,11 @@ export default function MyApp(props) {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <ContextProvider>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </ContextProvider>
       </ThemeProvider>
     </React.Fragment>
   );

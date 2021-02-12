@@ -30,9 +30,83 @@ const DoctorForm = () => {
   };
 
   const inputChange = (e) => {
-    const newUser = { ...doctorInfo };
-    newUser[e.target.name] = e.target.value;
-    setDoctorInfo(newUser);
+    e.preventDefault();
+    let isInputValid;
+
+    if (e.target.name === "bmdc_reg") {
+      isInputValid = true;
+    }
+    if (e.target.name === "nid") {
+      isInputValid = true;
+    }
+    if (e.target.name === "date_of_birth") {
+      isInputValid = true;
+    }
+    if (e.target.name === "number") {
+      const number = e.target.value.length > 10 ? e.target.value : "";
+      !number &&
+        document.querySelector(".number").style.setProperty("display", "block");
+      const value = e.target.value;
+      setDoctorInfo({
+        ...doctorInfo,
+        mobile_banking_info: {
+          ...doctorInfo.mobile_banking_info,
+          number: value,
+        },
+      });
+    }
+
+    if (e.target.name === "fullname") {
+      const nameValidation = /^([a-zA-Z]{3,30}\s*)+/;
+      isInputValid = nameValidation.test(e.target.value);
+
+      !isInputValid &&
+        document.querySelector(".name").style.setProperty("display", "block");
+    }
+    if (e.target.name === "phone_number") {
+      isInputValid = e.target.value.length > 10 ? e.target.value : "";
+      !isInputValid &&
+        document
+          .querySelector(".phone_number")
+          .style.setProperty("display", "block");
+    }
+    if (e.target.name === "mobile_banking_number") {
+      isInputValid = e.target.value.length > 10 ? e.target.value : "";
+      !isInputValid &&
+        document
+          .querySelector(".mobile_banking_number")
+          .style.setProperty("display", "block");
+    }
+    if (e.target.name === "email") {
+      const validation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      isInputValid = validation.test(e.target.value);
+      !isInputValid &&
+        document.querySelector(".email").style.setProperty("display", "block");
+    }
+    if (e.target.name === "password") {
+      const passValidation = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+      isInputValid = passValidation.test(e.target.value);
+      !isInputValid &&
+        document
+          .querySelector(".password")
+          .style.setProperty("display", "block");
+    }
+    if (e.target.name === "confirm_password") {
+      if (doctorInfo.password !== e.target.value) {
+        document
+          .querySelector(".confirm_password")
+          .style.setProperty("display", "block");
+      } else {
+        document
+          .querySelector(".confirm_password")
+          .style.setProperty("display", "none");
+      }
+    }
+    if (isInputValid) {
+      const newUser = { ...doctorInfo };
+      newUser[e.target.name] = e.target.value;
+      setDoctorInfo(newUser);
+    }
   };
   console.log(doctorInfo);
 
@@ -77,7 +151,6 @@ const DoctorForm = () => {
     case 5:
       return (
         <PatientSkipForm
-          nextStep={nextStep}
           inputChange={inputChange}
           values={doctorInfo}
           setDoctorInfo={setDoctorInfo}

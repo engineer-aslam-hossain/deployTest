@@ -1,51 +1,12 @@
-import { Card, Dropdown, Form, InputGroup } from "react-bootstrap";
+import { Card, Dropdown, Form, InputGroup, Modal } from "react-bootstrap";
 import Link from "next/link";
-const PatientRequiredForm = ({
-  nextStep,
-  inputChange,
-  values,
-  setDoctorInfo,
-}) => {
-  const continueForm = (e) => {
-    e.preventDefault();
-    nextStep();
-  };
-  //   const inputHandler = (e) => {
-  //     e.preventDefault();
-  //     let isInputValid;
-
-  //     if (e.target.name === "name") {
-  //       const nameValidation = /^([a-zA-Z]{3,30}\s*)+/;
-  //       isInputValid = nameValidation.test(e.target.value);
-
-  //       !isInputValid &&
-  //         document.querySelector(".name").style.setProperty("display", "block");
-  //     }
-  //     if (e.target.name === "phone") {
-  //       isInputValid = e.target.value.length > 10 ? e.target.value : "";
-  //       !isInputValid &&
-  //         document.querySelector(".phone").style.setProperty("display", "block");
-  //     }
-  //     if (e.target.name === "email") {
-  //       const validation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //       isInputValid = validation.test(e.target.value);
-  //       !isInputValid &&
-  //         document.querySelector(".email").style.setProperty("display", "block");
-  //     }
-  //     if (e.target.name === "password") {
-  //       const passValidation = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
-  //       isInputValid = passValidation.test(e.target.value);
-  //       !isInputValid &&
-  //         document
-  //           .querySelector(".password")
-  //           .style.setProperty("display", "block");
-  //     }
-  //     if (isInputValid) {
-  //       const newUser = { ...CreateUser };
-  //       newUser[e.target.name] = e.target.value;
-  //       SetCreateUser(newUser);
-  //     }
-  //   };
+import { useState } from "react";
+import CheckIcon from "@material-ui/icons/Check";
+import { useRouter } from "next/router";
+const PatientRequiredForm = ({ nextStep, inputChange, values }) => {
+  const [show, setShow] = useState(false);
+  const handleShow = () => setShow(true);
+  const router = useRouter();
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -63,9 +24,8 @@ const PatientRequiredForm = ({
       }
     );
     const data = await res.json();
-    data.success && data.success == "yes" && nextStep();
-
     console.log(data);
+    data.success && data.success == "yes" && handleShow();
   };
 
   return (
@@ -87,7 +47,7 @@ const PatientRequiredForm = ({
           />
           <Form.Control.Feedback type="invalid" className="name">
             {!values.fullname
-              ? "name must be start with atleast 3 character"
+              ? "FullName must be start with atleast 6 character"
               : ""}
           </Form.Control.Feedback>
         </Form.Group>
@@ -101,7 +61,7 @@ const PatientRequiredForm = ({
             required
           />
           <Form.Control.Feedback type="invalid" className="email">
-            {!values.email ? "please provide an valid email" : ""}
+            {!values.email ? "Please provide an valid email" : ""}
           </Form.Control.Feedback>
         </Form.Group>
 
@@ -116,12 +76,28 @@ const PatientRequiredForm = ({
           />
           <Form.Control.Feedback type="invalid" className="mb-3 password">
             {!values.password
-              ? "must have minimum 6 character with number"
+              ? "Must have minimum 6 character with number"
               : ""}
           </Form.Control.Feedback>
         </Form.Group>
+        <Form.Group className="basicFormInput">
+          <Form.Label>Confirm Password</Form.Label>
+          <Form.Control
+            onBlur={inputChange}
+            type="password"
+            name="confirm_password"
+            placeholder="Confirm Password"
+            required
+          />
+          <Form.Control.Feedback
+            type="invalid"
+            className="mb-3 confirm_password"
+          >
+            {"Password and Confirm Doesn't match"}
+          </Form.Control.Feedback>
+        </Form.Group>
         <div className="d-flex flex-column align-items-center mt-5">
-          <button type="submit" className="sign-up-btn">
+          <button type="submit" className="findDocBtn">
             Create Account
           </button>
           <Link href="/">
@@ -169,6 +145,41 @@ const PatientRequiredForm = ({
           </Link>
         </p>
       </div>
+      <Modal
+        show={show}
+        onHide={() => alert("Finish your setup for further move")}
+      >
+        <div className="p-5">
+          <div className="PatientModalTop">
+            <p>
+              <CheckIcon /> Account Created Successfully
+            </p>
+          </div>
+          <div className="d-flex flex-column align-items-center justify-content-center modalMsgIcon">
+            <div className="d-flex align-items-center position-relative px-3 my-3">
+              <p className="number">1</p>
+              <h4>
+                Check your Email Inbox and Verify your Email for Sobar Daktar
+              </h4>
+            </div>
+            <div className="d-flex align-items-center position-relative px-3 my-3">
+              <p className="number">2</p>
+              <h4>Now Go to Your Profile and Fill in all the info needed</h4>
+            </div>
+          </div>
+          <div className="d-flex justify-content-center">
+            <button
+              className="findDocBtn"
+              onClick={() => router.push("/Login")}
+            >
+              Go to Your Profile
+            </button>
+          </div>
+          <div className="modalFooter">
+            <p>Email Verification is necessary for using our services.</p>
+          </div>
+        </div>
+      </Modal>
     </Card>
   );
 };

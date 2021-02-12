@@ -7,7 +7,7 @@ function FindAsGuest() {
             You only need to login if you want an appointment. <br /> Explore as
             a Guest?
           </h3>
-          <button className="sign-up-btn py-3">Find A Doctor</button>
+          <button className="findDocBtn py-3">Find A Doctor</button>
         </div>
       </div>
     </div>

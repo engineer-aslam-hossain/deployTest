@@ -2,10 +2,15 @@ import { Form, FormControl, InputGroup, Nav, Navbar } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import DaktarContext from "../Context/Context";
 
 const Header = () => {
+  const { loggedInUser } = useContext(DaktarContext);
+
   const router = useRouter();
   const isActive = (route) => {
     if (route == router.pathname) {
@@ -16,6 +21,25 @@ const Header = () => {
   useEffect(() => {
     setWindowWidth(window.innerWidth);
   }, []);
+
+  const languageChange = async (e) => {
+    const language = {
+      language: e.target.value,
+    };
+    const getToken = JSON.parse(localStorage.getItem("loginToken"));
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/user/change_language_gender`,
+      {
+        method: "PUT",
+        headers: { sobar_daktar_session: getToken },
+        mode: "cors",
+        body: JSON.stringify(language),
+      }
+    );
+    const data = await res.json();
+    console.log(data);
+  };
+
   return (
     <header>
       <Navbar className="navbar" expand="lg">
@@ -58,29 +82,48 @@ const Header = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="d-flex justify-content-end align-items-center ">
             <Form.Group controlId="exampleForm.ControlSelect1" className="mb-0">
-              <Form.Control as="select" className="selectLang">
-                <option>বাংলা</option>
-                <option>English</option>
+              <Form.Control
+                as="select"
+                className="selectLang"
+                onChange={languageChange}
+              >
+                <option value="Bangla">বাংলা</option>
+                <option value="English">English</option>
               </Form.Control>
             </Form.Group>
 
             <Link href="/doctor">
               <a className="text-decoration-none">Find Doctor</a>
             </Link>
-            <Link href="/Login">
-              <a className={`text-decoration-none ${isActive("/Login")}`}>
-                Login
-              </a>
-            </Link>
-            <Link href="/sign-up">
-              <a
-                className={`text-decoration-none LoginBtn mr-0 ${isActive(
-                  "/Login"
-                )}`}
+            {loggedInUser.user_type ? (
+              <button className="headerBtn">
+                <NotificationsNoneIcon />
+              </button>
+            ) : (
+              <Link href="/Login">
+                <a className={`text-decoration-none ${isActive("/Login")}`}>
+                  Login
+                </a>
+              </Link>
+            )}
+            {loggedInUser.user_type ? (
+              <button
+                className="headerBtn"
+                onClick={() => router.push("/profile")}
               >
-                Sign Up
-              </a>
-            </Link>
+                <AccountCircleIcon />
+              </button>
+            ) : (
+              <Link href="/sign-up">
+                <a
+                  className={`text-decoration-none LoginBtn mr-0 ${isActive(
+                    "/Login"
+                  )}`}
+                >
+                  Sign Up
+                </a>
+              </Link>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Navbar>

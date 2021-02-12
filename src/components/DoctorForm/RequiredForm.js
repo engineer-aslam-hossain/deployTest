@@ -1,53 +1,17 @@
-import { Card, Dropdown, Form, InputGroup } from "react-bootstrap";
+import { Card, Dropdown, Form, InputGroup, Modal } from "react-bootstrap";
 import Link from "next/link";
-import cookie from "cookie";
-
-const RequiredForm = ({
-  nextStep,
-  inputChange,
-  values,
-  setDoctorInfo,
-  data,
-}) => {
+import { useEffect, useState } from "react";
+import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
+const RequiredForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
   const bankProvider = ["NAGAD", "BKASH", "ROCKET", "NONE"];
 
-  console.log(data);
-  //   const inputHandler = (e) => {
-  //     e.preventDefault();
-  //     let isInputValid;
+  const [show, setShow] = useState(false);
+  const handleShow = () => setShow(true);
 
-  //     if (e.target.name === "name") {
-  //       const nameValidation = /^([a-zA-Z]{3,30}\s*)+/;
-  //       isInputValid = nameValidation.test(e.target.value);
-
-  //       !isInputValid &&
-  //         document.querySelector(".name").style.setProperty("display", "block");
-  //     }
-  //     if (e.target.name === "phone") {
-  //       isInputValid = e.target.value.length > 10 ? e.target.value : "";
-  //       !isInputValid &&
-  //         document.querySelector(".phone").style.setProperty("display", "block");
-  //     }
-  //     if (e.target.name === "email") {
-  //       const validation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //       isInputValid = validation.test(e.target.value);
-  //       !isInputValid &&
-  //         document.querySelector(".email").style.setProperty("display", "block");
-  //     }
-  //     if (e.target.name === "password") {
-  //       const passValidation = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
-  //       isInputValid = passValidation.test(e.target.value);
-  //       !isInputValid &&
-  //         document
-  //           .querySelector(".password")
-  //           .style.setProperty("display", "block");
-  //     }
-  //     if (isInputValid) {
-  //       const newUser = { ...CreateUser };
-  //       newUser[e.target.name] = e.target.value;
-  //       SetCreateUser(newUser);
-  //     }
-  //   };
+  useEffect(() => {
+    !values.mobile_banking_provider &&
+      setDoctorInfo({ ...values, mobile_banking_provider: "NAGAD" });
+  }, []);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -67,7 +31,7 @@ const RequiredForm = ({
     const data = await res.json();
     console.log(data);
     setDoctorInfo({ ...values, success: data.success });
-    data.success && data.success == "yes" && nextStep();
+    data.success && data.success == "yes" && handleShow();
   };
 
   return (
@@ -89,7 +53,7 @@ const RequiredForm = ({
           />
           <Form.Control.Feedback type="invalid" className="name">
             {!values.fullname
-              ? "name must be start with atleast 3 character"
+              ? "FullName must be have atleast 6 character"
               : ""}
           </Form.Control.Feedback>
         </Form.Group>
@@ -103,7 +67,7 @@ const RequiredForm = ({
             required
           />
           <Form.Control.Feedback type="invalid" className="email">
-            {!values.email ? "please provide an valid email" : ""}
+            {!values.email ? "Please provide an valid email" : ""}
           </Form.Control.Feedback>
         </Form.Group>
         <Form.Group className="basicFormInput">
@@ -115,40 +79,37 @@ const RequiredForm = ({
             onBlur={inputChange}
             required
           />
-          <Form.Control.Feedback type="invalid" className="phone">
-            {!values.phone ? "must have atleast 11 number" : ""}
+          <Form.Control.Feedback type="invalid" className="phone_number">
+            {!values.phone_number ? "Must have atleast 11 number" : ""}
           </Form.Control.Feedback>
         </Form.Group>
         <Form.Group className="basicFormInput">
           <Form.Label>BMDC Reg No.</Form.Label>
           <Form.Control
-            type="text"
+            type="number"
             placeholder="Enter Your BMDC No."
             name="bmdc_reg"
             onBlur={inputChange}
             required
           />
-          <Form.Control.Feedback type="invalid" className="name">
-            {!values.fullname
-              ? "name must be start with atleast 3 character"
-              : ""}
-          </Form.Control.Feedback>
         </Form.Group>
         <Form.Group controlId="formBasicMobile">
           <Form.Label>Mobile Bank Info.</Form.Label>
           <div className="d-flex align-items-center">
             <InputGroup>
-              {/* <Form.Control
+              <Form.Control
                 type="number"
                 placeholder="Enter your phone no."
-                name="mobile_bank_no"
+                name="mobile_banking_number"
                 onBlur={inputChange}
                 required
-              /> */}
+              />
               <InputGroup.Append>
                 <Dropdown className="d-flex flex-column justify-content-center">
                   <Dropdown.Toggle id="Mobile-Bank-Dropdown">
-                    {values.mobile_bank ? values.mobile_bank : "NAGAD"}
+                    {values.mobile_banking_provider
+                      ? values.mobile_banking_provider
+                      : "NAGAD"}
                   </Dropdown.Toggle>
 
                   <Dropdown.Menu>
@@ -156,7 +117,10 @@ const RequiredForm = ({
                       <Dropdown.Item
                         key={index}
                         onSelect={() =>
-                          setDoctorInfo({ ...values, mobile_bank: item })
+                          setDoctorInfo({
+                            ...values,
+                            mobile_banking_provider: item,
+                          })
                         }
                       >
                         {item}
@@ -165,8 +129,13 @@ const RequiredForm = ({
                   </Dropdown.Menu>
                 </Dropdown>
               </InputGroup.Append>
-              <Form.Control.Feedback type="invalid" className="phone">
-                {!values.phone ? "must have atleast 11 number" : ""}
+              <Form.Control.Feedback
+                type="invalid"
+                className="mobile_banking_number"
+              >
+                {!values.mobile_banking_number
+                  ? "Must have atleast 11 number"
+                  : ""}
               </Form.Control.Feedback>
             </InputGroup>
           </div>
@@ -183,7 +152,7 @@ const RequiredForm = ({
           />
           <Form.Control.Feedback type="invalid" className="mb-3 password">
             {!values.password
-              ? "must have minimum 6 character with number"
+              ? "Must have minimum 6 character with number"
               : ""}
           </Form.Control.Feedback>
         </Form.Group>
@@ -196,14 +165,15 @@ const RequiredForm = ({
             placeholder="Confirm Password"
             required
           />
-          <Form.Control.Feedback type="invalid" className="mb-3 password">
-            {!values.password
-              ? "must have minimum 6 character with number"
-              : ""}
+          <Form.Control.Feedback
+            type="invalid"
+            className="mb-3 confirm_password"
+          >
+            {"Password and Confirm Doesn't match"}
           </Form.Control.Feedback>
         </Form.Group>
         <div className="d-flex flex-column align-items-center mt-5">
-          <button type="submit" className="sign-up-btn">
+          <button type="submit" className="findDocBtn">
             Create Account
           </button>
           <Link href="/">
@@ -251,6 +221,42 @@ const RequiredForm = ({
           </Link>
         </p>
       </div>
+      <Modal
+        show={show}
+        onHide={() => alert("You must continue account setup")}
+      >
+        <div className="p-5">
+          <div className="modalTop">
+            <p>
+              <ErrorOutlineIcon /> Email Verification Required
+            </p>
+          </div>
+          <div className="d-flex flex-column align-items-center justify-content-center modalMsgIcon">
+            <div className="d-flex align-items-center position-relative px-3 my-3">
+              <p className="number">1</p>
+              <h4>
+                Check your Email Inbox and Verify your Email for Sobar Daktar
+              </h4>
+            </div>
+            <div className="d-flex align-items-center position-relative px-3 my-3">
+              <p className="number">2</p>
+              <h4>Now Go to Your Profile and Fill in all the info needed</h4>
+            </div>
+          </div>
+          <div className="d-flex justify-content-center">
+            <button
+              id="pulse"
+              className="findDocBtn"
+              onClick={() => router.push("/Login")}
+            >
+              Go to Profile Now
+            </button>
+          </div>
+          <div className="modalFooter">
+            <p>Email Verification is necessary for using our services.</p>
+          </div>
+        </div>
+      </Modal>
     </Card>
   );
 };
