@@ -2,8 +2,11 @@ import { Card, Dropdown, Form, InputGroup, Modal } from "react-bootstrap";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
+import { useRouter } from "next/router";
+
 const RequiredForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
   const bankProvider = ["NAGAD", "BKASH", "ROCKET", "NONE"];
+  const router = useRouter();
 
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
