@@ -4,7 +4,7 @@ import { faEdit } from "@fortawesome/free-regular-svg-icons";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import DaktarContext from "../Context/Context";
 
-const Profile = () => {
+const Profile = ({ handleShow }) => {
   const { loggedInUser, setLoggedInUser } = useContext(DaktarContext);
   return (
     <>
@@ -15,7 +15,7 @@ const Profile = () => {
             <p className="visibility">
               ThiThis information is only visible to you
             </p>
-            <button className="editProfile">
+            <button className="editProfile" onClick={() => handleShow()}>
               <FontAwesomeIcon icon={faEdit} /> Edit Info
             </button>
           </div>

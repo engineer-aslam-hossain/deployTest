@@ -31,7 +31,7 @@ const DoctorProfile = () => {
   const [educationShow, setEducationShow] = useState(false);
   const [workPlaceShow, setWorkPlaceShow] = useState(false);
   const [workPlace, setWorkPlace] = useState("");
-  const genders = ["Male", "Female", "Others"];
+  const genders = ["Male", "Female", "Other"];
   const bankProvider = ["NAGAD", "BKASH", "ROCKET", "NONE"];
   const [editInfo, setEditInfo] = useState({});
   const [editEmail, setEditEmail] = useState({});
@@ -198,6 +198,34 @@ const DoctorProfile = () => {
         }
       );
       const data = await res.json();
+      if (data.success === "yes") {
+        setSaveChanges(data);
+
+        try {
+          const getToken = JSON.parse(localStorage.getItem("loginToken"));
+          const userRes = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/user`,
+            {
+              method: "GET",
+              headers: { sobar_daktar_session: getToken },
+              mode: "cors",
+            }
+          );
+          const userData = await userRes.json();
+
+          setLoggedInUser(userData);
+          document
+            .querySelector("p.text-success.notification.text-center.docEditP")
+            .style.setProperty("display", "block");
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        setSaveChanges(data);
+        document
+          .querySelector("p.text-danger.notification.text-center.docEditP")
+          .style.setProperty("display", "block");
+      }
       console.log(data);
     }
     setGender("");

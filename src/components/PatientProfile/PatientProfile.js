@@ -23,7 +23,7 @@ const PatientProfile = () => {
   const [deleteMailShow, setdeleteMailShow] = useState(false);
   const [addMailShow, setAddMailShow] = useState(false);
 
-  const genders = ["Male", "Female", "Others"];
+  const genders = ["Male", "Female", "Other"];
   const bankProvider = ["NAGAD", "BKASH", "ROCKET", "NONE"];
   const [editInfo, setEditInfo] = useState({});
   const [gender, setGender] = useState("");
@@ -93,6 +93,55 @@ const PatientProfile = () => {
         .querySelector("p.text-danger.notification.text-center.editInfoP")
         .style.setProperty("display", "block");
     }
+    if (gender) {
+      const getToken = JSON.parse(localStorage.getItem("loginToken"));
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/user/change_language_gender`,
+        {
+          method: "PUT",
+          headers: {
+            sobar_daktar_session: getToken,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            gender: gender,
+          }),
+        }
+      );
+      const data = await res.json();
+      if (data.success === "yes") {
+        setSaveChanges(data);
+
+        try {
+          const getToken = JSON.parse(localStorage.getItem("loginToken"));
+          const userRes = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/user`,
+            {
+              method: "GET",
+              headers: { sobar_daktar_session: getToken },
+              mode: "cors",
+            }
+          );
+          const userData = await userRes.json();
+
+          setLoggedInUser(userData);
+          document
+            .querySelector("p.text-success.notification.text-center.docEditP")
+            .style.setProperty("display", "block");
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        setSaveChanges(data);
+        document
+          .querySelector("p.text-danger.notification.text-center.docEditP")
+          .style.setProperty("display", "block");
+      }
+      console.log(data);
+    }
+    setGender("");
+    setEditInfo({});
     console.log(data);
   };
 
@@ -244,7 +293,7 @@ const PatientProfile = () => {
     router.push("/Login");
   };
 
-  console.log(loggedInUser);
+  console.log(gender);
   return (
     <div className="patientProfile">
       <div className="container">
@@ -262,7 +311,7 @@ const PatientProfile = () => {
                     <FontAwesomeIcon icon={faEdit} /> Edit Profile
                   </button>
                 </div>
-                <h3>Dr. Generic Placeholdername</h3>
+                <h3>{loggedInUser.fullname}</h3>
               </div>
               <div className="col-md-4 docInfoRight">
                 <div className="d-flex justify-content-end">
@@ -305,7 +354,7 @@ const PatientProfile = () => {
             </div>
           </div>
           {active === 1 ? (
-            <Profile />
+            <Profile handleShow={handleShow} />
           ) : active === 2 ? (
             <Appointments />
           ) : active === 3 ? (
