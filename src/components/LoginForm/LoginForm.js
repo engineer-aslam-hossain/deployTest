@@ -38,7 +38,7 @@ const LoginForm = ({ inputChange, values, show, target }) => {
         const data = await res.json();
         // console.log(data);
         setLoggedInUser(data);
-        if (data.account_verifyed) {
+        if (data.fullname) {
           router.push("/profile");
         }
       } catch (err) {
