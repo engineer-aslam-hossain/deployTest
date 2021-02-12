@@ -563,8 +563,8 @@ const DoctorProfile = () => {
 
   const logoutHandler = () => {
     setLoggedInUser({});
-    localStorage.removeItem("loginToken");
     router.push("/Login");
+    localStorage.removeItem("loginToken");
   };
 
   console.log(loggedInUser);
@@ -608,11 +608,12 @@ const DoctorProfile = () => {
                 Medical Practitioner since 2009 (11 Years)
               </p>
               <div className="my-4 d-flex flex-wrap">
-                {loggedInUser.expertise.map((item, index) => (
-                  <span className="expertise" key={index}>
-                    {item}
-                  </span>
-                ))}
+                {loggedInUser.expertise &&
+                  loggedInUser.expertise.map((item, index) => (
+                    <span className="expertise" key={index}>
+                      {item}
+                    </span>
+                  ))}
               </div>
               <p className="my-4">
                 Doctor’s Bio Goes Here Lorem ipsum dolor sit amet, consectetur
@@ -701,11 +702,12 @@ const DoctorProfile = () => {
               <div>
                 <h5 className="colorHeader">Expertise In</h5>
                 <div className="my-4 d-flex flex-wrap">
-                  {loggedInUser.expertise.map((item, index) => (
-                    <span className="expertise" key={index}>
-                      {item}
-                    </span>
-                  ))}
+                  {loggedInUser.expertise &&
+                    loggedInUser.expertise.map((item, index) => (
+                      <span className="expertise" key={index}>
+                        {item}
+                      </span>
+                    ))}
                 </div>
               </div>
               <div className="py-3">
@@ -713,19 +715,24 @@ const DoctorProfile = () => {
                   Current Workplace / Hospital Affiliation
                 </h5>
                 <div className="px-3">
-                  <h6>{loggedInUser.current_workplace.name} </h6>
+                  <h6>
+                    {loggedInUser.current_workplace &&
+                      loggedInUser.current_workplace.name}{" "}
+                  </h6>
                 </div>
               </div>
               <div className="py-3">
                 <h5 className="colorHeader">Education Background</h5>
-                {loggedInUser.degree.map((item) => (
-                  <div className="px-3">
-                    <h6>{item.institution}</h6>
-                    <p>
-                      {item.name}, {new Date(item.passing_year).toDateString()}
-                    </p>
-                  </div>
-                ))}
+                {loggedInUser.degree &&
+                  loggedInUser.degree.map((item) => (
+                    <div className="px-3">
+                      <h6>{item.institution}</h6>
+                      <p>
+                        {item.name},{" "}
+                        {new Date(item.passing_year).toDateString()}
+                      </p>
+                    </div>
+                  ))}
                 <div className="px-3">
                   <h6>Institute Name</h6>
                   <p>DEGREE, 1995</p>
@@ -769,9 +776,10 @@ const DoctorProfile = () => {
               <div className="py-3">
                 <h5 className="colorHeader">Email</h5>
                 <div className="px-3">
-                  {loggedInUser.email_info.map((email, index) => (
-                    <h6 key={index}>{email.email} </h6>
-                  ))}
+                  {loggedInUser.email_info &&
+                    loggedInUser.email_info.map((email, index) => (
+                      <h6 key={index}>{email.email} </h6>
+                    ))}
                 </div>
               </div>
               <div className="py-3">
@@ -794,8 +802,12 @@ const DoctorProfile = () => {
                 <h5 className="colorHeader">Mobile Banking</h5>
                 <div className="px-3">
                   <h6>
-                    {loggedInUser.mobile_banking_info.number} (
-                    {loggedInUser.mobile_banking_info.provider})
+                    {loggedInUser.mobile_banking_info &&
+                      loggedInUser.mobile_banking_info.number}
+                    (
+                    {loggedInUser.mobile_banking_info &&
+                      loggedInUser.mobile_banking_info.provider}
+                    )
                   </h6>
                 </div>
               </div>
@@ -1400,19 +1412,20 @@ const DoctorProfile = () => {
 
                 <Form.Group className="basicFormInput">
                   <Form.Label>Achievements</Form.Label>
-                  {loggedInUser.extra_degree.map((item) => (
-                    <button
-                      type="button"
-                      className="removeBtn2 py-3"
-                      key={item._id}
-                    >
-                      <div>
-                        <h6>{item.name}</h6>
-                        <p>{item.institution}, Year</p>
-                      </div>
-                      <CloseIcon />
-                    </button>
-                  ))}
+                  {loggedInUser.extra_degree &&
+                    loggedInUser.extra_degree.map((item) => (
+                      <button
+                        type="button"
+                        className="removeBtn2 py-3"
+                        key={item._id}
+                      >
+                        <div>
+                          <h6>{item.name}</h6>
+                          <p>{item.institution}, Year</p>
+                        </div>
+                        <CloseIcon />
+                      </button>
+                    ))}
                   <button type="button" className="removeBtn2 py-3">
                     <div>
                       <h6>Achievement Title</h6>

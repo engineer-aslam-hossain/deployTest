@@ -149,7 +149,7 @@ const LoginForm = ({ inputChange, values, show, target }) => {
           don't have an account ?
         </p>
         <p className="text-center">
-          <Link href="/">
+          <Link href="/sign-up">
             <a>Create Account</a>
           </Link>
         </p>

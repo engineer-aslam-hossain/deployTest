@@ -140,7 +140,7 @@ const PatientRequiredForm = ({ nextStep, inputChange, values }) => {
           Have an Account ?
         </p>
         <p className="text-center">
-          <Link href="/">
+          <Link href="/Login">
             <a>Login</a>
           </Link>
         </p>

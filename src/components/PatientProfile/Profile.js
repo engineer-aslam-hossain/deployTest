@@ -30,9 +30,10 @@ const Profile = () => {
           <div className="py-3">
             <h5 className="colorHeader">Email</h5>
             <div className="px-3">
-              {loggedInUser.email_info.map((email, index) => (
-                <h6 key={index}>{email.email} </h6>
-              ))}
+              {loggedInUser.email_info &&
+                loggedInUser.email_info.map((email, index) => (
+                  <h6 key={index}>{email.email} </h6>
+                ))}
             </div>
           </div>
           <div className="py-3">
@@ -51,8 +52,12 @@ const Profile = () => {
             <h5 className="colorHeader">Mobile Banking</h5>
             <div className="px-3">
               <h6>
-                {loggedInUser.mobile_banking_info.number} (
-                {loggedInUser.mobile_banking_info.provider})
+                {loggedInUser.mobile_banking_info &&
+                  loggedInUser.mobile_banking_info.number}
+                (
+                {loggedInUser.mobile_banking_info &&
+                  loggedInUser.mobile_banking_info.provider}
+                )
               </h6>
             </div>
           </div>

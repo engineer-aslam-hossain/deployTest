@@ -8,12 +8,14 @@ const profile = () => {
   console.log(loggedInUser);
   return (
     <section className="profile">
-      {loggedInUser && loggedInUser.user_type === "DOCTOR" ? (
-        <DoctorProfile />
-      ) : loggedInUser.user_type === "USER" ? (
-        <PatientProfile />
+      {loggedInUser ? (
+        loggedInUser.user_type === "DOCTOR" ? (
+          <DoctorProfile />
+        ) : (
+          <PatientProfile />
+        )
       ) : (
-        <Custom404 />
+        <Spinner animation="border" />
       )}
     </section>
   );

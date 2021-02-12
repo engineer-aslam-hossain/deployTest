@@ -182,36 +182,6 @@ const RequiredForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
           <Link href="/">
             <a className="forgetPass"> forget password ?</a>
           </Link>
-          <p className="text-secondary">Or Sign Up with...</p>
-        </div>
-        <div className="d-flex justify-content-around">
-          <Link href="https://sleepy-island-99039.herokuapp.com/auth/facebook">
-            <a>
-              <img
-                src="/images/icon_fb.svg"
-                alt=""
-                className="facebook img-fluid"
-              />
-            </a>
-          </Link>
-          <Link href="https://sleepy-island-99039.herokuapp.com/auth/linkedin">
-            <a>
-              <img
-                src="/images/icon_linkedin.svg"
-                alt=""
-                className="linkedin img-fluid"
-              />
-            </a>
-          </Link>
-          <Link href="https://sleepy-island-99039.herokuapp.com/auth/google">
-            <a>
-              <img
-                src="/images/google.png"
-                alt=""
-                className="google img-fluid"
-              />
-            </a>
-          </Link>
         </div>
       </Form>
       <div className="mt-5 loginFormFooter">
@@ -219,7 +189,7 @@ const RequiredForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
           Have an Account ?
         </p>
         <p className="text-center">
-          <Link href="/">
+          <Link href="/Login">
             <a>Login</a>
           </Link>
         </p>

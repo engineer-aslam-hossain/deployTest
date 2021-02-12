@@ -360,17 +360,18 @@ const PatientProfile = () => {
 
                 <Form.Group className="basicFormInput">
                   <Form.Label>Email</Form.Label>
-                  {loggedInUser.email_info.map(({ email, index }) => (
-                    <button
-                      type="button"
-                      className="removeBtn"
-                      key={email}
-                      onClick={() => emailDeleteShowBtn(email)}
-                    >
-                      {email}
-                      <CloseIcon />
-                    </button>
-                  ))}
+                  {loggedInUser.email_info &&
+                    loggedInUser.email_info.map(({ email, index }) => (
+                      <button
+                        type="button"
+                        className="removeBtn"
+                        key={email}
+                        onClick={() => emailDeleteShowBtn(email)}
+                      >
+                        {email}
+                        <CloseIcon />
+                      </button>
+                    ))}
                   <button
                     type="button"
                     className="addNewEmail"
