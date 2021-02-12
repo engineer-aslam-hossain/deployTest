@@ -48,7 +48,7 @@ const LoginRouteForm = () => {
   const target = useRef(null);
   useEffect(() => {
     loggedInUser.success === "no" && setShow(true);
-  }, [loggedInUser]);
+  }, []);
 
   switch (step) {
     case 1:

@@ -14,8 +14,11 @@ import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import DaktarContext from "../Context/Context";
 import CloseIcon from "@material-ui/icons/Close";
 import Select from "react-select";
+import { useRouter } from "next/router";
 
 const DoctorProfile = () => {
+  const router = useRouter();
+
   const { loggedInUser, setLoggedInUser } = useContext(DaktarContext);
   const [saveChanges, setSaveChanges] = useState({});
   const [completed, setCompleted] = useState(true);
@@ -557,7 +560,15 @@ const DoctorProfile = () => {
       boxShadow: "none",
     }),
   };
-  console.log(editInfo);
+
+  const logoutHandler = () => {
+    setLoggedInUser({});
+    localStorage.removeItem("loginToken");
+    router.push("/Login");
+  };
+
+  console.log(loggedInUser);
+
   return (
     <div className="doctorProfile">
       <div className="container">
@@ -1799,6 +1810,11 @@ const DoctorProfile = () => {
               )}
             </Card>
           </Modal>
+          <div>
+            <button className="logoutBtn" onClick={logoutHandler}>
+              Logout
+            </button>
+          </div>
         </div>
       </div>
     </div>

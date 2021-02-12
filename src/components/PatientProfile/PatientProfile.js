@@ -10,7 +10,11 @@ import { faEdit } from "@fortawesome/free-regular-svg-icons";
 import { Card } from "@material-ui/core";
 import DaktarContext from "../Context/Context";
 import CloseIcon from "@material-ui/icons/Close";
+import { useRouter } from "next/router";
+
 const PatientProfile = () => {
+  const router = useRouter();
+
   const { loggedInUser, setLoggedInUser } = useContext(DaktarContext);
   const [saveChanges, setSaveChanges] = useState({});
   const [active, setActive] = useState(1);
@@ -234,7 +238,13 @@ const PatientProfile = () => {
     deleteMailhandleShow();
   };
 
-  // console.log(saveChanges);
+  const logoutHandler = () => {
+    setLoggedInUser({});
+    localStorage.removeItem("loginToken");
+    router.push("/Login");
+  };
+
+  console.log(loggedInUser);
   return (
     <div className="patientProfile">
       <div className="container">
@@ -770,6 +780,11 @@ const PatientProfile = () => {
               </Form>
             </Card>
           </Modal>
+          <div>
+            <button className="logoutBtn" onClick={logoutHandler}>
+              Logout
+            </button>
+          </div>
         </div>
       </div>
     </div>

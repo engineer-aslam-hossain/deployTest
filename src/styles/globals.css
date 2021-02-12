@@ -961,6 +961,16 @@ label.form-label {
   max-height: 15rem;
   overflow-y: scroll;
 }
+
+button.logoutBtn {
+  border: 1px solid red;
+  padding: 0.5rem 2rem;
+  background: white;
+  font-size: 1rem;
+  font-weight: 700;
+  color: red;
+  margin-top: 2rem;
+}
 /* Doctor Edit Modal styles end*/
 
 /* Profile section styles end */
