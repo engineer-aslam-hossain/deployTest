@@ -8,7 +8,7 @@ import CarouselComonent from "../components/CarouselComponent/CarouselComponent"
 export default function Home() {
   return (
     <>
-      <CarouselComonent />
+      {/* <CarouselComonent /> */}
       <HeaderMain />
       <HomepageAdd />
       <DoctorBanner />
