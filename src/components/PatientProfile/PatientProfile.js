@@ -1,8 +1,8 @@
 import React, { useContext, useState } from "react";
 import { Dropdown, Form, InputGroup, Modal, Table } from "react-bootstrap";
 import WarningIcon from "@material-ui/icons/Warning";
-import Profile from "./profile";
 import Appointments from "./Appointments";
+import Profile from "./Profile";
 import Friends from "./Friends";
 import Error from "../../pages/_error";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
