@@ -67,7 +67,7 @@ const SkipForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
             type="number"
             placeholder="Enter NID no."
             name="nid"
-            onBlur={inputChange}
+            onChange={inputChange}
           />
         </Form.Group>
         <Form.Group className="basicFormInput">
@@ -85,7 +85,7 @@ const SkipForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
         <Form.Group className="basicFormInput">
           <Form.Label>Residence / Address</Form.Label>
           <Form.Control
-            onBlur={inputChange}
+            onChange={inputChange}
             type="text"
             name="address"
             placeholder="Residence / Address"
@@ -94,7 +94,7 @@ const SkipForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
         <Form.Group className="basicFormInput">
           <Form.Label>Password</Form.Label>
           <Form.Control
-            onBlur={inputChange}
+            onChange={inputChange}
             type="password"
             name="password"
             placeholder="Password"

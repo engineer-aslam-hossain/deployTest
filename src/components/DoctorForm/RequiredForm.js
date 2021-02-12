@@ -51,7 +51,7 @@ const RequiredForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
             type="text"
             placeholder="Enter Your Full Name"
             name="fullname"
-            onBlur={inputChange}
+            onChange={inputChange}
             required
           />
           <Form.Control.Feedback type="invalid" className="name">
@@ -66,7 +66,7 @@ const RequiredForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
             type="email"
             placeholder="Enter email address"
             name="email"
-            onBlur={inputChange}
+            onChange={inputChange}
             required
           />
           <Form.Control.Feedback type="invalid" className="email">
@@ -79,7 +79,7 @@ const RequiredForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
             type="number"
             placeholder="Enter your phone no."
             name="phone_number"
-            onBlur={inputChange}
+            onChange={inputChange}
             required
           />
           <Form.Control.Feedback type="invalid" className="phone_number">
@@ -92,7 +92,7 @@ const RequiredForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
             type="number"
             placeholder="Enter Your BMDC No."
             name="bmdc_reg"
-            onBlur={inputChange}
+            onChange={inputChange}
             required
           />
         </Form.Group>
@@ -104,7 +104,7 @@ const RequiredForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
                 type="number"
                 placeholder="Enter your phone no."
                 name="mobile_banking_number"
-                onBlur={inputChange}
+                onChange={inputChange}
                 required
               />
               <InputGroup.Append>
@@ -147,7 +147,7 @@ const RequiredForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
         <Form.Group className="basicFormInput">
           <Form.Label>Password</Form.Label>
           <Form.Control
-            onBlur={inputChange}
+            onChange={inputChange}
             type="password"
             name="password"
             placeholder="Password"
@@ -162,7 +162,7 @@ const RequiredForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
         <Form.Group className="basicFormInput">
           <Form.Label>Confirm Password</Form.Label>
           <Form.Control
-            onBlur={inputChange}
+            onChange={inputChange}
             type="password"
             name="confirm_password"
             placeholder="Confirm Password"

@@ -82,7 +82,7 @@ const LoginForm = ({ inputChange, values, show, target }) => {
             type="email"
             placeholder="Enter email address or phone"
             name="email"
-            onBlur={inputChange}
+            onChange={inputChange}
             required
           />
           <Form.Control.Feedback type="invalid" className="email">
@@ -92,7 +92,7 @@ const LoginForm = ({ inputChange, values, show, target }) => {
         <Form.Group className="basicFormInput">
           <Form.Label>Password</Form.Label>
           <Form.Control
-            onBlur={inputChange}
+            onChange={inputChange}
             type="password"
             name="password"
             placeholder="Password"

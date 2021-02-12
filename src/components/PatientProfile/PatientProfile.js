@@ -346,7 +346,7 @@ const PatientProfile = () => {
                     type="text"
                     placeholder="Enter Your Full Name"
                     name="fullname"
-                    onBlur={(e) =>
+                    onChange={(e) =>
                       setEditInfo({ ...editInfo, fullname: e.target.value })
                     }
                     required
@@ -386,7 +386,7 @@ const PatientProfile = () => {
                     type="number"
                     placeholder="Enter your phone no."
                     name="phone_number"
-                    onBlur={(e) =>
+                    onChange={(e) =>
                       setEditInfo({ ...editInfo, phone_number: e.target.value })
                     }
                     required
@@ -408,7 +408,7 @@ const PatientProfile = () => {
                         type="number"
                         placeholder="Enter your phone no."
                         name="number"
-                        onBlur={(e) =>
+                        onChange={(e) =>
                           setEditInfo({
                             ...editInfo,
                             mobile_banking_info: {
@@ -460,7 +460,7 @@ const PatientProfile = () => {
                     type="number"
                     placeholder="Enter NID no."
                     name="nid"
-                    onBlur={(e) =>
+                    onChange={(e) =>
                       setEditInfo({
                         ...editInfo,
                         nid: e.target.value,
@@ -507,7 +507,7 @@ const PatientProfile = () => {
                 <Form.Group className="basicFormInput">
                   <Form.Label>Enter Password to Save Changes</Form.Label>
                   <Form.Control
-                    onBlur={passwordToSave}
+                    onChange={passwordToSave}
                     type="password"
                     name="password"
                     placeholder="Password"
@@ -560,7 +560,7 @@ const PatientProfile = () => {
                 <Form.Group className="basicFormInput">
                   <Form.Label>Old Password</Form.Label>
                   <Form.Control
-                    onBlur={passwordToSave}
+                    onChange={passwordToSave}
                     type="password"
                     name="password"
                     placeholder="Password"
@@ -578,7 +578,7 @@ const PatientProfile = () => {
                 <Form.Group className="basicFormInput">
                   <Form.Label>New Password</Form.Label>
                   <Form.Control
-                    onBlur={(e) =>
+                    onChange={(e) =>
                       setChangePass({
                         ...changePass,
                         new_password: e.target.value,
@@ -601,7 +601,7 @@ const PatientProfile = () => {
                 <Form.Group className="basicFormInput">
                   <Form.Label>Confirm New Password</Form.Label>
                   <Form.Control
-                    onBlur={(e) =>
+                    onChange={(e) =>
                       setChangePass({
                         ...changePass,
                         confirm_password: e.target.value,
@@ -663,7 +663,7 @@ const PatientProfile = () => {
                 <Form.Group className="basicFormInput">
                   <Form.Label>Enter Your Password</Form.Label>
                   <Form.Control
-                    onBlur={(e) =>
+                    onChange={(e) =>
                       setDeleteEmail({
                         ...deleteEmail,
                         password: e.target.value,
@@ -722,7 +722,7 @@ const PatientProfile = () => {
                 <Form.Group className="basicFormInput">
                   <Form.Label>Add New Email</Form.Label>
                   <Form.Control
-                    onBlur={(e) =>
+                    onChange={(e) =>
                       setEditEmail({
                         ...editEmail,
                         email: e.target.value,
@@ -745,7 +745,7 @@ const PatientProfile = () => {
                 <Form.Group className="basicFormInput">
                   <Form.Label>Enter Password for Security</Form.Label>
                   <Form.Control
-                    onBlur={(e) =>
+                    onChange={(e) =>
                       setEditEmail({
                         ...editEmail,
                         password: e.target.value,

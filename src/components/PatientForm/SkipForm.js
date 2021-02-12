@@ -76,7 +76,7 @@ const PatientSkipForm = ({ inputChange, values, setDoctorInfo }) => {
             type="number"
             placeholder="Enter NID no."
             name="nid"
-            onBlur={inputChange}
+            onChange={inputChange}
           />
         </Form.Group>
         <Form.Group className="basicFormInput">
@@ -96,7 +96,7 @@ const PatientSkipForm = ({ inputChange, values, setDoctorInfo }) => {
                 type="number"
                 placeholder="Enter your phone no."
                 name="number"
-                onBlur={inputChange}
+                onChange={inputChange}
                 required
               />
               <InputGroup.Append>
@@ -139,7 +139,7 @@ const PatientSkipForm = ({ inputChange, values, setDoctorInfo }) => {
             type="number"
             placeholder="Enter your phone no."
             name="phone_number"
-            onBlur={inputChange}
+            onChange={inputChange}
             required
           />
           <Form.Control.Feedback type="invalid" className="phone_number">
@@ -149,7 +149,7 @@ const PatientSkipForm = ({ inputChange, values, setDoctorInfo }) => {
         <Form.Group className="basicFormInput">
           <Form.Label>Password</Form.Label>
           <Form.Control
-            onBlur={inputChange}
+            onChange={inputChange}
             type="password"
             name="password"
             placeholder="Password"

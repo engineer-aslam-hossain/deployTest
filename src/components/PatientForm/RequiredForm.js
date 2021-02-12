@@ -42,7 +42,7 @@ const PatientRequiredForm = ({ nextStep, inputChange, values }) => {
             type="text"
             placeholder="Enter Your Full Name"
             name="fullname"
-            onBlur={inputChange}
+            onChange={inputChange}
             required
           />
           <Form.Control.Feedback type="invalid" className="name">
@@ -57,7 +57,7 @@ const PatientRequiredForm = ({ nextStep, inputChange, values }) => {
             type="email"
             placeholder="Enter email address"
             name="email"
-            onBlur={inputChange}
+            onChange={inputChange}
             required
           />
           <Form.Control.Feedback type="invalid" className="email">
@@ -68,7 +68,7 @@ const PatientRequiredForm = ({ nextStep, inputChange, values }) => {
         <Form.Group className="basicFormInput">
           <Form.Label>Password</Form.Label>
           <Form.Control
-            onBlur={inputChange}
+            onChange={inputChange}
             type="password"
             name="password"
             placeholder="Password"
@@ -83,7 +83,7 @@ const PatientRequiredForm = ({ nextStep, inputChange, values }) => {
         <Form.Group className="basicFormInput">
           <Form.Label>Confirm Password</Form.Label>
           <Form.Control
-            onBlur={inputChange}
+            onChange={inputChange}
             type="password"
             name="confirm_password"
             placeholder="Confirm Password"

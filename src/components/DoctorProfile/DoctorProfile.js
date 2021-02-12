@@ -724,8 +724,8 @@ const DoctorProfile = () => {
               <div className="py-3">
                 <h5 className="colorHeader">Education Background</h5>
                 {loggedInUser.degree &&
-                  loggedInUser.degree.map((item) => (
-                    <div className="px-3">
+                  loggedInUser.degree.map((item, index) => (
+                    <div className="px-3" key={index}>
                       <h6>{item.institution}</h6>
                       <p>
                         {item.name},{" "}
@@ -858,7 +858,7 @@ const DoctorProfile = () => {
                     type="text"
                     placeholder="Enter Your Full Name"
                     name="fullname"
-                    onBlur={(e) =>
+                    onChange={(e) =>
                       setEditInfo({ ...editInfo, fullname: e.target.value })
                     }
                     required
@@ -897,7 +897,7 @@ const DoctorProfile = () => {
                     type="number"
                     placeholder="Enter your phone no."
                     name="phone_number"
-                    onBlur={(e) =>
+                    onChange={(e) =>
                       setEditInfo({ ...editInfo, phone_number: e.target.value })
                     }
                     required
@@ -919,7 +919,7 @@ const DoctorProfile = () => {
                         type="number"
                         placeholder="Enter your phone no."
                         name="number"
-                        onBlur={(e) =>
+                        onChange={(e) =>
                           setEditInfo({
                             ...editInfo,
                             mobile_banking_info: {
@@ -971,7 +971,7 @@ const DoctorProfile = () => {
                     type="number"
                     placeholder="Enter NID no."
                     name="nid"
-                    onBlur={(e) =>
+                    onChange={(e) =>
                       setEditInfo({
                         ...editInfo,
                         nid: e.target.value,
@@ -1025,7 +1025,7 @@ const DoctorProfile = () => {
                 <Form.Group className="basicFormInput">
                   <Form.Label>Enter Password to Save Changes</Form.Label>
                   <Form.Control
-                    onBlur={passwordToSave}
+                    onChange={passwordToSave}
                     type="password"
                     name="password"
                     placeholder="Password"
@@ -1078,7 +1078,7 @@ const DoctorProfile = () => {
                 <Form.Group className="basicFormInput">
                   <Form.Label>Old Password</Form.Label>
                   <Form.Control
-                    onBlur={passwordToSave}
+                    onChange={passwordToSave}
                     type="password"
                     name="password"
                     placeholder="Password"
@@ -1096,7 +1096,7 @@ const DoctorProfile = () => {
                 <Form.Group className="basicFormInput">
                   <Form.Label>New Password</Form.Label>
                   <Form.Control
-                    onBlur={(e) =>
+                    onChange={(e) =>
                       setChangePass({
                         ...changePass,
                         new_password: e.target.value,
@@ -1119,7 +1119,7 @@ const DoctorProfile = () => {
                 <Form.Group className="basicFormInput">
                   <Form.Label>Confirm New Password</Form.Label>
                   <Form.Control
-                    onBlur={(e) =>
+                    onChange={(e) =>
                       setChangePass({
                         ...changePass,
                         confirm_password: e.target.value,
@@ -1181,7 +1181,7 @@ const DoctorProfile = () => {
                 <Form.Group className="basicFormInput">
                   <Form.Label>Enter Your Password</Form.Label>
                   <Form.Control
-                    onBlur={(e) =>
+                    onChange={(e) =>
                       setDeleteEmail({
                         ...deleteEmail,
                         password: e.target.value,
@@ -1240,7 +1240,7 @@ const DoctorProfile = () => {
                 <Form.Group className="basicFormInput">
                   <Form.Label>Add New Email</Form.Label>
                   <Form.Control
-                    onBlur={(e) =>
+                    onChange={(e) =>
                       setEditEmail({
                         ...editEmail,
                         email: e.target.value,
@@ -1263,7 +1263,7 @@ const DoctorProfile = () => {
                 <Form.Group className="basicFormInput">
                   <Form.Label>Enter Password for Security</Form.Label>
                   <Form.Control
-                    onBlur={(e) =>
+                    onChange={(e) =>
                       setEditEmail({
                         ...editEmail,
                         password: e.target.value,
@@ -1358,8 +1358,12 @@ const DoctorProfile = () => {
                     </div>
                     <CloseIcon />
                   </button>
-                  {loggedInUser.worked_at_previously.map((item) => (
-                    <button type="button" className="removeBtn2 py-3">
+                  {loggedInUser.worked_at_previously.map((item, index) => (
+                    <button
+                      type="button"
+                      className="removeBtn2 py-3"
+                      key={index}
+                    >
                       <div>
                         <h6>{item.name}</h6>
                         <p>
@@ -1382,8 +1386,12 @@ const DoctorProfile = () => {
 
                 <Form.Group className="basicFormInput">
                   <Form.Label>Education Background</Form.Label>
-                  {loggedInUser.degree.map((item) => (
-                    <button type="button" className="removeBtn2 py-3">
+                  {loggedInUser.degree.map((item, index) => (
+                    <button
+                      type="button"
+                      className="removeBtn2 py-3"
+                      key={index}
+                    >
                       <div>
                         <h6>{item.institution}</h6>
                         <p>
@@ -1445,7 +1453,7 @@ const DoctorProfile = () => {
                 <Form.Group className="basicFormInput">
                   <Form.Label>Enter Password to Save Changes</Form.Label>
                   <Form.Control
-                    onBlur={passwordToSave}
+                    onChange={passwordToSave}
                     type="password"
                     name="password"
                     placeholder="Password"
@@ -1501,7 +1509,7 @@ const DoctorProfile = () => {
                 <Form.Group className="basicFormInput">
                   <Form.Label>Achievement Title</Form.Label>
                   <Form.Control
-                    onBlur={(e) =>
+                    onChange={(e) =>
                       setAddNewAchievements({
                         ...addNewAchievements,
                         name: e.target.value,
@@ -1516,7 +1524,7 @@ const DoctorProfile = () => {
                 <Form.Group className="basicFormInput">
                   <Form.Label>Institution Name</Form.Label>
                   <Form.Control
-                    onBlur={(e) =>
+                    onChange={(e) =>
                       setAddNewAchievements({
                         ...addNewAchievements,
                         institution: e.target.value,
@@ -1570,7 +1578,7 @@ const DoctorProfile = () => {
                 <Form.Group className="basicFormInput">
                   <Form.Label>Institution Name</Form.Label>
                   <Form.Control
-                    onBlur={(e) =>
+                    onChange={(e) =>
                       setAddNewEducation({
                         ...addNewEducation,
                         institution: e.target.value,
@@ -1585,7 +1593,7 @@ const DoctorProfile = () => {
                 <Form.Group className="basicFormInput">
                   <Form.Label>Degree Name</Form.Label>
                   <Form.Control
-                    onBlur={(e) =>
+                    onChange={(e) =>
                       setAddNewEducation({
                         ...addNewEducation,
                         name: e.target.value,
@@ -1675,7 +1683,7 @@ const DoctorProfile = () => {
                   <Form.Group className="basicFormInput">
                     <Form.Label>Workplace Name</Form.Label>
                     <Form.Control
-                      onBlur={(e) =>
+                      onChange={(e) =>
                         setAddCurrentWorkPlace({
                           ...addCurrentWorkPlace,
                           name: e.target.value,
@@ -1690,7 +1698,7 @@ const DoctorProfile = () => {
                   <Form.Group className="basicFormInput">
                     <Form.Label>Address</Form.Label>
                     <Form.Control
-                      onBlur={(e) =>
+                      onChange={(e) =>
                         setAddCurrentWorkPlace({
                           ...addCurrentWorkPlace,
                           address: e.target.value,
@@ -1748,7 +1756,7 @@ const DoctorProfile = () => {
                   <Form.Group className="basicFormInput">
                     <Form.Label>Workplace Name</Form.Label>
                     <Form.Control
-                      onBlur={(e) =>
+                      onChange={(e) =>
                         setAddNewWorkPlace({
                           ...addNewWorkPlace,
                           name: e.target.value,
@@ -1763,7 +1771,7 @@ const DoctorProfile = () => {
                   <Form.Group className="basicFormInput">
                     <Form.Label>Address</Form.Label>
                     <Form.Control
-                      onBlur={(e) =>
+                      onChange={(e) =>
                         setAddNewWorkPlace({
                           ...addNewWorkPlace,
                           address: e.target.value,
