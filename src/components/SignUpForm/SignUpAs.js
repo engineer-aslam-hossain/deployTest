@@ -42,7 +42,7 @@ function SignUpAs({ nextStep, nextStepForPatient }) {
           Already have an account ?
         </p>
         <p className="text-center">
-          <Link href="/">
+          <Link href="/Login">
             <a>Login Instead</a>
           </Link>
         </p>

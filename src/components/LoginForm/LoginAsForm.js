@@ -40,7 +40,7 @@ function LoginAsForm({ nextStep, nextStepForPatient }) {
       <div className="mt-5 loginFormFooter">
         <p className="text-center m-0 text-decoration-none">No account ?</p>
         <p className="text-center">
-          <Link href="/">
+          <Link href="/sign-up">
             <a>Create Account</a>
           </Link>
         </p>
