@@ -84,23 +84,10 @@ const DoctorForm = () => {
         document.querySelector(".email").style.setProperty("display", "block");
     }
     if (e.target.name === "password") {
-      const passValidation = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
-      isInputValid = passValidation.test(e.target.value);
-      !isInputValid &&
-        document
-          .querySelector(".password")
-          .style.setProperty("display", "block");
+      isInputValid = true;
     }
     if (e.target.name === "confirm_password") {
-      if (doctorInfo.password !== e.target.value) {
-        document
-          .querySelector(".confirm_password")
-          .style.setProperty("display", "block");
-      } else {
-        document
-          .querySelector(".confirm_password")
-          .style.setProperty("display", "none");
-      }
+      isInputValid = true;
     }
     if (isInputValid) {
       const newUser = { ...doctorInfo };
