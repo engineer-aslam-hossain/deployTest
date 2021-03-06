@@ -15,7 +15,7 @@ import Link from "next/link";
 const FindDoctors = ({ doctors }) => {
   const [docFilterInfo, setFilterInfo] = useState({});
   const [findedDoc, SetFindedDoc] = useState([...doctors]);
-  console.log(findedDoc);
+  // console.log(findedDoc);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -233,8 +233,12 @@ const FindDoctors = ({ doctors }) => {
                         <Card className="h-100">
                           <Card.Body>
                             <div className="docCardTop d-flex justify-content-between align-items-center mb-2">
-                              <h5>750 BDT</h5>
-                              <p>4.6/5.0 (348)</p>
+                              <h5>
+                                {doc.appointment && doc.appointment.fee} BDT
+                              </h5>
+                              <p>
+                                {doc.rating}/5.0 ({doc.total_consultation})
+                              </p>
                             </div>
                             <div>
                               <img
@@ -284,7 +288,7 @@ export async function getServerSideProps({ params }) {
     }
   );
   const doctors = await res.json();
-  console.log(doctors);
+  // console.log(doctors);
   // Pass doctors data to the page via props
   return { props: { doctors } };
 }

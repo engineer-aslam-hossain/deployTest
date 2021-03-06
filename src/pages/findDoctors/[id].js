@@ -26,12 +26,15 @@ const DoctorDetails = ({ doc }) => {
     degree,
     current_workplace,
     profile_pic,
+    practice_since,
   } = doc;
   const {
     day: { Friday, Sunday, Saturday, Monday, Wednesday, Tuesday, Thursday },
+    fee,
+    followup_fee,
   } = appointment;
 
-  console.log(doc);
+  // console.log(doc);
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -51,7 +54,7 @@ const DoctorDetails = ({ doc }) => {
   const [appointmentSelectedFor, setAppointmentSelectedFor] = useState("");
 
   const [doctorStatus, setDoctorStatus] = useState([]);
-  console.log(doctorStatus);
+  // console.log(doctorStatus);
   const [selectedCard, setSelectedCard] = useState(null);
   const handleCardSelect = (id) => {
     setSelectedCard(id);
@@ -87,7 +90,11 @@ const DoctorDetails = ({ doc }) => {
               </div>
               <h3>{fullname}</h3>
               <p className="docPractice">
-                Medical Practitioner since 2009 (11 Years)
+                Medical Practitioner since{" "}
+                {new Date(practice_since).getFullYear()} (
+                {new Date().getFullYear() -
+                  new Date(practice_since).getFullYear()}
+                Years)
               </p>
               <div className="my-4 d-flex flex-wrap">
                 {expertise &&
@@ -108,8 +115,8 @@ const DoctorDetails = ({ doc }) => {
                 </button>
               </div>
               <div className="mb-5 mt-3 pr-4">
-                <h5>Consultation Fee: 750 BDT</h5>
-                <h5>7 Days Follow-up Fee: 500 BDT</h5>
+                <h5>Consultation Fee: {fee} BDT</h5>
+                <h5>7 Days Follow-up Fee: {followup_fee} BDT</h5>
               </div>
               <div className="pl-4 pr-4">
                 <h6>SCHEDULE THIS WEEK</h6>
@@ -179,7 +186,6 @@ const DoctorDetails = ({ doc }) => {
                     <tr>
                       <td>Fri</td>
                       <td className="text-right pr-0">
-                        {console.log(!Friday.off_day)}
                         {!Friday.off_day
                           ? `${new Date(
                               Friday.start_time

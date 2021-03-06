@@ -1273,4 +1273,7 @@ button.callNowBtn {
   display: none;
 }
 
+.h-100.card {
+  cursor: pointer;
+}
 /* Find Doc styles end */
