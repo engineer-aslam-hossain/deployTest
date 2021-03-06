@@ -537,7 +537,7 @@ export default DoctorDetails;
 export async function getServerSideProps({ params }) {
   // Fetch data from external API
   const res = await fetch(
-    `${process.env.API_BASE_URL}/patient/get_doctor_by_id?doctor_id=6016c2ccc482746f70be7c7f`
+    `${process.env.API_BASE_URL}/patient/get_doctor_by_id?doctor_id=${params.id}`
   );
   const doc = await res.json();
   // console.log(doc);

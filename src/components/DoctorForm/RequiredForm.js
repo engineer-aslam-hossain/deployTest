@@ -35,8 +35,10 @@ const RequiredForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
       );
       const data = await res.json();
       // console.log(data);
-      setDoctorInfo({ ...values, success: data.success });
-      data.success && data.success == "yes" && handleShow();
+      data.success &&
+        data.success == "yes" &&
+        setDoctorInfo({ ...values, success: data.success });
+      data.success && data.success === "yes" && handleShow();
       if (data.success === "no") {
         Swal.fire({
           icon: "error",
