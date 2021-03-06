@@ -86,9 +86,7 @@ const DoctorForm = () => {
     if (e.target.name === "password") {
       isInputValid = true;
     }
-    if (e.target.name === "confirm_password") {
-      isInputValid = true;
-    }
+
     if (isInputValid) {
       const newUser = { ...doctorInfo };
       newUser[e.target.name] = e.target.value;
