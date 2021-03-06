@@ -111,7 +111,7 @@ const DoctorDetails = ({ doc }) => {
                 <h5>Consultation Fee: 750 BDT</h5>
                 <h5>7 Days Follow-up Fee: 500 BDT</h5>
               </div>
-              <div className="pr-4">
+              <div className="pl-4 pr-4">
                 <h6>SCHEDULE THIS WEEK</h6>
                 <Table borderless>
                   <thead></thead>
@@ -226,7 +226,7 @@ const DoctorDetails = ({ doc }) => {
                   Current Workplace / Hospital Affiliation
                 </h5>
                 <div className="px-3">
-                  <h6>{current_workplace && current_workplace} </h6>
+                  <h6>{current_workplace && current_workplace.name} </h6>
                 </div>
               </div>
               <div className="py-3">
