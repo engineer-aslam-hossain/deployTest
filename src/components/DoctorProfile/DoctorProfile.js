@@ -668,7 +668,7 @@ const DoctorProfile = () => {
                 <h5>Consultation Fee: 750 BDT</h5>
                 <h5>7 Days Follow-up Fee: 500 BDT</h5>
               </div>
-              <div className="px-5">
+              <div className="pr-5">
                 <h6>SCHEDULE THIS WEEK</h6>
                 <Table borderless>
                   <thead></thead>
