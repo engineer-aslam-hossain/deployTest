@@ -395,6 +395,7 @@ const PatientProfile = () => {
                     type="text"
                     placeholder="Enter Your Full Name"
                     name="fullname"
+                    defaultValue={loggedInUser.fullname}
                     onChange={(e) =>
                       setEditInfo({ ...editInfo, fullname: e.target.value })
                     }

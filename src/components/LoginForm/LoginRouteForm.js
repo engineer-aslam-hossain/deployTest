@@ -42,7 +42,7 @@ const LoginRouteForm = () => {
       setLoginInfo(newUser);
     }
   };
-  console.log(loginInfo);
+  // console.log(loginInfo);
 
   const [show, setShow] = useState(false);
   const target = useRef(null);

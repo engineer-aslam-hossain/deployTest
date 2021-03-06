@@ -15,16 +15,11 @@ function LoginAsForm({ nextStep, nextStepForPatient }) {
       <div className="col-md-12 flex-wrap px-0 signUpPerson d-flex justify-content-between">
         <div className="doctorPerson col-md-5" onClick={nextStep}>
           <img src="/images/femaledoc.svg" alt="#" className="img-fluid" />
-          <h3 className="personName">
-            Doctor <br /> /Physician
-          </h3>
+          <h3 className="personName">Doctor</h3>
         </div>
         <div className="doctorPerson col-md-5" onClick={nextStepForPatient}>
           <img src="/images/maledoc.svg" alt="#" className="img-fluid" />
-          <h3 className="personName">
-            Patient <br />
-            /Others
-          </h3>
+          <h3 className="personName">Patient</h3>
         </div>
       </div>
       <div className="signUpDetailsText p-3">

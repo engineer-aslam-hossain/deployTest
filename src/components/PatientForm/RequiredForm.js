@@ -3,6 +3,8 @@ import Link from "next/link";
 import { useState } from "react";
 import CheckIcon from "@material-ui/icons/Check";
 import { useRouter } from "next/router";
+import Swal from "sweetalert2";
+
 const PatientRequiredForm = ({ nextStep, inputChange, values }) => {
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
@@ -12,20 +14,33 @@ const PatientRequiredForm = ({ nextStep, inputChange, values }) => {
     e.preventDefault();
     e.target.reset();
 
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/auth/user_signup`,
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/auth/user_signup`,
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        }
+      );
+      const data = await res.json();
+      console.log(data);
+      data.success && data.success == "yes" && handleShow();
+      if (data.success === "no") {
+        Swal.fire({
+          icon: "error",
+          title: data.msg,
+        });
       }
-    );
-    const data = await res.json();
-    console.log(data);
-    data.success && data.success == "yes" && handleShow();
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Something went wrong!",
+      });
+    }
   };
 
   return (

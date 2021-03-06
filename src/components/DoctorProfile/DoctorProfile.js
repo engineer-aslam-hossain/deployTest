@@ -631,7 +631,7 @@ const DoctorProfile = () => {
                   <FontAwesomeIcon icon={faEdit} /> Edit Profile
                 </button>
               </div>
-              <h3>Dr. Generic Placeholdername</h3>
+              <h3>{loggedInUser.fullname}</h3>
               <p className="docPractice">
                 Medical Practitioner since 2009 (11 Years)
               </p>
@@ -655,7 +655,12 @@ const DoctorProfile = () => {
             </div>
             <div className="col-md-4 docInfoRight">
               <div className="d-flex justify-content-end">
-                <button className="findDocBtn mb-4">
+                <button
+                  className="findDocBtn mb-4"
+                  onClick={() =>
+                    router.push("/profile/docAppointmentDashboard")
+                  }
+                >
                   Appointment Dashboard
                 </button>
               </div>
@@ -823,7 +828,10 @@ const DoctorProfile = () => {
               <div className="py-3">
                 <h5 className="colorHeader">Birthdate</h5>
                 <div className="px-3">
-                  <h6>{new Date(loggedInUser.date_of_birth).toDateString()}</h6>
+                  <h6>
+                    {loggedInUser.date_of_birth &&
+                      new Date(loggedInUser.date_of_birth).toDateString()}
+                  </h6>
                 </div>
               </div>
               <div className="py-3">
@@ -885,6 +893,7 @@ const DoctorProfile = () => {
                   <Form.Control
                     type="text"
                     placeholder="Enter Your Full Name"
+                    defaultValue={loggedInUser.fullname}
                     name="fullname"
                     onChange={(e) =>
                       setEditInfo({ ...editInfo, fullname: e.target.value })
@@ -1376,10 +1385,14 @@ const DoctorProfile = () => {
                   <Form.Label>Work Places</Form.Label>
                   <button type="button" className="removeBtn2 py-3">
                     <div>
-                      <h6>{loggedInUser.current_workplace.name}</h6>
+                      <h6>
+                        {loggedInUser.current_workplace &&
+                          loggedInUser.current_workplace.name}
+                      </h6>
                       <p>
                         {new Date(
-                          loggedInUser.current_workplace.work_since
+                          loggedInUser.current_workplace &&
+                            loggedInUser.current_workplace.work_since
                         ).toDateString()}
                         - Now
                       </p>

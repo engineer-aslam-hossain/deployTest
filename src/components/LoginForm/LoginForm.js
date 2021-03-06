@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import DaktarContext from "../Context/Context";
+import Swal from "sweetalert2";
 
 const LoginForm = ({ inputChange, values, show, target }) => {
   const router = useRouter();
@@ -13,39 +14,49 @@ const LoginForm = ({ inputChange, values, show, target }) => {
     e.preventDefault();
     e.target.reset();
 
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/auth/user_signin`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      }
-    );
-
-    const data = await res.json();
-    if (data.sobar_daktar_session) {
-      localStorage.setItem(
-        "loginToken",
-        JSON.stringify(data.sobar_daktar_session)
-      );
-      try {
-        const getToken = JSON.parse(localStorage.getItem("loginToken"));
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user`, {
-          method: "GET",
-          headers: { sobar_daktar_session: getToken },
-          mode: "cors",
-        });
-        const data = await res.json();
-        // console.log(data);
-        setLoggedInUser(data);
-        if (data.fullname) {
-          router.push("/profile");
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/auth/user_signin`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
         }
-      } catch (err) {
-        console.log(err);
+      );
+
+      const data = await res.json();
+      if (data.sobar_daktar_session) {
+        localStorage.setItem(
+          "loginToken",
+          JSON.stringify(data.sobar_daktar_session)
+        );
+        try {
+          const getToken = JSON.parse(localStorage.getItem("loginToken"));
+          const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user`, {
+            method: "GET",
+            headers: { sobar_daktar_session: getToken },
+            mode: "cors",
+          });
+          const data = await res.json();
+          // console.log(data);
+          setLoggedInUser(data);
+          if (data.fullname) {
+            router.push("/profile");
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      } else if ((data.success = "no")) {
+        Swal.fire({
+          icon: "error",
+          title: "Password or Email doesn't match",
+        });
       }
-    } else if ((data.success = "no")) {
-      setLoggedInUser(data);
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Something went wrong",
+      });
     }
   };
 
@@ -58,21 +69,7 @@ const LoginForm = ({ inputChange, values, show, target }) => {
       }}
     >
       <Form noValidate onSubmit={submitHandler}>
-        <div ref={target}>
-          <Overlay target={target.current} show={show} placement="top">
-            {({
-              placement,
-              scheduleUpdate,
-              arrowProps,
-              outOfBoundaries,
-              show,
-              ...props
-            }) => (
-              <Alert variant="danger" {...props}>
-                Email or Password Doesn't match
-              </Alert>
-            )}
-          </Overlay>
+        <div>
           <h3 className="formTitle text-center">Login</h3>
           <p className="text-center">( as Patient )</p>
         </div>

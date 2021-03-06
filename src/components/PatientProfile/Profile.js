@@ -45,7 +45,10 @@ const Profile = ({ handleShow }) => {
           <div className="py-3">
             <h5 className="colorHeader">Birthdate</h5>
             <div className="px-3">
-              <h6>{new Date(loggedInUser.date_of_birth).toDateString()}</h6>
+              <h6>
+                {loggedInUser.date_of_birth &&
+                  new Date(loggedInUser.date_of_birth).toDateString()}
+              </h6>
             </div>
           </div>
           <div className="py-3">

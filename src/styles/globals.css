@@ -29,6 +29,7 @@ a {
   --background-color-light: white;
   --border-radius: 8px;
   --box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+  --box-shadow2: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 section {
@@ -72,7 +73,7 @@ img.logoImg2 {
 input.searchInput.form-control,
 span#basic-addon2 {
   box-shadow: none;
-  border: 1px solid #0000d6;
+  border: 1px solid #b794f6;
   background: white;
   border-radius: var(--border-radius);
 }
@@ -613,14 +614,14 @@ p.number {
 
 /* Profile section styles start */
 section.profile {
-  background-color: #e5e5e5;
+  background-color: #fcfff8;
 }
 .docInfo {
   background-color: white;
   padding: 2rem;
   border-radius: 8px;
   box-shadow: var(--box-shadow);
-  border: 1px solid #ababab;
+  border: 1px solid #dddddd;
   overflow: hidden;
 }
 .docInfo img {
@@ -695,7 +696,7 @@ span.expertise {
   padding: 2rem;
   border-radius: 8px;
   box-shadow: var(--box-shadow);
-  border: 1px solid #ababab;
+  border: 1px solid #dddddd;
 }
 
 h4.creditTitle {
@@ -718,7 +719,7 @@ h5.colorHeader {
   background: #fff5f5;
   padding: 0.8rem 2rem;
   border-radius: 8px;
-  border: 1px solid #ababab;
+  border: 1px solid #dddddd;
 }
 .warningDiv h3 {
   color: #ff0000;
@@ -974,3 +975,302 @@ button.logoutBtn {
 /* Doctor Edit Modal styles end*/
 
 /* Profile section styles end */
+
+/* Find Doc styles start */
+
+.findDocBanner {
+  background-image: url("../images/findDoc.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 20rem;
+}
+
+@media (max-width: 768px) {
+  .findDocBanner {
+    background-position: right;
+    background-size: cover;
+  }
+}
+
+h1.findDocBannerText {
+  font-weight: 700;
+  font-size: 3rem;
+}
+h4.searchTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  color: #ababab;
+}
+
+button.ResetBtn {
+  border: 1px solid #3a61c3;
+  outline: none;
+  background: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #3a61c3;
+  padding: 1rem 2rem;
+  /* width: 10rem;
+  height: 2.5rem; */
+  border-radius: var(--border-radius);
+  box-shadow: 2px 5px 5px rgba(0, 0, 0, 0.2);
+  transition: 0.6s ease;
+}
+
+.symtomSearch h6 {
+  color: #3a61c3;
+  font-size: 1.2rem;
+}
+
+.symtomSearch input,
+input.searchInput.form-control {
+  height: 3rem;
+  border: 1px solid #b794f6;
+  border-right: none;
+}
+.symtomSearch span#basic-addon2 {
+  border: 1px solid #b794f6;
+  border-left: none;
+}
+.symtomSearch svg.svg-inline--fa.fa-search.fa-w-16 {
+  color: #3a61c3;
+  cursor: pointer;
+}
+
+.docCardTop h5 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f9635;
+}
+.docCardTop p {
+  font-size: 14px;
+  color: #ababab;
+  margin-bottom: 0.5rem;
+}
+
+.docCardFooter h5 {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.docCardFooter h6 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f9635;
+}
+
+.newApointHead h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #37474f;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.newApointHead p {
+  color: #37474f;
+  text-align: center;
+}
+.selectedCard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-auto-rows: 1fr;
+  grid-gap: 2rem;
+}
+.selected {
+  border: 1px solid #e7e7e7;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 12rem;
+}
+
+.selected:hover {
+  background-color: #efefef;
+  cursor: pointer;
+}
+.selected.selectedFor {
+  background-color: #efefef;
+  box-shadow: 0px 0px 0px 5px #b8ccff;
+}
+.selected h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-align: center;
+}
+.selected p {
+  text-align: center;
+  font-size: 14px;
+}
+
+.ApointmentDate {
+  border: 1px solid #e7e7e7;
+  box-shadow: var(--box-shadow2);
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  margin: 1rem 0;
+}
+
+.ApointmentDate:hover {
+  background-color: #efefef;
+  cursor: pointer;
+}
+
+.ApointmentDate h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-right: 0.5rem;
+}
+
+button.friendsApointmentBtn.disabled {
+  background-color: #7a9ffb;
+}
+img.img-fluid.friendsImg {
+  width: 6rem;
+}
+
+.friendsCard {
+  border: 1px solid #e7e7e7;
+  box-shadow: var(--box-shadow2);
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 8px;
+}
+.friendsCard h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+label.cvLabel {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: relative;
+  height: 50px;
+  border-radius: 1rem;
+  border: 1px solid #b794f6;
+  font-weight: bold;
+  cursor: pointer;
+}
+.file {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+button.uploadBtn {
+  border: 1px solid #b794f6;
+  height: 3rem;
+  background-color: transparent;
+  border-radius: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  font-weight: 700;
+}
+
+h1.dashboardTitle {
+  font-weight: 700;
+  font-size: 2rem;
+}
+.dashboardCard {
+  box-shadow: var(--box-shadow);
+  border-radius: 8px;
+}
+
+.dashboardCard h5 {
+  color: #0f9635;
+  font-weight: 700;
+}
+.serialCard {
+  border: 1px solid #909090;
+  border-radius: 8px;
+}
+
+.apointmentWeekCard {
+  box-shadow: var(--box-shadow);
+  border-radius: 8px;
+}
+
+h2.weekCardTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #505050;
+  text-align: center;
+}
+
+.serialNo h6 {
+  color: #3a61c3;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+.serialNo h4 {
+  font-weight: 700;
+  font-size: 1.3rem;
+  margin: 1rem 0;
+}
+
+.serialDetails h6,
+h6.apointmentDay {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+button.seeUploadBtn {
+  color: #3a61c3;
+  border: 1px solid #ababab;
+  background-color: transparent;
+  outline: none;
+  padding: 0.5rem 2rem;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+p.apointmentType {
+  color: #3a61c3;
+}
+
+button.callNowBtn {
+  background-color: #0f9635;
+  color: white;
+  border-radius: 4px;
+  outline: none;
+  border: none;
+  padding: 0.5rem 2rem;
+}
+
+.weekViewColumn {
+  border-right: 1px solid #e7e7e7;
+}
+
+.weekView {
+  padding: 2.5rem;
+  border-bottom: 1px solid #e7e7e7;
+}
+.appointmentView h6 {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.patientNo {
+  color: #3a61c3;
+}
+.appointmentView {
+  border-bottom: 1px solid #e7e7e7;
+}
+.appointmentView:hover {
+  background-color: #dddddd;
+  cursor: pointer;
+}
+
+.serialDetails {
+  display: none;
+}
+
+/* Find Doc styles end */

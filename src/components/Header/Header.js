@@ -92,7 +92,7 @@ const Header = () => {
               </Form.Control>
             </Form.Group>
 
-            <Link href="/doctor">
+            <Link href="/findDoctors">
               <a className="text-decoration-none">Find Doctor</a>
             </Link>
             {loggedInUser.user_type ? (
