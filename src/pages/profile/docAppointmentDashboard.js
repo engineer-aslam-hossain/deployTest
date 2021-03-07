@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import DaktarContext from "../../components/Context/Context";
 import { useRouter } from "next/router";
 import { Spinner } from "react-bootstrap";
@@ -6,8 +6,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-regular-svg-icons";
 const docAppointmentDashboard = () => {
   const { loggedInUser } = useContext(DaktarContext);
+  const { appointment } = loggedInUser;
+  const { day, fee, followup_fee, advance_fee_percentage } =
+    appointment !== null;
   const router = useRouter();
-  //   console.log(loggedInUser);
+  console.log(loggedInUser);
+
+  const [appointmentDetailsShow, setAppointmentDetailsShow] = useState();
 
   useEffect(async () => {
     const userType = await loggedInUser.user_type;
@@ -16,6 +21,58 @@ const docAppointmentDashboard = () => {
     }
   });
 
+  const [appointmentSchedule, setAppointmentSchedule] = useState([]);
+
+  const handleAppointmentSchedule = async () => {
+    try {
+      const getToken = JSON.parse(localStorage.getItem("loginToken"));
+      const getStatus = await fetch(
+        `${process.env.API_BASE_URL}/doctor/get_next_seven_days_appointment_count`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            sobar_daktar_session: getToken,
+          },
+        }
+      );
+      const data = await getStatus.json();
+      setAppointmentSchedule(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    handleAppointmentSchedule();
+  }, [loggedInUser]);
+
+  const [appointmentsForAday, setAppointmentsForAday] = useState([]);
+
+  const getAppointmentsFor_A_Day = async (date) => {
+    console.log(date);
+
+    try {
+      const getToken = JSON.parse(localStorage.getItem("loginToken"));
+      const getStatus = await fetch(
+        `${process.env.API_BASE_URL}/doctor/get_my_all_appointment_for_a_date?appointment_date=${date}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            sobar_daktar_session: getToken,
+          },
+        }
+      );
+      const data = await getStatus.json();
+      setAppointmentsForAday(data);
+      console.log(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // console.log(appointmentSchedule);
   if (loggedInUser.user_type === "DOCTOR") {
     return (
       <section>
@@ -30,14 +87,14 @@ const docAppointmentDashboard = () => {
             </div>
             <div className="col-lg-12 dashboardCard p-4">
               <div className="my-4">
-                <h5>Consultation Fee: 750 BDT</h5>
+                <h5>Consultation Fee: {fee} BDT</h5>
                 <p>
                   You will recieve BDT ### per Consultation after adjusting x%
                   service charge.
                 </p>
               </div>
               <div className="my-4">
-                <h5>Follow-up Fee: 500 BDT</h5>
+                <h5>Follow-up Fee: {followup_fee} BDT</h5>
                 <p>
                   You will recieve BDT ### per Consultation after adjusting x%
                   service charge.
@@ -51,7 +108,7 @@ const docAppointmentDashboard = () => {
                 </p>
               </div>
               <div className="my-4">
-                <h5>Advanced Charge: 30%</h5>
+                <h5>Advanced Charge: {advance_fee_percentage}%</h5>
                 <p>
                   Patients will have to pay this percentage of charge when
                   creating an appointment. The rest will be collected after
@@ -67,11 +124,31 @@ const docAppointmentDashboard = () => {
                 <div className="weekView">
                   <h2 className="weekCardTitle">WEEK VIEW</h2>
                 </div>
-                <div className="appointmentView p-4">
-                  <h6>Saturday, 06.03.2021</h6>
-                  <p className="mb-1">10:00am - 02:00pm</p>
-                  <p className="patientNo">10 Patients (4 Followups)</p>
-                </div>
+                {appointmentSchedule.length > 0 ? (
+                  appointmentSchedule.map((item, index) => (
+                    <div
+                      className="appointmentView p-4"
+                      key={index}
+                      onClick={() => getAppointmentsFor_A_Day(item.date)}
+                    >
+                      <h6>
+                        {item.day_name}, {item.date}
+                      </h6>
+                      <p className="mb-1">
+                        {new Date(item.start_time).toLocaleTimeString()} -
+                        {new Date(item.end_time).toLocaleTimeString()}
+                      </p>
+                      <p className="patientNo">
+                        {item.total_appointment} Patients (
+                        {item.total_follow_appointment} Followups)
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                  <div className="d-flex justify-content-center align-items-center h-50">
+                    <Spinner animation="border" />
+                  </div>
+                )}
               </div>
               <div className="col-lg-9 px-4 pb-5">
                 <div className="col-lg-12 mt-3 my-5">
@@ -79,48 +156,71 @@ const docAppointmentDashboard = () => {
                     Appointments for Sunday, 07.03.2021
                   </h2>
                 </div>
-                <div className="col-lg-12 serialCard p-4 d-flex flex-column justify-content-between">
-                  <div className="d-flex justify-content-between mb-3">
-                    <div className="serialNo">
-                      <h6>Serial: 01</h6>
-                      <h4>Name of Patient</h4>
-                      <p>32 y/o, 60 Kg, Female</p>
+                {appointmentsForAday.map((item) => (
+                  <div
+                    className={`col-lg-12 serialCard p-4 d-flex flex-column justify-content-between mb-3`}
+                    key={item._id}
+                    onClick={() => setAppointmentDetailsShow(item._id)}
+                  >
+                    <div className="d-flex justify-content-between mb-3">
+                      <div className="serialNo">
+                        <h6>Serial: {item.serial} </h6>
+                        <h4>{item.patient_id && item.patient_id.fullname}</h4>
+                        <p>
+                          {item.age} y/o, {item.weight} Kg,
+                          {item.patient_id && item.patient_id.gender}
+                        </p>
+                      </div>
+                      <div>
+                        <button className="callNowBtn">Call Now</button>
+                      </div>
                     </div>
-                    <div>
-                      <button className="callNowBtn">Call Now</button>
+                    <div
+                      className={`mb-3 serialDetails ${
+                        appointmentDetailsShow === item._id ? "detailsShow" : ""
+                      }`}
+                    >
+                      <div className="mb-4 ">
+                        <h6>Health Complications:</h6>
+                        <p>{item.problem_details}</p>
+                      </div>
+                      <div>
+                        <button className="seeUploadBtn">
+                          See Uploaded Files
+                        </button>
+                      </div>
+                    </div>
+                    <div className="d-flex justify-content-between align-items-end">
+                      <div>
+                        <p className="apointmentType">
+                          {item.appointment_type === "FRESH" &&
+                            "New Appointment"}
+                        </p>
+                      </div>
+                      <div className="d-flex flex-column align-items-end">
+                        <h6 className="apointmentDay">
+                          {new Date(item.appointment_time).toLocaleString(
+                            "en-us",
+                            {
+                              weekday: "long",
+                            }
+                          )}
+                          {" , "}
+                          {new Date(item.appointment_time).toLocaleDateString()}
+                          ,
+                        </h6>
+                        <p>
+                          Estimated Time:
+                          {new Date(item.appointment_time).toLocaleTimeString()}
+                          -
+                          {new Date(
+                            item.appointment_end_time
+                          ).toLocaleTimeString()}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                  <div className="mb-3 serialDetails">
-                    <div className="mb-4 ">
-                      <h6>Health Complications:</h6>
-                      <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Donec pellentesque mauris risus, at egestas nibh
-                        condimentum ut. Integer et metus sit amet est gravida
-                        rutrum sit amet vitae augue. Nulla non enim sagittis ex
-                        suscipit posuere. Phasellus gravida enim non molestie
-                        mattis. Duis eget dui in augue viverra rutrum. Nunc
-                        sodales pretium consectetur. Sed non porttitor orci.
-                        Morbi dapibus sollicitudin mi in volutpat. Suspendisse
-                        ac lacus molestie, lacinia odio eget
-                      </p>
-                    </div>
-                    <div>
-                      <button className="seeUploadBtn">
-                        See Uploaded Files
-                      </button>
-                    </div>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-end">
-                    <div>
-                      <p className="apointmentType">New Appointment</p>
-                    </div>
-                    <div className="d-flex flex-column align-items-end">
-                      <h6 className="apointmentDay">Sunday, 07.03.2021</h6>
-                      <p>Estimated Time: 10:00am - 02:00pm</p>
-                    </div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>

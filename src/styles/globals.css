@@ -176,7 +176,8 @@ p.bannerText {
   text-align: right;
   margin-bottom: 1.3rem;
 }
-button.findDocBtn {
+button.findDocBtn,
+a.findDocBtn {
   border: none;
   outline: none;
   background: #3a61c3;
@@ -184,11 +185,16 @@ button.findDocBtn {
   font-size: 1.1rem;
   color: white;
   padding: 1rem 2rem;
-  /* width: 10rem;
-  height: 2.5rem; */
+  text-decoration: none !important;
   border-radius: var(--border-radius);
   box-shadow: 2px 5px 5px rgba(0, 0, 0, 0.2);
   transition: 0.6s ease;
+}
+.SpinnerDiv {
+  display: none;
+}
+a.findDocBtn {
+  color: white !important;
 }
 
 button.findDocBtn:hover {
@@ -703,8 +709,6 @@ h4.creditTitle {
   color: #505050;
   font-size: 24px;
   line-height: 36px;
-  margin-bottom: 1rem;
-  margin-left: 1rem;
 }
 
 p.visibility {
@@ -1120,6 +1124,10 @@ input.searchInput.form-control {
   cursor: pointer;
 }
 
+.ApointmentDate.selectedDate {
+  background-color: #efefef;
+}
+
 .ApointmentDate h3 {
   font-size: 1.2rem;
   font-weight: 700;
@@ -1139,6 +1147,15 @@ img.img-fluid.friendsImg {
   margin: 1rem 0;
   padding: 1rem;
   border-radius: 8px;
+}
+
+.friendsCard:hover {
+  cursor: pointer;
+  background-color: #efefef;
+}
+
+.friendsCard.selectedDate {
+  background-color: #efefef;
 }
 .friendsCard h3 {
   font-size: 1.2rem;
@@ -1189,10 +1206,16 @@ h1.dashboardTitle {
   font-weight: 700;
 }
 .serialCard {
-  border: 1px solid #909090;
+  border: 1px solid #d2d2d2 !important;
   border-radius: 8px;
 }
+.serialCard:hover {
+  cursor: pointer;
+}
 
+.serialDetails.detailsShow {
+  display: block;
+}
 .apointmentWeekCard {
   box-shadow: var(--box-shadow);
   border-radius: 8px;
@@ -1276,4 +1299,9 @@ button.callNowBtn {
 .h-100.card {
   cursor: pointer;
 }
+
+section.findDoctors {
+  padding-top: 2rem !important;
+}
+
 /* Find Doc styles end */

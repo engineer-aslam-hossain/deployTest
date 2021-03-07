@@ -24,8 +24,12 @@ const profile = () => {
       <section className="profile">
         {loggedInUser.user_type === "DOCTOR" ? (
           <DoctorProfile />
-        ) : (
+        ) : loggedInUser.user_type === "USER" ? (
           <PatientProfile />
+        ) : (
+          <div className="d-flex justify-content-center align-items-center h-50">
+            <Spinner animation="border" />
+          </div>
         )}
       </section>
     );

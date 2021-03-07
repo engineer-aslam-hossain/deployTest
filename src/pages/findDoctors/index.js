@@ -105,7 +105,7 @@ const FindDoctors = ({ doctors }) => {
   };
 
   return (
-    <section>
+    <section className="findDoctors">
       <div className="container">
         <div className="row">
           <div className="col-md-12 findDocBanner  d-flex align-items-center">

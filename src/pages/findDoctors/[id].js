@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Card,
   Dropdown,
@@ -11,7 +11,11 @@ import {
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import PublishIcon from "@material-ui/icons/Publish";
 import CloseIcon from "@material-ui/icons/Close";
-
+import { Spinner } from "react-bootstrap";
+import DaktarContext from "../../components/Context/Context";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import Swal from "sweetalert2";
 const DoctorDetails = ({ doc }) => {
   const {
     fullname,
@@ -27,6 +31,7 @@ const DoctorDetails = ({ doc }) => {
     current_workplace,
     profile_pic,
     practice_since,
+    _id,
   } = doc;
   const {
     day: { Friday, Sunday, Saturday, Monday, Wednesday, Tuesday, Thursday },
@@ -34,7 +39,9 @@ const DoctorDetails = ({ doc }) => {
     followup_fee,
   } = appointment;
 
-  // console.log(doc);
+  const { loggedInUser } = useContext(DaktarContext);
+  // console.log(loggedInUser);
+  const router = useRouter();
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -51,7 +58,16 @@ const DoctorDetails = ({ doc }) => {
   const showDetailsClose = () => setShowDetails(false);
   const showDetailsShow = () => setShowDetails(true);
 
-  const [appointmentSelectedFor, setAppointmentSelectedFor] = useState("");
+  const [showSuccess, setShowSuccess] = useState(false);
+  const showSuccessClose = () => setShowSuccess(false);
+  const showSuccessShow = () => setShowSuccess(true);
+
+  const [showPayment, setShowPayment] = useState(false);
+  const showPaymentClose = () => setShowPayment(false);
+  const showPaymentShow = () => setShowPayment(true);
+
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedFriend, setSelectedFriend] = useState(null);
 
   const [doctorStatus, setDoctorStatus] = useState([]);
   // console.log(doctorStatus);
@@ -60,17 +76,42 @@ const DoctorDetails = ({ doc }) => {
     setSelectedCard(id);
   };
 
+  const loggedInCheck = () => {
+    loggedInUser.fullname ? handleShow() : router.push("/Login");
+  };
+
+  const [freindList, setFriendList] = useState([]);
+
   const handleApointmentFor = async () => {
     selectedCard === 1 ? showMyAppointmentShow() : showSearchFriendShow();
 
     try {
       const getStatus = await fetch(
-        `${process.env.API_BASE_URL}/patient/get_doctor_available_status?doctor_id=6016c2ccc482746f70be7c7f`
+        `${process.env.API_BASE_URL}/patient/get_doctor_available_status?doctor_id=${_id}`
       );
       const data = await getStatus.json();
       setDoctorStatus(data);
     } catch (err) {
       console.log(err);
+    }
+
+    if (selectedCard === 2) {
+      try {
+        const getToken = JSON.parse(localStorage.getItem("loginToken"));
+        const friends = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/patient/get_friend_list`,
+          {
+            method: "GET",
+            headers: { sobar_daktar_session: getToken },
+          }
+        );
+        const { friend } = await friends.json();
+        // console.log(friend);
+
+        setFriendList(friend);
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
 
@@ -78,7 +119,74 @@ const DoctorDetails = ({ doc }) => {
     showMyAppointmentShow();
   };
 
-  //   console.log(selectedCard);
+  const [appointmentDetailsInfo, setAppointmentDetailsInfo] = useState({
+    doctor_id: _id,
+    appointment_date: "",
+    patient_id: "",
+    problem_details: "",
+    weight: 0,
+    age: 0,
+  });
+
+  useEffect(() => {
+    loggedInUser._id && appointmentDetailsInfo.patient_id === ""
+      ? setAppointmentDetailsInfo({
+          ...appointmentDetailsInfo,
+          patient_id: loggedInUser._id,
+        })
+      : null;
+  }, [loggedInUser]);
+
+  const appointmentDateHandler = (item, index) => {
+    setSelectedDate(index);
+    setAppointmentDetailsInfo({
+      ...appointmentDetailsInfo,
+      appointment_date: item.date,
+    });
+  };
+
+  const setPatientId = (id) => {
+    setSelectedFriend(id);
+    setAppointmentDetailsInfo({
+      ...appointmentDetailsInfo,
+      patient_id: id,
+    });
+  };
+
+  const [appointmentResponse, setAppointmentResponse] = useState({});
+
+  const appointmentHandler = async () => {
+    try {
+      const getToken = JSON.parse(localStorage.getItem("loginToken"));
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/patient/make_appointment`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            sobar_daktar_session: getToken,
+          },
+          body: JSON.stringify(appointmentDetailsInfo),
+        }
+      );
+      const data = await res.json();
+      if (data.success === "yes") {
+        setAppointmentResponse(data);
+        showPaymentShow();
+      }
+
+      console.log(data);
+
+      if (data.success === "no") {
+        Swal.fire({
+          icon: "error",
+          title: data.msg,
+        });
+      }
+    } catch (err) {}
+  };
+
+  console.log(appointmentDetailsInfo);
   return (
     <div className="doctorProfile">
       <div className="container my-5">
@@ -91,9 +199,10 @@ const DoctorDetails = ({ doc }) => {
               <h3>{fullname}</h3>
               <p className="docPractice">
                 Medical Practitioner since{" "}
-                {new Date(practice_since).getFullYear()} (
-                {new Date().getFullYear() -
-                  new Date(practice_since).getFullYear()}
+                {practice_since && new Date(practice_since).getFullYear()} (
+                {practice_since &&
+                  new Date().getFullYear() -
+                    new Date(practice_since).getFullYear()}
                 Years)
               </p>
               <div className="my-4 d-flex flex-wrap">
@@ -110,7 +219,7 @@ const DoctorDetails = ({ doc }) => {
             </div>
             <div className="col-md-4 docInfoRight">
               <div className="d-flex justify-content-end">
-                <button className="findDocBtn mb-4" onClick={handleShow}>
+                <button className="findDocBtn mb-4" onClick={loggedInCheck}>
                   Make an Appointment
                 </button>
               </div>
@@ -126,7 +235,7 @@ const DoctorDetails = ({ doc }) => {
                     <tr>
                       <td>Sun</td>
                       <td className="text-right pr-0">
-                        {!Sunday.off_day
+                        {Sunday && !Sunday.off_day
                           ? `${new Date(
                               Sunday.start_time
                             ).toLocaleTimeString()}- ${new Date(
@@ -138,7 +247,7 @@ const DoctorDetails = ({ doc }) => {
                     <tr>
                       <td>Mon</td>
                       <td className="text-right pr-0">
-                        {!Monday.off_day
+                        {Monday && !Monday.off_day
                           ? `${new Date(
                               Monday.start_time
                             ).toLocaleTimeString()}- ${new Date(
@@ -150,7 +259,7 @@ const DoctorDetails = ({ doc }) => {
                     <tr>
                       <td>Tue</td>
                       <td className="text-right pr-0">
-                        {!Tuesday.off_day
+                        {Tuesday && !Tuesday.off_day
                           ? `${new Date(
                               Tuesday.start_time
                             ).toLocaleTimeString()}- ${new Date(
@@ -162,7 +271,7 @@ const DoctorDetails = ({ doc }) => {
                     <tr>
                       <td>Wed</td>
                       <td className="text-right pr-0">
-                        {!Wednesday.off_day
+                        {Wednesday && !Wednesday.off_day
                           ? `${new Date(
                               Wednesday.start_time
                             ).toLocaleTimeString()}- ${new Date(
@@ -174,7 +283,7 @@ const DoctorDetails = ({ doc }) => {
                     <tr>
                       <td>Thu</td>
                       <td className="text-right pr-0">
-                        {!Thursday.off_day
+                        {Thursday && !Thursday.off_day
                           ? `${new Date(
                               Thursday.start_time
                             ).toLocaleTimeString()}- ${new Date(
@@ -186,7 +295,7 @@ const DoctorDetails = ({ doc }) => {
                     <tr>
                       <td>Fri</td>
                       <td className="text-right pr-0">
-                        {!Friday.off_day
+                        {Friday && !Friday.off_day
                           ? `${new Date(
                               Friday.start_time
                             ).toLocaleTimeString()}- ${new Date(
@@ -198,13 +307,13 @@ const DoctorDetails = ({ doc }) => {
                     <tr>
                       <td>Sat</td>
                       <td className="text-right pr-0">
-                        {!Saturday.off_day
+                        {Saturday && !Saturday.off_day
                           ? `${new Date(
                               Saturday.start_time
                             ).toLocaleTimeString()}- ${new Date(
                               Saturday.end_time
                             ).toLocaleTimeString()}`
-                          : Saturday.off_day}
+                          : "Off Day"}
                       </td>
                     </tr>
                   </tbody>
@@ -250,8 +359,8 @@ const DoctorDetails = ({ doc }) => {
               </div>
               <div className="py-3">
                 <h5 className="colorHeader">Achievements</h5>
-                {extra_degree.map((item) => (
-                  <div className="px-3" key={item._id}>
+                {extra_degree.map((item, index) => (
+                  <div className="px-3" key={index}>
                     <h6>{item.name}</h6>
                     <p>{item.institution}, YEAR</p>
                   </div>
@@ -312,46 +421,70 @@ const DoctorDetails = ({ doc }) => {
                   <h2>Make a New Appointment</h2>
                   <p>Select a Suitable Date</p>
                 </div>
-                {doctorStatus.map((item) => (
-                  <div className="col-md-12 d-flex justify-content-between align-items-center ApointmentDate">
-                    <div>
-                      <div className="d-flex justify-content-between align-items-center">
-                        <h3>{item.day}</h3>
-                        <p className="mb-0">
-                          {new Date(item.date).toLocaleDateString()}
-                        </p>
+                {doctorStatus.length > 0 ? (
+                  doctorStatus.map((item, index) => (
+                    <div
+                      className={`col-md-12 d-flex justify-content-between align-items-center ApointmentDate ${
+                        index === selectedDate && !item.off_day
+                          ? "selectedDate"
+                          : null
+                      }`}
+                      key={index}
+                      onClick={() => appointmentDateHandler(item, index)}
+                    >
+                      <div>
+                        <div className="d-flex justify-content-between align-items-center">
+                          <h3>{item.day}</h3>
+                          <p className="mb-0">
+                            {new Date(item.date).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="mb-1">
+                            {`${new Date(
+                              appointment.day[item.day].start_time
+                            ).toLocaleTimeString()} - ${new Date(
+                              appointment.day[item.day].end_time
+                            ).toLocaleTimeString()}`}
+                          </p>
+                        </div>
                       </div>
                       <div>
-                        <p className="mb-1">
-                          {`${new Date(
-                            appointment.day[item.day].start_time
-                          ).toLocaleTimeString()} - ${new Date(
-                            appointment.day[item.day].end_time
-                          ).toLocaleTimeString()}`}
-                        </p>
+                        {item.off_day ? (
+                          <button className="cancelBtn mx-4">Off Day</button>
+                        ) : (
+                          <button
+                            className={`${`${
+                              item.status && item.status.includes("Available")
+                                ? "editProfile"
+                                : "friendsApointmentBtn disabled"
+                            }`} `}
+                          >
+                            {item.status}
+                          </button>
+                        )}
                       </div>
                     </div>
-                    <div>
-                      {item.off_day ? (
-                        <button className="cancelBtn mx-4">Off Day</button>
-                      ) : (
-                        <button
-                          className={`${`${
-                            item.status && item.status.includes("Available")
-                              ? "editProfile"
-                              : "friendsApointmentBtn disabled"
-                          }`} `}
-                        >
-                          {item.status}
-                        </button>
-                      )}
-                    </div>
+                  ))
+                ) : (
+                  <div className="d-flex justify-content-center align-items-center h-50">
+                    <Spinner animation="border" />
                   </div>
-                ))}
+                )}
 
                 <div className="col-md-12 d-flex justify-content-between my-5">
-                  <button className="cancelBtn">Previous</button>
-                  <button className="findDocBtn">Next</button>
+                  <button
+                    className="cancelBtn"
+                    onClick={showMyAppointmentClose}
+                  >
+                    Previous
+                  </button>
+                  <button
+                    className="findDocBtn"
+                    onClick={() => selectedDate !== null && showDetailsShow()}
+                  >
+                    Next
+                  </button>
                 </div>
               </Card.Body>
             </Card>
@@ -379,65 +512,59 @@ const DoctorDetails = ({ doc }) => {
                   </Form>
                 </div>
 
-                <div className="col-md-12 d-flex flex-wrap friendsCard">
-                  <div className="pr-3 d-flex justify-content-center align-items-center">
-                    <img
-                      src="/images/doc.png"
-                      alt="userImg"
-                      className="img-fluid friendsImg"
-                    />
-                  </div>
-                  <div className="px-1 d-flex flex-column justify-content-between flex-grow-1">
-                    <div className="d-flex justify-content-between flex-wrap ">
-                      <div>
-                        <h3 className="mb-0">Mr. Friend Here</h3>
-                        <p>Male</p>
+                {freindList.length > 0 ? (
+                  freindList.map((item) => (
+                    <div
+                      className={`col-md-12 d-flex flex-wrap friendsCard ${
+                        selectedFriend === item._id ? "selectedDate" : ""
+                      }`}
+                      key={item._id}
+                      onClick={() => setPatientId(item._id)}
+                    >
+                      <div className="pr-3 d-flex justify-content-center align-items-center">
+                        <img
+                          src={item.profile_pic}
+                          alt="userImg"
+                          className="img-fluid friendsImg"
+                        />
                       </div>
-                      <div className="d-flex flex-column align-items-end">
-                        <MoreHorizIcon />
-                        {/* <button className="removeFriendsBtn">
-                      <CloseIcon /> Remove Freinds
-                    </button> */}
+                      <div className="px-1 d-flex flex-column justify-content-between flex-grow-1">
+                        <div className="d-flex justify-content-between flex-wrap ">
+                          <div>
+                            <h3 className="mb-0">{item.fullname}</h3>
+                            <p>{item.gender}</p>
+                          </div>
+                          <div className="d-flex flex-column align-items-end">
+                            <MoreHorizIcon />
+                            {/* <button className="removeFriendsBtn">
+                        <CloseIcon /> Remove Freinds
+                      </button> */}
+                          </div>
+                        </div>
+                        <div className="">
+                          <button className="friendsApointmentBtn">
+                            Appointments for Friends
+                          </button>
+                        </div>
                       </div>
                     </div>
+                  ))
+                ) : (
+                  <div className="d-flex justify-content-center align-items-center w-100 h-50 ">
                     <div className="">
-                      <button className="friendsApointmentBtn">
-                        Appointments for Friends
-                      </button>
+                      <Spinner animation="border" />
                     </div>
                   </div>
-                </div>
-                <div className="col-md-12 d-flex flex-wrap friendsCard">
-                  <div className="pr-3 d-flex justify-content-center align-items-center">
-                    <img
-                      src="/images/doc.png"
-                      alt="userImg"
-                      className="img-fluid friendsImg"
-                    />
-                  </div>
-                  <div className="px-1 d-flex flex-column justify-content-between flex-grow-1">
-                    <div className="d-flex justify-content-between flex-wrap ">
-                      <div>
-                        <h3 className="mb-0">Mr. Friend Here</h3>
-                        <p>Male</p>
-                      </div>
-                      <div className="d-flex flex-column align-items-end">
-                        <MoreHorizIcon />
-                        {/* <button className="removeFriendsBtn">
-                      <CloseIcon /> Remove Freinds
-                    </button> */}
-                      </div>
-                    </div>
-                    <div className="">
-                      <button className="friendsApointmentBtn">
-                        Appointments for Friends
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                )}
+
                 <div className="col-md-12 d-flex justify-content-between my-5">
-                  <button className="cancelBtn">Previous</button>
-                  <button className="findDocBtn" onClick={showDetailsShow}>
+                  <button className="cancelBtn" onClick={showSearchFriendClose}>
+                    Previous
+                  </button>
+                  <button
+                    className="findDocBtn"
+                    onClick={handleApointmentForFriend}
+                  >
                     Next
                   </button>
                 </div>
@@ -455,12 +582,32 @@ const DoctorDetails = ({ doc }) => {
                   <div className="col-md-6 px-0">
                     <Form.Group className="basicFormInput">
                       <Form.Label>Age (Years)</Form.Label>
-                      <Form.Control type="number" placeholder="" required />
+                      <Form.Control
+                        type="number"
+                        placeholder=""
+                        required
+                        onChange={(e) =>
+                          setAppointmentDetailsInfo({
+                            ...appointmentDetailsInfo,
+                            age: parseInt(e.target.value),
+                          })
+                        }
+                      />
                     </Form.Group>
 
                     <Form.Group className="basicFormInput">
                       <Form.Label>Weight (Kg)</Form.Label>
-                      <Form.Control type="number" placeholder="" required />
+                      <Form.Control
+                        type="number"
+                        placeholder=""
+                        required
+                        onChange={(e) =>
+                          setAppointmentDetailsInfo({
+                            ...appointmentDetailsInfo,
+                            weight: parseInt(e.target.value),
+                          })
+                        }
+                      />
                     </Form.Group>
                   </div>
                 </div>
@@ -473,6 +620,12 @@ const DoctorDetails = ({ doc }) => {
                       //           `}
                       placeholder=""
                       rows={3}
+                      onChange={(e) =>
+                        setAppointmentDetailsInfo({
+                          ...appointmentDetailsInfo,
+                          problem_details: e.target.value,
+                        })
+                      }
                     />
                   </Form.Group>
                 </div>
@@ -526,8 +679,113 @@ const DoctorDetails = ({ doc }) => {
                   </div>
                 </div>
                 <div className="col-md-12 d-flex justify-content-between my-5">
-                  <button className="cancelBtn">Previous</button>
-                  <button className="findDocBtn">Next</button>
+                  <button className="cancelBtn" onClick={showDetailsClose}>
+                    Previous
+                  </button>
+                  <button className="findDocBtn" onClick={appointmentHandler}>
+                    Next
+                  </button>
+                </div>
+              </Card.Body>
+            </Card>
+          </Modal>
+          <Modal show={showPayment} onHide={showPaymentClose}>
+            <Card style={{ padding: "1rem" }}>
+              <Card.Body>
+                <div className="newApointHead mb-4">
+                  <h2>Please Complete Your Payment</h2>
+                </div>
+                <div className="col-md-12 ">
+                  <div className="d-flex justify-content-center">
+                    <h5>Payment Details</h5>
+                  </div>
+                  <Table hover bordered className="py-3 mb-4">
+                    <tbody>
+                      <tr>
+                        <td>Doctor’s Fee</td>
+                        <td>{appointmentResponse.doctor_fee}</td>
+                      </tr>
+                      <tr>
+                        <td>System Charge</td>
+                        <td>{appointmentResponse.system_charge}</td>
+                      </tr>
+                      <tr>
+                        <td>Your Current Credit </td>
+                        <td>{appointmentResponse.current_available_credit}</td>
+                      </tr>
+                      <tr>
+                        <td>Discounted System Charge </td>
+                        <td>{appointmentResponse.current_available_credit}</td>
+                      </tr>
+                      <tr>
+                        <td>Your Credit After This Payment</td>
+                        <td>{appointmentResponse.credit_after_adjustment}</td>
+                      </tr>
+                      <tr>
+                        <td>Advance Payable </td>
+                        <td>{appointmentResponse.advance_payable_amount}</td>
+                      </tr>
+                      <tr>
+                        <td>Total Payable Amount </td>
+                        <td>{appointmentResponse.total_payable_amount}</td>
+                      </tr>
+                    </tbody>
+                  </Table>
+                </div>
+                <div className="d-flex justify-content-center align-items-center">
+                  <Link href={`${appointmentResponse.payment_link}`}>
+                    <a className="findDocBtn">Make Payment</a>
+                  </Link>
+                </div>
+              </Card.Body>
+            </Card>
+          </Modal>
+          <Modal show={showSuccess} onHide={showSuccessClose}>
+            <Card style={{ padding: "1rem" }}>
+              <Card.Body>
+                <div className="newApointHead mb-5">
+                  <h2>Appointment Successfully Created</h2>
+                </div>
+                <div className="col-md-12 selectedCard">
+                  <Table hover borderless>
+                    <tbody>
+                      <tr>
+                        <td>Patient Name</td>
+                        <td>Mark</td>
+                      </tr>
+                      <tr>
+                        <td>Age, Weight, Gender</td>
+                        <td>32 y/o, 70Kg, Male</td>
+                      </tr>
+                      <tr>
+                        <td>Appointment Date</td>
+                        <td>12/02/2021, Saturday</td>
+                      </tr>
+                      <tr>
+                        <td>Serial Number</td>
+                        <td>07</td>
+                      </tr>
+                      <tr>
+                        <td>Approx. Time</td>
+                        <td>12:30 am</td>
+                      </tr>
+                      <tr>
+                        <td>Doctor’s Name</td>
+                        <td>Dr. Placeholder Name</td>
+                      </tr>
+                    </tbody>
+                  </Table>
+                </div>
+                <div className="col-md-12 d-flex justify-content-between my-5">
+                  <button
+                    className="cancelBtn"
+                    onClick={() => router.push("/profile")}
+                  >
+                    Go to Profile
+                  </button>
+                  <button className="findDocBtn" onClick={showSuccessClose}>
+                    Okey
+                  </button>
                 </div>
               </Card.Body>
             </Card>

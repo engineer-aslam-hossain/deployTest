@@ -20,6 +20,31 @@ const DoctorProfile = () => {
   const router = useRouter();
 
   const { loggedInUser, setLoggedInUser } = useContext(DaktarContext);
+  const {
+    fullname,
+    rating,
+    total_consultation,
+    bio,
+    appointment,
+    expertise,
+    extra_degree,
+    worked_at_previously,
+    gender,
+    degree,
+    credit,
+    current_workplace,
+    profile_pic,
+    phone_number,
+    practice_since,
+    email_info,
+    date_of_birth,
+    mobile_banking_info,
+  } = loggedInUser;
+
+  const { day, fee, followup_fee } = appointment !== null;
+  const { Friday, Sunday, Saturday, Monday, Wednesday, Tuesday, Thursday } =
+    day !== undefined;
+
   const [saveChanges, setSaveChanges] = useState({});
   const [completed, setCompleted] = useState(true);
   const [show, setShow] = useState(false);
@@ -35,7 +60,7 @@ const DoctorProfile = () => {
   const bankProvider = ["NAGAD", "BKASH", "ROCKET", "NONE"];
   const [editInfo, setEditInfo] = useState({});
   const [editEmail, setEditEmail] = useState({});
-  const [gender, setGender] = useState("");
+  const [genderSelect, setGenderSelect] = useState("");
   const [deleteEmail, setDeleteEmail] = useState({});
   const [changePass, setChangePass] = useState({});
   const [addNewWorkPlace, setAddNewWorkPlace] = useState({});
@@ -181,7 +206,7 @@ const DoctorProfile = () => {
         .style.setProperty("display", "block");
     }
 
-    if (gender) {
+    if (genderSelect) {
       const getToken = JSON.parse(localStorage.getItem("loginToken"));
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/user/change_language_gender`,
@@ -193,7 +218,7 @@ const DoctorProfile = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            gender: gender,
+            gender: genderSelect,
           }),
         }
       );
@@ -228,10 +253,10 @@ const DoctorProfile = () => {
       }
       console.log(data);
     }
-    setGender("");
+    setGenderSelect("");
     setEditInfo({});
   };
-  console.log(gender, editInfo);
+
   const addEmailHandler = async (e) => {
     e.preventDefault();
     e.target.reset();
@@ -601,57 +626,60 @@ const DoctorProfile = () => {
     <div className="doctorProfile">
       <div className="container">
         <div className="row">
-          <div className="col-md-12 d-flex justify-content-between my-3 align-items-center warningDiv">
-            <h3>
-              <WarningIcon /> Education Info Missing
-            </h3>
-            <p>
-              Click Here to go to “Edit Overview” and fill in all your
-              information
-            </p>
-          </div>
-          <div className="col-md-12 d-flex justify-content-between my-3 align-items-center warningDiv">
-            <h3>
-              <WarningIcon /> Education Info Missing
-            </h3>
-            <p>
-              Click Here to go to “Edit Overview” and fill in all your
-              information
-            </p>
-          </div>
+          {degree && degree.length <= 1 && (
+            <div className="col-md-12 d-flex justify-content-between my-3 align-items-center warningDiv">
+              <h3>
+                <WarningIcon /> Education Info Missing
+              </h3>
+              <p>
+                Click Here to go to “Edit Overview” and fill in all your
+                information
+              </p>
+            </div>
+          )}
+          {email_info[0] && email_info[0].is_email_verified ? (
+            ""
+          ) : (
+            <div className="col-md-12 d-flex justify-content-between my-3 align-items-center warningDiv">
+              <h3>
+                <WarningIcon /> Email Not Verified
+              </h3>
+              <p>
+                Go to Your Email inbox and search for “Sobar Daktar” & Verify
+                your email
+              </p>
+            </div>
+          )}
           <div className="col-md-12 d-flex flex-wrap docInfo">
             <div className="col-md-8 mb-5">
               <div className="d-flex align-items-end mb-3 flex-wrap">
-                <img
-                  src={loggedInUser.profile_pic}
-                  alt="docImg"
-                  className="img-fluid"
-                />
+                <img src={profile_pic} alt="docImg" className="img-fluid" />
                 <button className="editProfile" onClick={handleShow}>
                   <FontAwesomeIcon icon={faEdit} /> Edit Profile
                 </button>
               </div>
-              <h3>{loggedInUser.fullname}</h3>
+              <h3>{fullname}</h3>
               <p className="docPractice">
-                Medical Practitioner since 2009 (11 Years)
+                Medical Practitioner since{" "}
+                {practice_since && new Date(practice_since).getFullYear()} (
+                {practice_since &&
+                  new Date().getFullYear() -
+                    new Date(practice_since).getFullYear()}
+                Years)
               </p>
               <div className="my-4 d-flex flex-wrap">
-                {loggedInUser.expertise &&
-                  loggedInUser.expertise.map((item, index) => (
+                {expertise &&
+                  expertise.map((item, index) => (
                     <span className="expertise" key={index}>
                       {item}
                     </span>
                   ))}
               </div>
-              <p className="my-4">
-                Doctor’s Bio Goes Here Lorem ipsum dolor sit amet, consectetur
-                adipiscing elit. Cras sodales vulputate purus, at eleifend
-                tellus luctus ac. Aenean molestie consectetur urna, eu malesuada
-                massa. Curabitur egestas odio sed nisl rutrum feugiat. Curabitur
-                sit amet ornare enim
+              <p className="my-4">{bio}</p>
+              <p className="mb-0">
+                Rating: {rating}/5({total_consultation})
               </p>
-              <p className="mb-0">Rating: 4.6/5(666)</p>
-              <p className="mb-0">Total Consultations: 348</p>
+              <p className="mb-0">Total Consultations: {total_consultation}</p>
             </div>
             <div className="col-md-4 docInfoRight">
               <div className="d-flex justify-content-end">
@@ -665,8 +693,8 @@ const DoctorProfile = () => {
                 </button>
               </div>
               <div className="mb-5 mt-3 pr-4">
-                <h5>Consultation Fee: 750 BDT</h5>
-                <h5>7 Days Follow-up Fee: 500 BDT</h5>
+                <h5>Consultation Fee: {fee} BDT</h5>
+                <h5>7 Days Follow-up Fee: {followup_fee} BDT</h5>
               </div>
               <div className="pr-5">
                 <h6>SCHEDULE THIS WEEK</h6>
@@ -675,31 +703,87 @@ const DoctorProfile = () => {
                   <tbody>
                     <tr>
                       <td>Sun</td>
-                      <td className="text-right pr-0">6pm to 8pm</td>
+                      <td className="text-right pr-0">
+                        {Sunday && !Sunday.off_day
+                          ? `${new Date(
+                              Sunday.start_time
+                            ).toLocaleTimeString()}- ${new Date(
+                              Sunday.end_time
+                            ).toLocaleTimeString()}`
+                          : "Off Day"}
+                      </td>
                     </tr>
                     <tr>
                       <td>Mon</td>
-                      <td className="text-right pr-0">6pm to 8pm</td>
+                      <td className="text-right pr-0">
+                        {Monday && !Monday.off_day
+                          ? `${new Date(
+                              Monday.start_time
+                            ).toLocaleTimeString()}- ${new Date(
+                              Monday.end_time
+                            ).toLocaleTimeString()}`
+                          : "Off Day"}
+                      </td>
                     </tr>
                     <tr>
                       <td>Tue</td>
-                      <td className="text-right pr-0">6pm to 8pm</td>
+                      <td className="text-right pr-0">
+                        {Tuesday && !Tuesday.off_day
+                          ? `${new Date(
+                              Tuesday.start_time
+                            ).toLocaleTimeString()}- ${new Date(
+                              Tuesday.end_time
+                            ).toLocaleTimeString()}`
+                          : "Off Day"}
+                      </td>
                     </tr>
                     <tr>
                       <td>Wed</td>
-                      <td className="text-right pr-0">6pm to 8pm</td>
+                      <td className="text-right pr-0">
+                        {Wednesday && !Wednesday.off_day
+                          ? `${new Date(
+                              Wednesday.start_time
+                            ).toLocaleTimeString()}- ${new Date(
+                              Wednesday.end_time
+                            ).toLocaleTimeString()}`
+                          : "Off Day"}
+                      </td>
                     </tr>
                     <tr>
                       <td>Thu</td>
-                      <td className="text-right pr-0">6pm to 8pm</td>
+                      <td className="text-right pr-0">
+                        {Thursday && !Thursday.off_day
+                          ? `${new Date(
+                              Thursday.start_time
+                            ).toLocaleTimeString()}- ${new Date(
+                              Thursday.end_time
+                            ).toLocaleTimeString()}`
+                          : "Off Day"}
+                      </td>
                     </tr>
                     <tr>
                       <td>Fri</td>
-                      <td className="text-right pr-0">Off Day</td>
+                      <td className="text-right pr-0">
+                        {Friday && !Friday.off_day
+                          ? `${new Date(
+                              Friday.start_time
+                            ).toLocaleTimeString()}- ${new Date(
+                              Friday.end_time
+                            ).toLocaleTimeString()}`
+                          : "Off Day"}
+                      </td>
                     </tr>
                     <tr>
                       <td>Sat</td>
-                      <td className="text-right pr-0">6pm to 8pm</td>
+                      <td className="text-right pr-0">
+                        {Saturday && !Saturday.off_day
+                          ? `${new Date(
+                              Saturday.start_time
+                            ).toLocaleTimeString()}- ${new Date(
+                              Saturday.end_time
+                            ).toLocaleTimeString()}`
+                          : "Off Day"}
+                      </td>
                     </tr>
                   </tbody>
                 </Table>
@@ -719,7 +803,7 @@ const DoctorProfile = () => {
               </div>
               <div>
                 <h5 className="colorHeader">Sobar Daktar Credit Points</h5>
-                <strong>1245</strong>
+                <strong>{credit}</strong>
               </div>
             </div>
           </div>
@@ -735,8 +819,8 @@ const DoctorProfile = () => {
               <div>
                 <h5 className="colorHeader">Expertise In</h5>
                 <div className="my-4 d-flex flex-wrap">
-                  {loggedInUser.expertise &&
-                    loggedInUser.expertise.map((item, index) => (
+                  {expertise &&
+                    expertise.map((item, index) => (
                       <span className="expertise" key={index}>
                         {item}
                       </span>
@@ -748,16 +832,13 @@ const DoctorProfile = () => {
                   Current Workplace / Hospital Affiliation
                 </h5>
                 <div className="px-3">
-                  <h6>
-                    {loggedInUser.current_workplace &&
-                      loggedInUser.current_workplace.name}{" "}
-                  </h6>
+                  <h6>{current_workplace && current_workplace.name} </h6>
                 </div>
               </div>
               <div className="py-3">
                 <h5 className="colorHeader">Education Background</h5>
-                {loggedInUser.degree &&
-                  loggedInUser.degree.map((item, index) => (
+                {degree &&
+                  degree.map((item, index) => (
                     <div className="px-3" key={index}>
                       <h6>{item.institution}</h6>
                       <p>
@@ -766,24 +847,15 @@ const DoctorProfile = () => {
                       </p>
                     </div>
                   ))}
-                <div className="px-3">
-                  <h6>Institute Name</h6>
-                  <p>DEGREE, 1995</p>
-                </div>
               </div>
               <div className="py-3">
                 <h5 className="colorHeader">Achievements</h5>
-                {loggedInUser.extra_degree.map((item) => (
+                {extra_degree.map((item) => (
                   <div className="px-3" key={item._id}>
                     <h6>{item.name}</h6>
                     <p>{item.institution}, YEAR</p>
                   </div>
                 ))}
-
-                <div className="px-3">
-                  <h6>Achievement Title</h6>
-                  <p>INSTITUTE, YEAR</p>
-                </div>
               </div>
             </div>
           </div>
@@ -792,7 +864,7 @@ const DoctorProfile = () => {
             <div className="Credits">
               <div className="d-flex justify-content-between flex-wrap">
                 <p className="visibility">
-                  ThiThis information is only visible to you
+                  This information is only visible to you
                 </p>
                 <button className="editProfile" onClick={handleShow}>
                   <FontAwesomeIcon icon={faEdit} /> Edit Info
@@ -801,16 +873,14 @@ const DoctorProfile = () => {
               <div>
                 <h5 className="colorHeader">Gender</h5>
                 <div className="px-3">
-                  <h6>
-                    {loggedInUser.gender ? loggedInUser.gender : "Not set Yet"}
-                  </h6>
+                  <h6>{gender ? gender : "Not set Yet"}</h6>
                 </div>
               </div>
               <div className="py-3">
                 <h5 className="colorHeader">Email</h5>
                 <div className="px-3">
-                  {loggedInUser.email_info &&
-                    loggedInUser.email_info.map((email, index) => (
+                  {email_info &&
+                    email_info.map((email, index) => (
                       <h6 key={index}>{email.email} </h6>
                     ))}
                 </div>
@@ -818,19 +888,14 @@ const DoctorProfile = () => {
               <div className="py-3">
                 <h5 className="colorHeader">Phone</h5>
                 <div className="px-3">
-                  <h6>
-                    {loggedInUser.phone_number
-                      ? loggedInUser.phone_number
-                      : "Not Set Yet"}
-                  </h6>
+                  <h6>{phone_number ? phone_number : "Not Set Yet"}</h6>
                 </div>
               </div>
               <div className="py-3">
                 <h5 className="colorHeader">Birthdate</h5>
                 <div className="px-3">
                   <h6>
-                    {loggedInUser.date_of_birth &&
-                      new Date(loggedInUser.date_of_birth).toDateString()}
+                    {date_of_birth && new Date(date_of_birth).toDateString()}
                   </h6>
                 </div>
               </div>
@@ -838,12 +903,8 @@ const DoctorProfile = () => {
                 <h5 className="colorHeader">Mobile Banking</h5>
                 <div className="px-3">
                   <h6>
-                    {loggedInUser.mobile_banking_info &&
-                      loggedInUser.mobile_banking_info.number}
-                    (
-                    {loggedInUser.mobile_banking_info &&
-                      loggedInUser.mobile_banking_info.provider}
-                    )
+                    {mobile_banking_info && mobile_banking_info.number}(
+                    {mobile_banking_info && mobile_banking_info.provider})
                   </h6>
                 </div>
               </div>
@@ -1027,14 +1088,14 @@ const DoctorProfile = () => {
                   <Form.Label>Gender</Form.Label>
                   <Dropdown className="d-flex flex-column justify-content-center Gender">
                     <Dropdown.Toggle id="GenderDropdown">
-                      {gender ? gender : "Gender"}
+                      {genderSelect ? genderSelect : "Gender"}
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
                       {genders.map((item, index) => (
                         <Dropdown.Item
                           key={index}
-                          onSelect={() => setGender(item)}
+                          onSelect={() => setGenderSelect(item)}
                         >
                           {item}
                         </Dropdown.Item>

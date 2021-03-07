@@ -17,6 +17,9 @@ const PatientProfile = () => {
 
   const { loggedInUser, setLoggedInUser } = useContext(DaktarContext);
   const [saveChanges, setSaveChanges] = useState({});
+  const [myAppointments, setMyAppointments] = useState([]);
+  const [searchData, setsearchData] = useState([]);
+
   const [active, setActive] = useState(1);
   const [show, setShow] = useState(false);
   const [changePassShow, setchangePassShow] = useState(false);
@@ -293,7 +296,50 @@ const PatientProfile = () => {
     router.push("/Login");
   };
 
-  console.log(gender);
+  const myAppointmentsHandler = async () => {
+    setActive(2);
+    try {
+      const getToken = JSON.parse(localStorage.getItem("loginToken"));
+      const myAppoints = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/patient/get_my_appointments`,
+        {
+          method: "GET",
+          headers: { sobar_daktar_session: getToken },
+          mode: "cors",
+        }
+      );
+      const myAppointsData = await myAppoints.json();
+      setMyAppointments(myAppointsData);
+      // console.log(myAppointsData);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const [spinner, setSpinner] = useState(false);
+
+  const searchFriends = async () => {
+    // console.log(data);
+    setSpinner(true);
+    setActive(3);
+    try {
+      const getToken = JSON.parse(localStorage.getItem("loginToken"));
+      const friends = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/patient/get_friend_list`,
+        {
+          method: "GET",
+          headers: { sobar_daktar_session: getToken },
+        }
+      );
+      const { friend } = await friends.json();
+      // console.log(friend);
+      setsearchData(friend);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  console.log(searchData);
   return (
     <div className="patientProfile">
       <div className="container">
@@ -339,7 +385,7 @@ const PatientProfile = () => {
                 className={`col-md-4 d-flex justify-content-center ${
                   active === 2 && "active"
                 }`}
-                onClick={() => setActive(2)}
+                onClick={myAppointmentsHandler}
               >
                 Appointments
               </div>
@@ -347,7 +393,7 @@ const PatientProfile = () => {
                 className={`col-md-4 d-flex justify-content-center l ${
                   active === 3 && "active"
                 }`}
-                onClick={() => setActive(3)}
+                onClick={searchFriends}
               >
                 Friends
               </div>
@@ -356,9 +402,9 @@ const PatientProfile = () => {
           {active === 1 ? (
             <Profile handleShow={handleShow} />
           ) : active === 2 ? (
-            <Appointments />
+            <Appointments appointments={myAppointments} />
           ) : active === 3 ? (
-            <Friends />
+            <Friends searchInfo={searchData} spinner={spinner} />
           ) : (
             <Error />
           )}
