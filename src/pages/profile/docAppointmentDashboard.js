@@ -4,11 +4,11 @@ import { useRouter } from "next/router";
 import { Spinner } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-regular-svg-icons";
+import Link from "next/link";
 const docAppointmentDashboard = () => {
   const { loggedInUser } = useContext(DaktarContext);
   const { appointment } = loggedInUser;
-  const { day, fee, followup_fee, advance_fee_percentage } =
-    appointment !== null;
+
   const router = useRouter();
 
   const [appointmentDetailsShow, setAppointmentDetailsShow] = useState();
@@ -21,7 +21,7 @@ const docAppointmentDashboard = () => {
   });
 
   const [appointmentSchedule, setAppointmentSchedule] = useState([]);
-  console.log(appointmentSchedule);
+  console.log(loggedInUser);
   const handleAppointmentSchedule = async () => {
     try {
       const getToken = JSON.parse(localStorage.getItem("loginToken"));
@@ -49,10 +49,13 @@ const docAppointmentDashboard = () => {
   const [appointmentsForAday, setAppointmentsForAday] = useState([]);
   const [appointmentAday, setAppointmentAday] = useState(null);
   const [offDay, setoffDay] = useState(false);
-  console.log(offDay);
+  const [spinner, setspinner] = useState(false);
+
+  // console.log(offDay);
   const getAppointmentsFor_A_Day = async (date, offDay) => {
     setoffDay(offDay);
     setAppointmentAday(date);
+    setspinner(true);
     try {
       const getToken = JSON.parse(localStorage.getItem("loginToken"));
       const getStatus = await fetch(
@@ -81,21 +84,23 @@ const docAppointmentDashboard = () => {
           <div className="row">
             <div className="col-lg-12 mb-4 d-flex justify-content-between align-items-center">
               <h1 className="dashboardTitle">Appointment Dashboard</h1>
-              <button className="editProfile py-2">
-                <FontAwesomeIcon icon={faEdit} /> Configure Appointments
-                Schedule
-              </button>
+              <Link href="/profile/configureAppointments">
+                <a className="editProfile py-2">
+                  <FontAwesomeIcon icon={faEdit} /> Configure Appointments
+                  Schedule
+                </a>
+              </Link>
             </div>
             <div className="col-lg-12 dashboardCard p-4">
               <div className="my-4">
-                <h5>Consultation Fee: {fee} BDT</h5>
+                <h5>Consultation Fee: {appointment.fee} BDT</h5>
                 <p>
                   You will recieve BDT ### per Consultation after adjusting x%
                   service charge.
                 </p>
               </div>
               <div className="my-4">
-                <h5>Follow-up Fee: {followup_fee} BDT</h5>
+                <h5>Follow-up Fee: {appointment.followup_fee} BDT</h5>
                 <p>
                   You will recieve BDT ### per Consultation after adjusting x%
                   service charge.
@@ -109,7 +114,7 @@ const docAppointmentDashboard = () => {
                 </p>
               </div>
               <div className="my-4">
-                <h5>Advanced Charge: {advance_fee_percentage}%</h5>
+                <h5>Advanced Charge: {appointment.advance_fee_percentage}%</h5>
                 <p>
                   Patients will have to pay this percentage of charge when
                   creating an appointment. The rest will be collected after
@@ -157,7 +162,7 @@ const docAppointmentDashboard = () => {
                     </div>
                   ))
                 ) : (
-                  <div className="d-flex justify-content-center align-items-center h-50">
+                  <div className="d-flex justify-content-center align-items-center h-50 py-4">
                     <Spinner animation="border" />
                   </div>
                 )}
@@ -179,77 +184,87 @@ const docAppointmentDashboard = () => {
                         : "NO Date Selected"}
                     </h2>
                   </div>
-                  {appointmentsForAday.map((item) => (
-                    <div
-                      className={`col-lg-11 serialCard p-4 d-flex flex-column justify-content-between my-3 mx-auto`}
-                      key={item._id}
-                      onClick={() => setAppointmentDetailsShow(item._id)}
-                    >
-                      <div className="d-flex justify-content-between mb-3">
-                        <div className="serialNo">
-                          <h6>Serial: {item.serial} </h6>
-                          <h4>{item.patient_id && item.patient_id.fullname}</h4>
-                          <p>
-                            {item.age} y/o, {item.weight} Kg,
-                            {item.patient_id && item.patient_id.gender}
-                          </p>
-                        </div>
-                        <div>
-                          <button className="callNowBtn">Call Now</button>
-                        </div>
-                      </div>
+                  {appointmentsForAday.length > 0 ? (
+                    appointmentsForAday.map((item) => (
                       <div
-                        className={`mb-3 serialDetails ${
-                          appointmentDetailsShow === item._id
-                            ? "detailsShow"
-                            : ""
-                        }`}
+                        className={`col-lg-11 serialCard p-4 d-flex flex-column justify-content-between my-3 mx-auto`}
+                        key={item._id}
+                        onClick={() => setAppointmentDetailsShow(item._id)}
                       >
-                        <div className="mb-4 ">
-                          <h6>Health Complications:</h6>
-                          <p>{item.problem_details}</p>
+                        <div className="d-flex justify-content-between mb-3">
+                          <div className="serialNo">
+                            <h6>Serial: {item.serial} </h6>
+                            <h4>
+                              {item.patient_id && item.patient_id.fullname}
+                            </h4>
+                            <p>
+                              {item.age} y/o, {item.weight} Kg,
+                              {item.patient_id && item.patient_id.gender}
+                            </p>
+                          </div>
+                          <div>
+                            <button className="callNowBtn">Call Now</button>
+                          </div>
                         </div>
-                        <div>
-                          <button className="seeUploadBtn">
-                            See Uploaded Files
-                          </button>
+                        <div
+                          className={`mb-3 serialDetails ${
+                            appointmentDetailsShow === item._id
+                              ? "detailsShow"
+                              : ""
+                          }`}
+                        >
+                          <div className="mb-4 ">
+                            <h6>Health Complications:</h6>
+                            <p>{item.problem_details}</p>
+                          </div>
+                          <div>
+                            <button className="seeUploadBtn">
+                              See Uploaded Files
+                            </button>
+                          </div>
+                        </div>
+                        <div className="d-flex justify-content-between align-items-end">
+                          <div>
+                            <p className="apointmentType">
+                              {item.appointment_type === "FRESH" &&
+                                "New Appointment"}
+                            </p>
+                          </div>
+                          <div className="d-flex flex-column align-items-end">
+                            <h6 className="apointmentDay">
+                              {new Date(item.appointment_time).toLocaleString(
+                                "en-us",
+                                {
+                                  weekday: "long",
+                                }
+                              )}
+                              {" , "}
+                              {new Date(
+                                item.appointment_time
+                              ).toLocaleDateString()}
+                              ,
+                            </h6>
+                            <p>
+                              Estimated Time:
+                              {new Date(
+                                item.appointment_time
+                              ).toLocaleTimeString()}
+                              -
+                              {new Date(
+                                item.appointment_end_time
+                              ).toLocaleTimeString()}
+                            </p>
+                          </div>
                         </div>
                       </div>
-                      <div className="d-flex justify-content-between align-items-end">
-                        <div>
-                          <p className="apointmentType">
-                            {item.appointment_type === "FRESH" &&
-                              "New Appointment"}
-                          </p>
-                        </div>
-                        <div className="d-flex flex-column align-items-end">
-                          <h6 className="apointmentDay">
-                            {new Date(item.appointment_time).toLocaleString(
-                              "en-us",
-                              {
-                                weekday: "long",
-                              }
-                            )}
-                            {" , "}
-                            {new Date(
-                              item.appointment_time
-                            ).toLocaleDateString()}
-                            ,
-                          </h6>
-                          <p>
-                            Estimated Time:
-                            {new Date(
-                              item.appointment_time
-                            ).toLocaleTimeString()}
-                            -
-                            {new Date(
-                              item.appointment_end_time
-                            ).toLocaleTimeString()}
-                          </p>
-                        </div>
+                    ))
+                  ) : spinner ? (
+                    <div className="d-flex justify-content-center align-items-center h-50 py-4">
+                      <div className="appointmentDaySpinner">
+                        <Spinner animation="border" />
                       </div>
                     </div>
-                  ))}
+                  ) : null}
                 </div>
               </div>
             </div>

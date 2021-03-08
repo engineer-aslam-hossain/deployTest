@@ -633,7 +633,8 @@ section.profile {
 .docInfo img {
   width: 12rem;
 }
-button.editProfile {
+button.editProfile,
+a.editProfile {
   border: 1px solid #ababab;
   background: transparent;
   border-radius: 8px;
@@ -643,6 +644,8 @@ button.editProfile {
   padding-right: 1rem;
   display: flex;
   align-items: center;
+  color: black;
+  text-decoration: none !important;
 }
 
 button.editProfile svg.svg-inline--fa.fa-edit.fa-w-18 {
@@ -1305,4 +1308,41 @@ section.findDoctors {
   padding-top: 2rem !important;
 }
 
+.custom-switch .custom-control-label::before {
+  left: 8.75rem !important;
+  top: 0.4rem !important;
+}
+.custom-switch .custom-control-label::after {
+  left: calc(8.75rem + 2px) !important;
+  top: calc(0.4rem + 2px) !important;
+}
+.custom-control.custom-switch {
+  padding-right: 3rem;
+  display: flex;
+  justify-content: flex-end;
+}
+.configureForm label.custom-control-label,
+.configureForm label.form-label {
+  font-size: 1.2rem;
+  color: #0f9635;
+  font-weight: 700;
+}
+.configureForm input::placeholder {
+  text-align: end;
+}
+
+.weekScheduleForm h5 {
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+.weekScheduleForm label.form-label,
+.weekScheduleForm label.form-check-label {
+  font-size: 12px;
+  color: #505050;
+  font-weight: 400;
+}
+
+.appointmentDetailsTab {
+  /* display: none; */
+}
 /* Find Doc styles end */
