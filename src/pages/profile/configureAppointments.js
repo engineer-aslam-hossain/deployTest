@@ -268,6 +268,58 @@ const ConfigureAppointments = () => {
     } catch (err) {}
   };
 
+  const [availability, setAvailability] = useState(false);
+
+  const statusHandler = async () => {
+    if (availability) {
+      setAvailability(!availability);
+      try {
+        const getToken = JSON.parse(localStorage.getItem("loginToken"));
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/doctor/make_me_available`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              sobar_daktar_session: getToken,
+            },
+          }
+        );
+        const data = await res.json();
+        // console.log(data);
+        Swal.fire({
+          icon: "success",
+          title: "Successfully change Availability",
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      setAvailability(!availability);
+      try {
+        const getToken = JSON.parse(localStorage.getItem("loginToken"));
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/doctor/make_me_unavailable`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              sobar_daktar_session: getToken,
+            },
+          }
+        );
+        const data = await res.json();
+        Swal.fire({
+          icon: "success",
+          title: "Successfully change Availability",
+        });
+        // console.log(data);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
   return (
     <section>
       <div className="container">
@@ -284,6 +336,7 @@ const ConfigureAppointments = () => {
                 type="switch"
                 id="custom-switch"
                 label="Active Status"
+                onChange={statusHandler}
               />
               <Form.Text className="text-muted text-right">
                 Turning this off will prevent users from finding you in search &
