@@ -10,7 +10,6 @@ const docAppointmentDashboard = () => {
   const { day, fee, followup_fee, advance_fee_percentage } =
     appointment !== null;
   const router = useRouter();
-  console.log(loggedInUser);
 
   const [appointmentDetailsShow, setAppointmentDetailsShow] = useState();
 
@@ -22,7 +21,7 @@ const docAppointmentDashboard = () => {
   });
 
   const [appointmentSchedule, setAppointmentSchedule] = useState([]);
-
+  console.log(appointmentSchedule);
   const handleAppointmentSchedule = async () => {
     try {
       const getToken = JSON.parse(localStorage.getItem("loginToken"));
@@ -48,10 +47,12 @@ const docAppointmentDashboard = () => {
   }, [loggedInUser]);
 
   const [appointmentsForAday, setAppointmentsForAday] = useState([]);
-
-  const getAppointmentsFor_A_Day = async (date) => {
-    console.log(date);
-
+  const [appointmentAday, setAppointmentAday] = useState(null);
+  const [offDay, setoffDay] = useState(false);
+  console.log(offDay);
+  const getAppointmentsFor_A_Day = async (date, offDay) => {
+    setoffDay(offDay);
+    setAppointmentAday(date);
     try {
       const getToken = JSON.parse(localStorage.getItem("loginToken"));
       const getStatus = await fetch(
@@ -129,14 +130,25 @@ const docAppointmentDashboard = () => {
                     <div
                       className="appointmentView p-4"
                       key={index}
-                      onClick={() => getAppointmentsFor_A_Day(item.date)}
+                      onClick={() =>
+                        getAppointmentsFor_A_Day(
+                          item.date,
+                          item.off_day ? item.off_day : false
+                        )
+                      }
                     >
                       <h6>
                         {item.day_name}, {item.date}
                       </h6>
                       <p className="mb-1">
-                        {new Date(item.start_time).toLocaleTimeString()} -
-                        {new Date(item.end_time).toLocaleTimeString()}
+                        {item.off_day ? (
+                          "Off Day"
+                        ) : (
+                          <>
+                            {new Date(item.start_time).toLocaleTimeString()} -
+                            {new Date(item.end_time).toLocaleTimeString()}
+                          </>
+                        )}
                       </p>
                       <p className="patientNo">
                         {item.total_appointment} Patients (
@@ -150,77 +162,95 @@ const docAppointmentDashboard = () => {
                   </div>
                 )}
               </div>
-              <div className="col-lg-9 px-4 pb-5">
-                <div className="col-lg-12 mt-3 my-5">
-                  <h2 className="weekCardTitle">
-                    Appointments for Sunday, 07.03.2021
-                  </h2>
-                </div>
-                {appointmentsForAday.map((item) => (
-                  <div
-                    className={`col-lg-12 serialCard p-4 d-flex flex-column justify-content-between mb-3`}
-                    key={item._id}
-                    onClick={() => setAppointmentDetailsShow(item._id)}
-                  >
-                    <div className="d-flex justify-content-between mb-3">
-                      <div className="serialNo">
-                        <h6>Serial: {item.serial} </h6>
-                        <h4>{item.patient_id && item.patient_id.fullname}</h4>
-                        <p>
-                          {item.age} y/o, {item.weight} Kg,
-                          {item.patient_id && item.patient_id.gender}
-                        </p>
-                      </div>
-                      <div>
-                        <button className="callNowBtn">Call Now</button>
-                      </div>
-                    </div>
-                    <div
-                      className={`mb-3 serialDetails ${
-                        appointmentDetailsShow === item._id ? "detailsShow" : ""
-                      }`}
-                    >
-                      <div className="mb-4 ">
-                        <h6>Health Complications:</h6>
-                        <p>{item.problem_details}</p>
-                      </div>
-                      <div>
-                        <button className="seeUploadBtn">
-                          See Uploaded Files
-                        </button>
-                      </div>
-                    </div>
-                    <div className="d-flex justify-content-between align-items-end">
-                      <div>
-                        <p className="apointmentType">
-                          {item.appointment_type === "FRESH" &&
-                            "New Appointment"}
-                        </p>
-                      </div>
-                      <div className="d-flex flex-column align-items-end">
-                        <h6 className="apointmentDay">
-                          {new Date(item.appointment_time).toLocaleString(
-                            "en-us",
-                            {
-                              weekday: "long",
-                            }
-                          )}
-                          {" , "}
-                          {new Date(item.appointment_time).toLocaleDateString()}
-                          ,
-                        </h6>
-                        <p>
-                          Estimated Time:
-                          {new Date(item.appointment_time).toLocaleTimeString()}
-                          -
-                          {new Date(
-                            item.appointment_end_time
-                          ).toLocaleTimeString()}
-                        </p>
-                      </div>
-                    </div>
+              <div className="col-lg-9 px-0 pb-5">
+                <div>
+                  <div className="col-lg-12  appointmentDivTitle">
+                    <h2 className="weekCardTitle">
+                      {offDay
+                        ? "Off Day"
+                        : appointmentAday !== null
+                        ? `Appointments for ${new Date(
+                            appointmentAday
+                          ).toLocaleString("en-us", {
+                            weekday: "long",
+                          })} , ${new Date(
+                            appointmentAday
+                          ).toLocaleDateString()} `
+                        : "NO Date Selected"}
+                    </h2>
                   </div>
-                ))}
+                  {appointmentsForAday.map((item) => (
+                    <div
+                      className={`col-lg-11 serialCard p-4 d-flex flex-column justify-content-between my-3 mx-auto`}
+                      key={item._id}
+                      onClick={() => setAppointmentDetailsShow(item._id)}
+                    >
+                      <div className="d-flex justify-content-between mb-3">
+                        <div className="serialNo">
+                          <h6>Serial: {item.serial} </h6>
+                          <h4>{item.patient_id && item.patient_id.fullname}</h4>
+                          <p>
+                            {item.age} y/o, {item.weight} Kg,
+                            {item.patient_id && item.patient_id.gender}
+                          </p>
+                        </div>
+                        <div>
+                          <button className="callNowBtn">Call Now</button>
+                        </div>
+                      </div>
+                      <div
+                        className={`mb-3 serialDetails ${
+                          appointmentDetailsShow === item._id
+                            ? "detailsShow"
+                            : ""
+                        }`}
+                      >
+                        <div className="mb-4 ">
+                          <h6>Health Complications:</h6>
+                          <p>{item.problem_details}</p>
+                        </div>
+                        <div>
+                          <button className="seeUploadBtn">
+                            See Uploaded Files
+                          </button>
+                        </div>
+                      </div>
+                      <div className="d-flex justify-content-between align-items-end">
+                        <div>
+                          <p className="apointmentType">
+                            {item.appointment_type === "FRESH" &&
+                              "New Appointment"}
+                          </p>
+                        </div>
+                        <div className="d-flex flex-column align-items-end">
+                          <h6 className="apointmentDay">
+                            {new Date(item.appointment_time).toLocaleString(
+                              "en-us",
+                              {
+                                weekday: "long",
+                              }
+                            )}
+                            {" , "}
+                            {new Date(
+                              item.appointment_time
+                            ).toLocaleDateString()}
+                            ,
+                          </h6>
+                          <p>
+                            Estimated Time:
+                            {new Date(
+                              item.appointment_time
+                            ).toLocaleTimeString()}
+                            -
+                            {new Date(
+                              item.appointment_end_time
+                            ).toLocaleTimeString()}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
