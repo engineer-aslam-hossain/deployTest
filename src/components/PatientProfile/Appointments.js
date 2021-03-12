@@ -4,6 +4,16 @@ import { Spinner } from "react-bootstrap";
 const Appointments = ({ appointments }) => {
   console.log(appointments);
 
+  function formatAMPM(date) {
+    var hours = date.getUTCHours();
+    var minutes = date.getUTCMinutes();
+    var ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    var strTime = hours + ":" + minutes + " " + ampm;
+    return strTime;
+  }
   return (
     <>
       <div className="col-md-12 my-4 px-0" id="appointments">
@@ -48,14 +58,14 @@ const Appointments = ({ appointments }) => {
                           </div>
                           <div>
                             <h6>
-                              {new Date(
-                                appointment.appointment_time
-                              ).toLocaleTimeString()}
+                              {formatAMPM(
+                                new Date(appointment.appointment_time)
+                              )}
                             </h6>
                             <h6>
                               {new Date(
                                 appointment.appointment_time
-                              ).toLocaleDateString()}
+                              ).toDateString()}
                             </h6>
                           </div>
                         </div>

@@ -266,14 +266,9 @@ const docAppointmentDashboard = () => {
                               ,
                             </h6>
                             <p>
-                              Estimated Time:
-                              {new Date(
-                                item.appointment_time
-                              ).toLocaleTimeString()}
-                              -
-                              {new Date(
-                                item.appointment_end_time
-                              ).toLocaleTimeString()}
+                              Estimated Time :{" "}
+                              {formatAMPM(new Date(item.appointment_time))} -{" "}
+                              {formatAMPM(new Date(item.appointment_end_time))}
                             </p>
                           </div>
                         </div>
