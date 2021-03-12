@@ -11,6 +11,7 @@ import { Card } from "@material-ui/core";
 import DaktarContext from "../Context/Context";
 import CloseIcon from "@material-ui/icons/Close";
 import { useRouter } from "next/router";
+import Swal from "sweetalert2";
 
 const PatientProfile = () => {
   const router = useRouter();
@@ -70,7 +71,13 @@ const PatientProfile = () => {
     );
     const data = await res.json();
     if (data.success === "yes") {
-      setSaveChanges(data);
+      Swal.fire({
+        icon: "success",
+        title: "Successfully Save the Changes",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      handleClose();
       try {
         const getToken = JSON.parse(localStorage.getItem("loginToken"));
         const userRes = await fetch(
@@ -84,17 +91,14 @@ const PatientProfile = () => {
         const userData = await userRes.json();
 
         setLoggedInUser(userData);
-        document
-          .querySelector("p.text-success.notification.text-center.editInfoP")
-          .style.setProperty("display", "block");
       } catch (err) {
         console.log(err);
       }
     } else {
-      setSaveChanges(data);
-      document
-        .querySelector("p.text-danger.notification.text-center.editInfoP")
-        .style.setProperty("display", "block");
+      Swal.fire({
+        icon: "error",
+        title: data.msg,
+      });
     }
     if (gender) {
       const getToken = JSON.parse(localStorage.getItem("loginToken"));
@@ -114,8 +118,6 @@ const PatientProfile = () => {
       );
       const data = await res.json();
       if (data.success === "yes") {
-        setSaveChanges(data);
-
         try {
           const getToken = JSON.parse(localStorage.getItem("loginToken"));
           const userRes = await fetch(
@@ -129,23 +131,16 @@ const PatientProfile = () => {
           const userData = await userRes.json();
 
           setLoggedInUser(userData);
-          document
-            .querySelector("p.text-success.notification.text-center.docEditP")
-            .style.setProperty("display", "block");
         } catch (err) {
           console.log(err);
         }
       } else {
-        setSaveChanges(data);
-        document
-          .querySelector("p.text-danger.notification.text-center.docEditP")
-          .style.setProperty("display", "block");
       }
-      console.log(data);
+      // console.log(data);
     }
     setGender("");
     setEditInfo({});
-    console.log(data);
+    // console.log(data);
   };
 
   const addEmailHandler = async (e) => {
@@ -168,9 +163,15 @@ const PatientProfile = () => {
       }
     );
     const data = await res.json();
-    console.log(data);
+    // console.log(data);
     if (data.success === "yes") {
-      setSaveChanges(data);
+      Swal.fire({
+        icon: "success",
+        title: "Successfully Save the Changes",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      addMailhandleClose();
       try {
         const getToken = JSON.parse(localStorage.getItem("loginToken"));
         const userRes = await fetch(
@@ -184,17 +185,14 @@ const PatientProfile = () => {
         const userData = await userRes.json();
         // console.log(data);
         setLoggedInUser(userData);
-        document
-          .querySelector("p.text-success.notification.text-center.addMailP")
-          .style.setProperty("display", "block");
       } catch (err) {
         console.log(err);
       }
     } else {
-      setSaveChanges(data);
-      document
-        .querySelector("p.text-danger.notification.text-center.addMailP")
-        .style.setProperty("display", "block");
+      Swal.fire({
+        icon: "error",
+        title: data.msg,
+      });
     }
   };
 
@@ -218,7 +216,7 @@ const PatientProfile = () => {
       }
     );
     const data = await res.json();
-    console.log(data);
+    // console.log(data);
     if (data.success === "yes") {
       try {
         const getToken = JSON.parse(localStorage.getItem("loginToken"));
@@ -233,18 +231,21 @@ const PatientProfile = () => {
         const userData = await userRes.json();
         // console.log(data);
         setLoggedInUser(userData);
-        setSaveChanges(data);
-        document
-          .querySelector("p.text-success.notification.text-center.deleteMailP")
-          .style.setProperty("display", "block");
+        Swal.fire({
+          icon: "success",
+          title: "Successfully Save the Changes",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+        deleteMailhandleClose();
       } catch (err) {
         console.log(err);
       }
     } else {
-      setSaveChanges(data);
-      document
-        .querySelector("p.text-danger.notification.text-center.deleteMailP")
-        .style.setProperty("display", "block");
+      Swal.fire({
+        icon: "error",
+        title: data.msg,
+      });
     }
   };
 
@@ -270,15 +271,18 @@ const PatientProfile = () => {
     const data = await res.json();
     console.log(data);
     if (data.success === "yes") {
-      setSaveChanges(data);
-      document
-        .querySelector("p.text-success.notification.text-center.changePassP")
-        .style.setProperty("display", "block");
+      Swal.fire({
+        icon: "success",
+        title: "Successfully Save the Changes",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      changePasshandleClose();
     } else {
-      setSaveChanges(data);
-      document
-        .querySelector("p.text-danger.notification.text-center.changePassP")
-        .style.setProperty("display", "block");
+      Swal.fire({
+        icon: "error",
+        title: data.msg,
+      });
     }
   };
 
@@ -408,25 +412,11 @@ const PatientProfile = () => {
           ) : (
             <Error />
           )}
-          <Modal
-            show={show}
-            onHide={() =>
-              alert("For close modal please click to the Cancel Button")
-            }
-            className="PatientEditModal"
-          >
+          <Modal show={show} onHide={handleClose} className="PatientEditModal">
             <Card style={{ padding: "2rem 2rem" }} className="">
               <Form noValidate onSubmit={submitHandler}>
                 <div>
                   <h3 className="editFormTitle text-center">Edit Info</h3>
-                  <p className="text-success notification text-center editInfoP">
-                    {saveChanges.success === "yes"
-                      ? "Successfully Save the Changes"
-                      : ""}
-                  </p>
-                  <p className="text-danger notification text-center editInfoP">
-                    {saveChanges.success === "no" ? saveChanges.msg : ""}
-                  </p>
                 </div>
                 <button
                   type="button"
@@ -635,23 +625,13 @@ const PatientProfile = () => {
           </Modal>
           <Modal
             show={changePassShow}
-            onHide={() =>
-              alert("For close modal please click to the Cancel Button")
-            }
+            onHide={changePasshandleClose}
             className="PatientEditModal"
           >
             <Card style={{ padding: "2rem 2rem" }} className=" mx-auto">
               <Form noValidate onSubmit={passwordChangeHandler}>
                 <div>
                   <h3 className="editFormTitle text-center">Reset Password</h3>
-                  <p className="text-success notification text-center changePassP">
-                    {saveChanges.success === "yes"
-                      ? "Successfully Save the Changes"
-                      : ""}
-                  </p>
-                  <p className="text-danger notification text-center changePassP">
-                    {saveChanges.success === "no" ? saveChanges.msg : ""}
-                  </p>
                 </div>
                 <Form.Group className="basicFormInput">
                   <Form.Label>Old Password</Form.Label>
@@ -735,9 +715,7 @@ const PatientProfile = () => {
           </Modal>
           <Modal
             show={deleteMailShow}
-            onHide={() =>
-              alert("For close modal please click to the Cancel Button")
-            }
+            onHide={deleteMailhandleClose}
             className="PatientEditModal"
           >
             <Card style={{ padding: "2rem 2rem" }} className=" mx-auto">
@@ -746,14 +724,6 @@ const PatientProfile = () => {
                   <h3 className="editFormTitle text-center">Remove Email ?</h3>
                   <p className="text-center">
                     You need to enter your password to remove an email.
-                  </p>
-                  <p className="text-success notification text-center deleteMailP">
-                    {saveChanges.success === "yes"
-                      ? "Successfully Save the Changes"
-                      : ""}
-                  </p>
-                  <p className="text-danger notification text-center deleteMailP">
-                    {saveChanges.success === "no" ? saveChanges.msg : ""}
                   </p>
                 </div>
                 <Form.Group className="basicFormInput">
@@ -797,23 +767,13 @@ const PatientProfile = () => {
           </Modal>
           <Modal
             show={addMailShow}
-            onHide={() =>
-              alert("For close modal please click to the Cancel Button")
-            }
+            onHide={addMailhandleClose}
             className="PatientEditModal"
           >
             <Card style={{ padding: "2rem 2rem" }} className=" mx-auto">
               <Form noValidate onSubmit={addEmailHandler}>
                 <div>
                   <h3 className="editFormTitle text-center">Add New Email</h3>
-                  <p className="text-success notification text-center addMailP">
-                    {saveChanges.success === "yes"
-                      ? "Successfully Save the Changes"
-                      : ""}
-                  </p>
-                  <p className="text-danger notification text-center addMailP">
-                    {saveChanges.success === "no" ? saveChanges.msg : ""}
-                  </p>
                 </div>
                 <Form.Group className="basicFormInput">
                   <Form.Label>Add New Email</Form.Label>

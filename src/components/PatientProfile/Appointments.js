@@ -44,7 +44,7 @@ const Appointments = ({ appointments }) => {
                         </div>
                         <div className="d-flex justify-content-between flex-wrap mt-3">
                           <div className="d-flex align-items-end">
-                            <h5>{appointment.patient_due} BDT</h5>
+                            <h5>{Math.floor(appointment.patient_due)} BDT</h5>
                           </div>
                           <div>
                             <h6>

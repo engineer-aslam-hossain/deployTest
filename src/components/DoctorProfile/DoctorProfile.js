@@ -15,6 +15,7 @@ import DaktarContext from "../Context/Context";
 import CloseIcon from "@material-ui/icons/Close";
 import Select from "react-select";
 import { useRouter } from "next/router";
+import Swal from "sweetalert2";
 
 const DoctorProfile = () => {
   const router = useRouter();
@@ -40,10 +41,6 @@ const DoctorProfile = () => {
     date_of_birth,
     mobile_banking_info,
   } = loggedInUser;
-
-  const { day, fee, followup_fee } = appointment !== null;
-  const { Friday, Sunday, Saturday, Monday, Wednesday, Tuesday, Thursday } =
-    day !== undefined;
 
   const [saveChanges, setSaveChanges] = useState({});
   const [completed, setCompleted] = useState(true);
@@ -111,7 +108,7 @@ const DoctorProfile = () => {
     });
   };
 
-  console.log(editEmail);
+  // console.log(editEmail);
 
   const overViewSubmitHandler = async (e) => {
     e.preventDefault();
@@ -130,8 +127,15 @@ const DoctorProfile = () => {
       }
     );
     const data = await res.json();
-    console.log(data);
+    // console.log(data);
     if (data.success === "yes") {
+      overviewHandleClose();
+      Swal.fire({
+        icon: "success",
+        title: "Successfully Save the Changes",
+        showConfirmButton: false,
+        timer: 1000,
+      });
       try {
         const getToken = JSON.parse(localStorage.getItem("loginToken"));
         const userRes = await fetch(
@@ -145,18 +149,14 @@ const DoctorProfile = () => {
         const userData = await userRes.json();
         // console.log(data);
         setLoggedInUser(userData);
-        setSaveChanges(data);
-        document
-          .querySelector("p.text-success.notification.text-center.overviewP")
-          .style.setProperty("display", "block");
       } catch (err) {
         console.log(err);
       }
     } else {
-      setSaveChanges(data);
-      document
-        .querySelector("p.text-danger.notification.text-center.overviewP")
-        .style.setProperty("display", "block");
+      Swal.fire({
+        icon: "error",
+        title: data.msg,
+      });
     }
   };
 
@@ -178,7 +178,13 @@ const DoctorProfile = () => {
     );
     const data = await res.json();
     if (data.success === "yes") {
-      setSaveChanges(data);
+      Swal.fire({
+        icon: "success",
+        title: "Successfully Save the Changes",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      handleClose();
 
       try {
         const getToken = JSON.parse(localStorage.getItem("loginToken"));
@@ -191,19 +197,15 @@ const DoctorProfile = () => {
           }
         );
         const userData = await userRes.json();
-
         setLoggedInUser(userData);
-        document
-          .querySelector("p.text-success.notification.text-center.docEditP")
-          .style.setProperty("display", "block");
       } catch (err) {
         console.log(err);
       }
     } else {
-      setSaveChanges(data);
-      document
-        .querySelector("p.text-danger.notification.text-center.docEditP")
-        .style.setProperty("display", "block");
+      Swal.fire({
+        icon: "error",
+        title: data.msg,
+      });
     }
 
     if (genderSelect) {
@@ -239,17 +241,10 @@ const DoctorProfile = () => {
           const userData = await userRes.json();
 
           setLoggedInUser(userData);
-          document
-            .querySelector("p.text-success.notification.text-center.docEditP")
-            .style.setProperty("display", "block");
         } catch (err) {
           console.log(err);
         }
       } else {
-        setSaveChanges(data);
-        document
-          .querySelector("p.text-danger.notification.text-center.docEditP")
-          .style.setProperty("display", "block");
       }
       console.log(data);
     }
@@ -277,9 +272,15 @@ const DoctorProfile = () => {
       }
     );
     const data = await res.json();
-    console.log(data);
+    // console.log(data);
     if (data.success === "yes") {
-      setSaveChanges(data);
+      Swal.fire({
+        icon: "success",
+        title: "Successfully Save the Changes",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      addMailhandleClose();
       try {
         const getToken = JSON.parse(localStorage.getItem("loginToken"));
         const userRes = await fetch(
@@ -293,17 +294,14 @@ const DoctorProfile = () => {
         const userData = await userRes.json();
         // console.log(data);
         setLoggedInUser(userData);
-        document
-          .querySelector("p.text-success.notification.text-center.addEmailP")
-          .style.setProperty("display", "block");
       } catch (err) {
         console.log(err);
       }
     } else {
-      setSaveChanges(data);
-      document
-        .querySelector("p.text-danger.notification.text-center.addEmailP")
-        .style.setProperty("display", "block");
+      Swal.fire({
+        icon: "error",
+        title: data.msg,
+      });
     }
   };
 
@@ -327,8 +325,15 @@ const DoctorProfile = () => {
       }
     );
     const data = await res.json();
-    console.log(data);
+    // console.log(data);
     if (data.success === "yes") {
+      Swal.fire({
+        icon: "success",
+        title: "Successfully Save the Changes",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      deleteMailhandleClose();
       try {
         const getToken = JSON.parse(localStorage.getItem("loginToken"));
         const userRes = await fetch(
@@ -342,18 +347,14 @@ const DoctorProfile = () => {
         const userData = await userRes.json();
         // console.log(data);
         setLoggedInUser(userData);
-        setSaveChanges(data);
-        document
-          .querySelector("p.text-success.notification.text-center.deleteEmailP")
-          .style.setProperty("display", "block");
       } catch (err) {
         console.log(err);
       }
     } else {
-      setSaveChanges(data);
-      document
-        .querySelector("p.text-danger.notification.text-center.deleteEmailP")
-        .style.setProperty("display", "block");
+      Swal.fire({
+        icon: "error",
+        title: data.msg,
+      });
     }
   };
 
@@ -385,6 +386,13 @@ const DoctorProfile = () => {
     const data = await res.json();
     console.log(data);
     if (data.success === "yes") {
+      Swal.fire({
+        icon: "success",
+        title: "Successfully Save the Changes",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      educationHandleClose();
       try {
         const getToken = JSON.parse(localStorage.getItem("loginToken"));
         const userRes = await fetch(
@@ -398,18 +406,14 @@ const DoctorProfile = () => {
         const userData = await userRes.json();
         // console.log(data);
         setLoggedInUser(userData);
-        setSaveChanges(data);
-        document
-          .querySelector("p.text-success.notification.text-center.educationP")
-          .style.setProperty("display", "block");
       } catch (err) {
         console.log(err);
       }
     } else {
-      setSaveChanges(data);
-      document
-        .querySelector("p.text-danger.notification.text-center.educationP")
-        .style.setProperty("display", "block");
+      Swal.fire({
+        icon: "error",
+        title: data.msg,
+      });
     }
   };
 
@@ -434,6 +438,13 @@ const DoctorProfile = () => {
     const data = await res.json();
     console.log(data);
     if (data.success === "yes") {
+      Swal.fire({
+        icon: "success",
+        title: "Successfully Save the Changes",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      achievementhandleClose();
       try {
         const getToken = JSON.parse(localStorage.getItem("loginToken"));
         const userRes = await fetch(
@@ -447,18 +458,14 @@ const DoctorProfile = () => {
         const userData = await userRes.json();
         // console.log(data);
         setLoggedInUser(userData);
-        setSaveChanges(data);
-        document
-          .querySelector("p.text-success.notification.text-center.achievementP")
-          .style.setProperty("display", "block");
       } catch (err) {
         console.log(err);
       }
     } else {
-      setSaveChanges(data);
-      document
-        .querySelector("p.text-danger.notification.text-center.achievementP")
-        .style.setProperty("display", "block");
+      Swal.fire({
+        icon: "error",
+        title: data.msg,
+      });
     }
   };
 
@@ -483,6 +490,13 @@ const DoctorProfile = () => {
     const data = await res.json();
     console.log(data);
     if (data.success === "yes") {
+      workPlaceHandleClose();
+      Swal.fire({
+        icon: "success",
+        title: "Successfully Save the Changes",
+        showConfirmButton: false,
+        timer: 1000,
+      });
       try {
         const getToken = JSON.parse(localStorage.getItem("loginToken"));
         const userRes = await fetch(
@@ -496,20 +510,14 @@ const DoctorProfile = () => {
         const userData = await userRes.json();
         // console.log(data);
         setLoggedInUser(userData);
-        setSaveChanges(data);
-        document
-          .querySelector(
-            "p.text-success.notification.text-center.previousWorkP"
-          )
-          .style.setProperty("display", "block");
       } catch (err) {
         console.log(err);
       }
     } else {
-      setSaveChanges(data);
-      document
-        .querySelector("p.text-danger.notification.text-center.previousWorkP")
-        .style.setProperty("display", "block");
+      Swal.fire({
+        icon: "error",
+        title: data.msg,
+      });
     }
   };
 
@@ -533,8 +541,15 @@ const DoctorProfile = () => {
       }
     );
     const data = await res.json();
-    console.log(data);
+    // console.log(data);
     if (data.success === "yes") {
+      workPlaceHandleClose();
+      Swal.fire({
+        icon: "success",
+        title: "Successfully Save the Changes",
+        showConfirmButton: false,
+        timer: 1000,
+      });
       try {
         const getToken = JSON.parse(localStorage.getItem("loginToken"));
         const userRes = await fetch(
@@ -548,18 +563,14 @@ const DoctorProfile = () => {
         const userData = await userRes.json();
         // console.log(data);
         setLoggedInUser(userData);
-        setSaveChanges(data);
-        document
-          .querySelector("p.text-success.notification.text-center.currentWorkP")
-          .style.setProperty("display", "block");
       } catch (err) {
         console.log(err);
       }
     } else {
-      setSaveChanges(data);
-      document
-        .querySelector("p.text-danger.notification.text-center.currentWorkP")
-        .style.setProperty("display", "block");
+      Swal.fire({
+        icon: "error",
+        title: data.msg,
+      });
     }
   };
 
@@ -583,17 +594,20 @@ const DoctorProfile = () => {
       }
     );
     const data = await res.json();
-    console.log(data);
+    // console.log(data);
     if (data.success === "yes") {
-      setSaveChanges(data);
-      document
-        .querySelector("p.text-success.notification.text-center.changePassP")
-        .style.setProperty("display", "block");
+      changePasshandleClose();
+      Swal.fire({
+        icon: "success",
+        title: "Successfully Save the Changes",
+        showConfirmButton: false,
+        timer: 1000,
+      });
     } else {
-      setSaveChanges(data);
-      document
-        .querySelector("p.text-danger.notification.text-center.changePassP")
-        .style.setProperty("display", "block");
+      Swal.fire({
+        icon: "error",
+        title: data.msg,
+      });
     }
   };
 
@@ -620,7 +634,82 @@ const DoctorProfile = () => {
     localStorage.removeItem("loginToken");
   };
 
-  console.log(loggedInUser);
+  // console.log(loggedInUser);
+
+  function formatAMPM(date) {
+    var hours = date.getUTCHours();
+    var minutes = date.getUTCMinutes();
+    var ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    var strTime = hours + ":" + minutes + " " + ampm;
+    return strTime;
+  }
+
+  const [showSuccess, setShowSuccess] = useState(false);
+  const showSuccessClose = () => setShowSuccess(false);
+  const showSuccessShow = () => setShowSuccess(true);
+
+  const appointmentRouteHandle = () => {
+    appointment
+      ? router.push("/profile/docAppointmentDashboard")
+      : showSuccessShow();
+  };
+
+  const [weekApointmentDetails, setWeekAppointmentDetails] = useState({});
+
+  const appointmentForAWeekHandler = async (e) => {
+    e.preventDefault();
+    console.log(weekApointmentDetails);
+    try {
+      const getToken = JSON.parse(localStorage.getItem("loginToken"));
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/doctor/set_appointment_time_for_whole_week`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            sobar_daktar_session: getToken,
+          },
+          body: JSON.stringify(weekApointmentDetails),
+        }
+      );
+      const data = await res.json();
+      if (data.success === "yes") {
+        try {
+          const getToken = JSON.parse(localStorage.getItem("loginToken"));
+          const userRes = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/user`,
+            {
+              method: "GET",
+              headers: { sobar_daktar_session: getToken },
+              mode: "cors",
+            }
+          );
+          const userData = await userRes.json();
+          // console.log(data);
+          setLoggedInUser(userData);
+        } catch (err) {
+          console.log(err);
+        }
+        Swal.fire({
+          icon: "success",
+          title: "Successfully Complete Appointment Setup",
+        });
+        showSuccessClose();
+      }
+
+      console.log(data);
+
+      if (data.success === "no") {
+        Swal.fire({
+          icon: "error",
+          title: data.msg,
+        });
+      }
+    } catch (err) {}
+  };
 
   return (
     <div className="doctorProfile">
@@ -685,16 +774,17 @@ const DoctorProfile = () => {
               <div className="d-flex justify-content-end">
                 <button
                   className="findDocBtn mb-4"
-                  onClick={() =>
-                    router.push("/profile/docAppointmentDashboard")
-                  }
+                  onClick={appointmentRouteHandle}
                 >
                   Appointment Dashboard
                 </button>
               </div>
               <div className="mb-5 mt-3 pr-4">
-                <h5>Consultation Fee: {fee} BDT</h5>
-                <h5>7 Days Follow-up Fee: {followup_fee} BDT</h5>
+                <h5>Consultation Fee: {appointment && appointment.fee} BDT</h5>
+                <h5>
+                  7 Days Follow-up Fee:{" "}
+                  {appointment && appointment.followup_fee} BDT
+                </h5>
               </div>
               <div className="pr-5">
                 <h6>SCHEDULE THIS WEEK</h6>
@@ -704,84 +794,98 @@ const DoctorProfile = () => {
                     <tr>
                       <td>Sun</td>
                       <td className="text-right pr-0">
-                        {Sunday && !Sunday.off_day
-                          ? `${new Date(
-                              Sunday.start_time
-                            ).toLocaleTimeString()}- ${new Date(
-                              Sunday.end_time
-                            ).toLocaleTimeString()}`
+                        {appointment &&
+                        appointment.day &&
+                        !appointment.day.Sunday.off_day
+                          ? `${formatAMPM(
+                              new Date(appointment.day.Sunday.start_time)
+                            )}- ${formatAMPM(
+                              new Date(appointment.day.Sunday.end_time)
+                            )}`
                           : "Off Day"}
                       </td>
                     </tr>
                     <tr>
                       <td>Mon</td>
                       <td className="text-right pr-0">
-                        {Monday && !Monday.off_day
-                          ? `${new Date(
-                              Monday.start_time
-                            ).toLocaleTimeString()}- ${new Date(
-                              Monday.end_time
-                            ).toLocaleTimeString()}`
+                        {appointment &&
+                        appointment.day &&
+                        !appointment.day.Monday.off_day
+                          ? `${formatAMPM(
+                              new Date(appointment.day.Monday.start_time)
+                            )}- ${formatAMPM(
+                              new Date(appointment.day.Monday.end_time)
+                            )}`
                           : "Off Day"}
                       </td>
                     </tr>
                     <tr>
                       <td>Tue</td>
                       <td className="text-right pr-0">
-                        {Tuesday && !Tuesday.off_day
-                          ? `${new Date(
-                              Tuesday.start_time
-                            ).toLocaleTimeString()}- ${new Date(
-                              Tuesday.end_time
-                            ).toLocaleTimeString()}`
+                        {appointment &&
+                        appointment.day &&
+                        !appointment.day.Tuesday.off_day
+                          ? `${formatAMPM(
+                              new Date(appointment.day.Tuesday.start_time)
+                            )}- ${formatAMPM(
+                              new Date(appointment.day.Tuesday.end_time)
+                            )}`
                           : "Off Day"}
                       </td>
                     </tr>
                     <tr>
                       <td>Wed</td>
                       <td className="text-right pr-0">
-                        {Wednesday && !Wednesday.off_day
-                          ? `${new Date(
-                              Wednesday.start_time
-                            ).toLocaleTimeString()}- ${new Date(
-                              Wednesday.end_time
-                            ).toLocaleTimeString()}`
+                        {appointment &&
+                        appointment.day &&
+                        !appointment.day.Wednesday.off_day
+                          ? `${formatAMPM(
+                              new Date(appointment.day.Wednesday.start_time)
+                            )}- ${formatAMPM(
+                              new Date(appointment.day.Wednesday.end_time)
+                            )}`
                           : "Off Day"}
                       </td>
                     </tr>
                     <tr>
                       <td>Thu</td>
                       <td className="text-right pr-0">
-                        {Thursday && !Thursday.off_day
-                          ? `${new Date(
-                              Thursday.start_time
-                            ).toLocaleTimeString()}- ${new Date(
-                              Thursday.end_time
-                            ).toLocaleTimeString()}`
+                        {appointment &&
+                        appointment.day &&
+                        !appointment.day.Thursday.off_day
+                          ? `${formatAMPM(
+                              new Date(appointment.day.Thursday.start_time)
+                            )}- ${formatAMPM(
+                              new Date(appointment.day.Thursday.end_time)
+                            )}`
                           : "Off Day"}
                       </td>
                     </tr>
                     <tr>
                       <td>Fri</td>
                       <td className="text-right pr-0">
-                        {Friday && !Friday.off_day
-                          ? `${new Date(
-                              Friday.start_time
-                            ).toLocaleTimeString()}- ${new Date(
-                              Friday.end_time
-                            ).toLocaleTimeString()}`
+                        {appointment &&
+                        appointment.day &&
+                        !appointment.day.Friday.off_day
+                          ? `${formatAMPM(
+                              new Date(appointment.day.Friday.start_time)
+                            )}- ${formatAMPM(
+                              new Date(appointment.day.Friday.end_time)
+                            )}`
                           : "Off Day"}
                       </td>
                     </tr>
                     <tr>
                       <td>Sat</td>
                       <td className="text-right pr-0">
-                        {Saturday && !Saturday.off_day
-                          ? `${new Date(
-                              Saturday.start_time
-                            ).toLocaleTimeString()}- ${new Date(
-                              Saturday.end_time
-                            ).toLocaleTimeString()}`
+                        {appointment &&
+                        appointment.day &&
+                        !appointment.day.Saturday.off_day
+                          ? `${formatAMPM(
+                              new Date(appointment.day.Saturday.start_time)
+                            )}- ${formatAMPM(
+                              new Date(appointment.day.Saturday.end_time)
+                            )}`
                           : "Off Day"}
                       </td>
                     </tr>
@@ -922,25 +1026,11 @@ const DoctorProfile = () => {
               </div>
             </div>
           </div>
-          <Modal
-            show={show}
-            onHide={() =>
-              alert("For close modal please click to the Cancel Button")
-            }
-            className="PatientEditModal"
-          >
+          <Modal show={show} onHide={handleClose} className="PatientEditModal">
             <Card style={{ padding: "2rem 2rem" }} className="">
               <Form noValidate onSubmit={submitHandler}>
                 <div>
                   <h3 className="editFormTitle text-center">Edit Info</h3>
-                  <p className="text-success notification text-center docEditP">
-                    {saveChanges.success === "yes"
-                      ? "Successfully Save the Changes"
-                      : ""}
-                  </p>
-                  <p className="text-danger notification text-center docEditP">
-                    {saveChanges.success === "no" ? saveChanges.msg : ""}
-                  </p>
                 </div>
                 <button
                   type="button"
@@ -1155,23 +1245,13 @@ const DoctorProfile = () => {
           </Modal>
           <Modal
             show={changePassShow}
-            onHide={() =>
-              alert("For close modal please click to the Cancel Button")
-            }
+            onHide={changePasshandleClose}
             className="PatientEditModal"
           >
             <Card style={{ padding: "2rem 2rem" }} className="">
               <Form noValidate onSubmit={passwordChangeHandler}>
                 <div>
                   <h3 className="editFormTitle text-center">Reset Password</h3>
-                  <p className="text-success notification text-center changePassP">
-                    {saveChanges.success === "yes"
-                      ? "Successfully Save the Changes"
-                      : ""}
-                  </p>
-                  <p className="text-danger notification text-center changePassP">
-                    {saveChanges.success === "no" ? saveChanges.msg : ""}
-                  </p>
                 </div>
                 <Form.Group className="basicFormInput">
                   <Form.Label>Old Password</Form.Label>
@@ -1255,9 +1335,7 @@ const DoctorProfile = () => {
           </Modal>
           <Modal
             show={deleteMailShow}
-            onHide={() =>
-              alert("For close modal please click to the Cancel Button")
-            }
+            onHide={deleteMailhandleClose}
             className="PatientEditModal"
           >
             <Card style={{ padding: "2rem 2rem" }} className="">
@@ -1266,14 +1344,6 @@ const DoctorProfile = () => {
                   <h3 className="editFormTitle text-center">Remove Email ?</h3>
                   <p className="text-center">
                     You need to enter your password to remove an email.
-                  </p>
-                  <p className="text-success notification text-center deleteEmailP">
-                    {saveChanges.success === "yes"
-                      ? "Successfully Save the Changes"
-                      : ""}
-                  </p>
-                  <p className="text-danger notification text-center deleteEmailP">
-                    {saveChanges.success === "no" ? saveChanges.msg : ""}
                   </p>
                 </div>
                 <Form.Group className="basicFormInput">
@@ -1317,23 +1387,13 @@ const DoctorProfile = () => {
           </Modal>
           <Modal
             show={addMailShow}
-            onHide={() =>
-              alert("For close modal please click to the Cancel Button")
-            }
+            onHide={addMailhandleClose}
             className="PatientEditModal"
           >
             <Card style={{ padding: "2rem 2rem" }} className="">
               <Form noValidate onSubmit={addEmailHandler}>
                 <div>
                   <h3 className="editFormTitle text-center">Add New Email</h3>
-                  <p className="text-success notification text-center addEmailP">
-                    {saveChanges.success === "yes"
-                      ? "Successfully Save the Changes"
-                      : ""}
-                  </p>
-                  <p className="text-danger notification text-center addEmailP">
-                    {saveChanges.success === "no" ? saveChanges.msg : ""}
-                  </p>
                 </div>
                 <Form.Group className="basicFormInput">
                   <Form.Label>Add New Email</Form.Label>
@@ -1399,23 +1459,13 @@ const DoctorProfile = () => {
           </Modal>
           <Modal
             show={overviewShow}
-            onHide={() =>
-              alert("For close modal please click to the Cancel Button")
-            }
+            onHide={overviewHandleClose}
             className="PatientEditModal"
           >
             <Card style={{ padding: "2rem 2rem" }} className="">
               <Form noValidate onSubmit={overViewSubmitHandler}>
                 <div>
                   <h3 className="editFormTitle text-center">Edit Overview</h3>
-                  <p className="text-success notification text-center overviewP">
-                    {saveChanges.success === "yes"
-                      ? "Successfully Save the Changes"
-                      : ""}
-                  </p>
-                  <p className="text-danger notification text-center overviewP">
-                    {saveChanges.success === "no" ? saveChanges.msg : ""}
-                  </p>
                 </div>
                 <Form.Group className="basicFormInput">
                   <Form.Label>Expertise Fields</Form.Label>
@@ -1587,9 +1637,7 @@ const DoctorProfile = () => {
           </Modal>
           <Modal
             show={achievementShow}
-            onHide={() =>
-              alert("For close modal please click to the Cancel Button")
-            }
+            onHide={achievementhandleClose}
             className="PatientEditModal"
           >
             <Card style={{ padding: "2rem 2rem" }} className="">
@@ -1598,14 +1646,6 @@ const DoctorProfile = () => {
                   <h3 className="editFormTitle text-center">
                     Add New Achievement
                   </h3>
-                  <p className="text-success notification text-center achievementP">
-                    {saveChanges.success === "yes"
-                      ? "Successfully Save the Changes"
-                      : ""}
-                  </p>
-                  <p className="text-danger notification text-center achievementP">
-                    {saveChanges.success === "no" ? saveChanges.msg : ""}
-                  </p>
                 </div>
 
                 <Form.Group className="basicFormInput">
@@ -1656,9 +1696,7 @@ const DoctorProfile = () => {
           </Modal>
           <Modal
             show={educationShow}
-            onHide={() =>
-              alert("For close modal please click to the Cancel Button")
-            }
+            onHide={educationHandleClose}
             className="PatientEditModal"
           >
             <Card style={{ padding: "2rem 2rem" }} className="">
@@ -1667,14 +1705,6 @@ const DoctorProfile = () => {
                   <h3 className="editFormTitle text-center">
                     Add New Education
                   </h3>
-                  <p className="text-success notification text-center educationP">
-                    {saveChanges.success === "yes"
-                      ? "Successfully Save the Changes"
-                      : ""}
-                  </p>
-                  <p className="text-danger notification text-center educationP">
-                    {saveChanges.success === "no" ? saveChanges.msg : ""}
-                  </p>
                 </div>
 
                 <Form.Group className="basicFormInput">
@@ -1746,9 +1776,7 @@ const DoctorProfile = () => {
 
           <Modal
             show={workPlaceShow}
-            onHide={() =>
-              alert("For close modal please click to the Cancel Button")
-            }
+            onHide={workPlaceHandleClose}
             className="PatientEditModal"
           >
             <Card style={{ padding: "2rem 2rem" }} className="">
@@ -1772,14 +1800,6 @@ const DoctorProfile = () => {
                     <h3 className="editFormTitle text-center">
                       Add Current Workplace
                     </h3>
-                    <p className="text-success notification text-center currentWorkP">
-                      {saveChanges.success === "yes"
-                        ? "Successfully Save the Changes"
-                        : ""}
-                    </p>
-                    <p className="text-danger notification text-center currentWorkP">
-                      {saveChanges.success === "no" ? saveChanges.msg : ""}
-                    </p>
                   </div>
 
                   <Form.Group className="basicFormInput">
@@ -1845,14 +1865,6 @@ const DoctorProfile = () => {
                     <h3 className="editFormTitle text-center mb-3">
                       Add Previous Workplace
                     </h3>
-                    <p className="text-success notification text-center previousWorkP">
-                      {saveChanges.success === "yes"
-                        ? "Successfully Save the Changes"
-                        : ""}
-                    </p>
-                    <p className="text-danger notification text-center previousWorkP">
-                      {saveChanges.success === "no" ? saveChanges.msg : ""}
-                    </p>
                   </div>
 
                   <Form.Group className="basicFormInput">
@@ -1931,6 +1943,168 @@ const DoctorProfile = () => {
               ) : (
                 ""
               )}
+            </Card>
+          </Modal>
+          <Modal show={showSuccess} onHide={showSuccessClose}>
+            <Card style={{ padding: "1rem" }}>
+              <Card.Body>
+                <div className="col-lg-12 newApointHead mb-5">
+                  <h2>Please Complete Appointment Setup</h2>
+                  <p>You can always change All this information later.</p>
+                </div>
+                <div className="col-md-12 selectedCard">
+                  <Form noValidate onSubmit={appointmentForAWeekHandler}>
+                    <div className="configureForm">
+                      <Form.Group>
+                        <Form.Label>Consultation Fee</Form.Label>
+                        <Form.Control
+                          type="number"
+                          placeholder="BDT"
+                          onChange={(e) =>
+                            setWeekAppointmentDetails({
+                              ...weekApointmentDetails,
+                              fee: parseInt(e.target.value),
+                            })
+                          }
+                        />
+                        <Form.Text className="text-muted">
+                          You will recieve BDT ### per Consultation after
+                          adjusting x% service charge.
+                        </Form.Text>
+                      </Form.Group>
+                      <Form.Group>
+                        <Form.Label>Follow-up Fee</Form.Label>
+                        <Form.Control
+                          type="number"
+                          placeholder="BDT"
+                          onChange={(e) =>
+                            setWeekAppointmentDetails({
+                              ...weekApointmentDetails,
+                              followup_fee: parseInt(e.target.value),
+                            })
+                          }
+                        />
+                        <Form.Text className="text-muted">
+                          You will recieve BDT ### per Consultation after
+                          adjusting x% service charge.
+                        </Form.Text>
+                      </Form.Group>
+                      <Form.Group>
+                        <Form.Label>Follow-up Day limit</Form.Label>
+                        <Form.Control
+                          type="number"
+                          placeholder="DAYS"
+                          onChange={(e) =>
+                            setWeekAppointmentDetails({
+                              ...weekApointmentDetails,
+                              followup_within: parseInt(e.target.value),
+                            })
+                          }
+                        />
+                        <Form.Text className="text-muted">
+                          Patients who come back within this time period will be
+                          counted as follow-up appointments
+                        </Form.Text>
+                      </Form.Group>
+                      <Form.Group>
+                        <Form.Label>Advanced Charge Percentage</Form.Label>
+                        <Form.Control
+                          type="number"
+                          placeholder="Percent"
+                          onChange={(e) =>
+                            setWeekAppointmentDetails({
+                              ...weekApointmentDetails,
+                              advance_fee_percentage: parseInt(e.target.value),
+                            })
+                          }
+                        />
+                        <Form.Text className="text-muted">
+                          Patients will have to pay this percentage of charge
+                          when creating an appointment. The rest will be
+                          collected after completion of appointment.
+                        </Form.Text>
+                      </Form.Group>
+                      <Form.Group>
+                        <Form.Label>Estimated Time Per Patient</Form.Label>
+                        <Form.Control
+                          type="number"
+                          placeholder="Minutes"
+                          onChange={(e) =>
+                            setWeekAppointmentDetails({
+                              ...weekApointmentDetails,
+                              time_per_patient: parseInt(e.target.value),
+                            })
+                          }
+                        />
+                        <Form.Text className="text-muted">
+                          Our system will suggest you proper time scheduling
+                          based on this value
+                        </Form.Text>
+                      </Form.Group>
+                      <Form.Group>
+                        <Form.Label>Set Schedule for Whole Week</Form.Label>
+                        <div className="d-flex col-lg-12 px-0">
+                          <div className="col-lg-6 pl-0">
+                            <Form.Group>
+                              <Form.Text className="text-muted">
+                                Starting Time
+                              </Form.Text>
+
+                              <Form.Control
+                                type="time"
+                                placeholder="Minutes"
+                                onChange={(e) =>
+                                  setWeekAppointmentDetails({
+                                    ...weekApointmentDetails,
+                                    start_time_hour: e.target.value.split(
+                                      ":"
+                                    )[0],
+                                    start_time_min: e.target.value.split(
+                                      ":"
+                                    )[1],
+                                  })
+                                }
+                              />
+                            </Form.Group>
+                          </div>
+                          <div className="d-flex justify-content-center align-items-center">
+                            to
+                          </div>
+                          <div className="col-lg-6">
+                            <Form.Group>
+                              <Form.Text className="text-muted">
+                                Ending Time
+                              </Form.Text>
+                              <Form.Control
+                                type="time"
+                                placeholder="Minutes"
+                                onChange={(e) =>
+                                  setWeekAppointmentDetails({
+                                    ...weekApointmentDetails,
+                                    end_time_hour: e.target.value.split(":")[0],
+                                    end_time_min: e.target.value.split(":")[1],
+                                  })
+                                }
+                              />
+                            </Form.Group>
+                          </div>
+                        </div>
+                        <Form.Text className="text-muted">
+                          This will make it easier & faster for you to set your
+                          week schedule in Sobar Daktar. You can always change
+                          individual weekday schedule later.
+                        </Form.Text>
+                      </Form.Group>
+                    </div>
+
+                    <div className="col-md-12 d-flex justify-content-between my-5 px-0">
+                      <button className="findDocBtn" type="submit">
+                        Complete Setup
+                      </button>
+                    </div>
+                  </Form>
+                </div>
+              </Card.Body>
             </Card>
           </Modal>
           <div>

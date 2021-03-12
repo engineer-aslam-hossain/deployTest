@@ -1,10 +1,70 @@
 import Link from "next/link";
-import { useState } from "react";
-import { Form, Nav } from "react-bootstrap";
+import { useContext, useEffect, useState } from "react";
+import { Card, Form, Nav } from "react-bootstrap";
 import Swal from "sweetalert2";
+import DaktarContext from "../../components/Context/Context";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
+import { withStyles } from "@material-ui/core/styles";
+
+const IOSSwitch = withStyles((theme) => ({
+  root: {
+    width: 42,
+    height: 26,
+    padding: 0,
+    margin: theme.spacing(1),
+  },
+  switchBase: {
+    padding: 1,
+    "&$checked": {
+      transform: "translateX(16px)",
+      color: theme.palette.common.white,
+      "& + $track": {
+        backgroundColor: "#52d869",
+        opacity: 1,
+        border: "none",
+      },
+    },
+    "&$focusVisible $thumb": {
+      color: "#52d869",
+      border: "6px solid #fff",
+    },
+  },
+  thumb: {
+    width: 24,
+    height: 24,
+  },
+  track: {
+    borderRadius: 26 / 2,
+    border: `1px solid ${theme.palette.grey[400]}`,
+    backgroundColor: theme.palette.grey[50],
+    opacity: 1,
+    transition: theme.transitions.create(["background-color", "border"]),
+  },
+  checked: {},
+  focusVisible: {},
+}))(({ classes, ...props }) => {
+  return (
+    <Switch
+      focusVisibleClassName={classes.focusVisible}
+      disableRipple
+      classes={{
+        root: classes.root,
+        switchBase: classes.switchBase,
+        thumb: classes.thumb,
+        track: classes.track,
+        checked: classes.checked,
+      }}
+      {...props}
+    />
+  );
+});
+
 const ConfigureAppointments = () => {
   const [active, setActive] = useState(1);
-
+  const { loggedInUser, setLoggedInUser } = useContext(DaktarContext);
+  // console.log(loggedInUser);
   const [appointmentDetails, setAppointmentDetails] = useState({
     fee: 0,
     time_per_patient: 0,
@@ -76,7 +136,7 @@ const ConfigureAppointments = () => {
     day: "Friday",
   });
 
-  console.log(saturday, sunday, monday, Tuesday, WednesDay, Thursday, Friday);
+  // console.log(saturday, sunday, monday, Tuesday, WednesDay, Thursday, Friday);
   const satrudayAppointmentTime = async () => {
     try {
       const getToken = JSON.parse(localStorage.getItem("loginToken"));
@@ -268,11 +328,15 @@ const ConfigureAppointments = () => {
     } catch (err) {}
   };
 
-  const [availability, setAvailability] = useState(false);
+  const [availability, setAvailability] = useState(loggedInUser.available);
+  // console.log(loggedInUser);
+  useEffect(() => {
+    setAvailability(loggedInUser.available);
+  }, [loggedInUser.available]);
 
-  const statusHandler = async () => {
-    if (availability) {
-      setAvailability(!availability);
+  const statusHandler = async (e) => {
+    // console.log(e);
+    if (e) {
       try {
         const getToken = JSON.parse(localStorage.getItem("loginToken"));
         const res = await fetch(
@@ -287,15 +351,34 @@ const ConfigureAppointments = () => {
         );
         const data = await res.json();
         // console.log(data);
+        if ((data.success = "yes")) {
+          try {
+            const getToken = JSON.parse(localStorage.getItem("loginToken"));
+            const res = await fetch(
+              `${process.env.NEXT_PUBLIC_BASE_URL}/user`,
+              {
+                method: "GET",
+                headers: { sobar_daktar_session: getToken },
+                mode: "cors",
+              }
+            );
+            const data = await res.json();
+            // console.log(data);
+            setLoggedInUser(data);
+          } catch (err) {
+            console.log(err);
+          }
+        }
         Swal.fire({
           icon: "success",
           title: "Successfully change Availability",
+          showConfirmButton: false,
+          timer: 1000,
         });
       } catch (err) {
         console.log(err);
       }
     } else {
-      setAvailability(!availability);
       try {
         const getToken = JSON.parse(localStorage.getItem("loginToken"));
         const res = await fetch(
@@ -309,9 +392,29 @@ const ConfigureAppointments = () => {
           }
         );
         const data = await res.json();
+        if ((data.success = "yes")) {
+          try {
+            const getToken = JSON.parse(localStorage.getItem("loginToken"));
+            const res = await fetch(
+              `${process.env.NEXT_PUBLIC_BASE_URL}/user`,
+              {
+                method: "GET",
+                headers: { sobar_daktar_session: getToken },
+                mode: "cors",
+              }
+            );
+            const data = await res.json();
+            // console.log(data);
+            setLoggedInUser(data);
+          } catch (err) {
+            console.log(err);
+          }
+        }
         Swal.fire({
           icon: "success",
           title: "Successfully change Availability",
+          showConfirmButton: false,
+          timer: 1000,
         });
         // console.log(data);
       } catch (err) {
@@ -332,12 +435,23 @@ const ConfigureAppointments = () => {
           </div>
           <div className="col-lg-12 py-5 px-0 d-flex justify-content-end align-items-center">
             <div className="col-lg-6 mb-4 configureForm">
-              <Form.Check
-                type="switch"
-                id="custom-switch"
-                label="Active Status"
-                onChange={statusHandler}
-              />
+              <div className="d-flex align-items-center justify-content-end">
+                <div className="activeStatus mr-5">
+                  <h5>Active Status</h5>
+                </div>
+                <FormGroup>
+                  <FormControlLabel
+                    control={
+                      <IOSSwitch
+                        checked={availability || false}
+                        onChange={(e) => statusHandler(e.target.checked)}
+                        name="checkedB"
+                      />
+                    }
+                    label="ON"
+                  />
+                </FormGroup>
+              </div>
               <Form.Text className="text-muted text-right">
                 Turning this off will prevent users from finding you in search &
                 setting further appointments. But Appointments already set for
@@ -462,6 +576,17 @@ const ConfigureAppointments = () => {
                     </div>
                   </div>
                 </Form>
+              </div>
+            </div>
+          ) : loggedInUser.appointment === null ? (
+            <div className="col-md-12 my-4 px-0">
+              <h4 className="creditTitle">WEEK Schedule</h4>
+              <div className="Credits px-0">
+                <div className="col-lg-12 weekScheduleForm">
+                  <Card>
+                    <h1>hello</h1>
+                  </Card>
+                </div>
               </div>
             </div>
           ) : (
@@ -904,3 +1029,21 @@ const ConfigureAppointments = () => {
 };
 
 export default ConfigureAppointments;
+
+// export async function getServerSideProps({ req, res }) {
+//   // Get the user's session based on the request
+//   const user = await JSON.parse(localStorage.getItem("loginToken"));
+
+//   if (!user) {
+//     return {
+//       redirect: {
+//         destination: "/Login",
+//         permanent: false,
+//       },
+//     };
+//   }
+
+//   return {
+//     props: { user },
+//   };
+// }

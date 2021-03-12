@@ -58,10 +58,6 @@ const DoctorDetails = ({ doc }) => {
   const showDetailsClose = () => setShowDetails(false);
   const showDetailsShow = () => setShowDetails(true);
 
-  const [showSuccess, setShowSuccess] = useState(false);
-  const showSuccessClose = () => setShowSuccess(false);
-  const showSuccessShow = () => setShowSuccess(true);
-
   const [showPayment, setShowPayment] = useState(false);
   const showPaymentClose = () => setShowPayment(false);
   const showPaymentShow = () => setShowPayment(true);
@@ -125,14 +121,19 @@ const DoctorDetails = ({ doc }) => {
     patient_id: "",
     problem_details: "",
     weight: 0,
-    age: 0,
+    age: "",
   });
 
   useEffect(() => {
+    const age =
+      new Date().getFullYear() -
+      new Date(loggedInUser.date_of_birth).getFullYear();
+
     loggedInUser._id && appointmentDetailsInfo.patient_id === ""
       ? setAppointmentDetailsInfo({
           ...appointmentDetailsInfo,
           patient_id: loggedInUser._id,
+          age: loggedInUser.date_of_birth ? age : "",
         })
       : null;
   }, [loggedInUser]);
@@ -170,12 +171,12 @@ const DoctorDetails = ({ doc }) => {
         }
       );
       const data = await res.json();
-      if (data.success === "yes") {
+      if (data.payment_link && data.payment_link !== "") {
         setAppointmentResponse(data);
         showPaymentShow();
       }
 
-      console.log(data);
+      // console.log(data);
 
       if (data.success === "no") {
         Swal.fire({
@@ -186,7 +187,17 @@ const DoctorDetails = ({ doc }) => {
     } catch (err) {}
   };
 
-  console.log(appointmentDetailsInfo);
+  function formatAMPM(date) {
+    var hours = date.getUTCHours();
+    var minutes = date.getUTCMinutes();
+    var ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    var strTime = hours + ":" + minutes + " " + ampm;
+    return strTime;
+  }
+
   return (
     <div className="doctorProfile">
       <div className="container my-5">
@@ -236,11 +247,9 @@ const DoctorDetails = ({ doc }) => {
                       <td>Sun</td>
                       <td className="text-right pr-0">
                         {Sunday && !Sunday.off_day
-                          ? `${new Date(
-                              Sunday.start_time
-                            ).toLocaleTimeString()}- ${new Date(
-                              Sunday.end_time
-                            ).toLocaleTimeString()}`
+                          ? `${formatAMPM(
+                              new Date(Sunday.start_time)
+                            )}- ${formatAMPM(new Date(Sunday.end_time))}`
                           : "Off Day"}
                       </td>
                     </tr>
@@ -248,11 +257,9 @@ const DoctorDetails = ({ doc }) => {
                       <td>Mon</td>
                       <td className="text-right pr-0">
                         {Monday && !Monday.off_day
-                          ? `${new Date(
-                              Monday.start_time
-                            ).toLocaleTimeString()}- ${new Date(
-                              Monday.end_time
-                            ).toLocaleTimeString()}`
+                          ? `${formatAMPM(
+                              new Date(Monday.start_time)
+                            )}- ${formatAMPM(new Date(Monday.end_time))}`
                           : "Off Day"}
                       </td>
                     </tr>
@@ -260,11 +267,9 @@ const DoctorDetails = ({ doc }) => {
                       <td>Tue</td>
                       <td className="text-right pr-0">
                         {Tuesday && !Tuesday.off_day
-                          ? `${new Date(
-                              Tuesday.start_time
-                            ).toLocaleTimeString()}- ${new Date(
-                              Tuesday.end_time
-                            ).toLocaleTimeString()}`
+                          ? `${formatAMPM(
+                              new Date(Tuesday.start_time)
+                            )}- ${formatAMPM(new Date(Tuesday.end_time))}`
                           : "Off Day"}
                       </td>
                     </tr>
@@ -272,11 +277,9 @@ const DoctorDetails = ({ doc }) => {
                       <td>Wed</td>
                       <td className="text-right pr-0">
                         {Wednesday && !Wednesday.off_day
-                          ? `${new Date(
-                              Wednesday.start_time
-                            ).toLocaleTimeString()}- ${new Date(
-                              Wednesday.end_time
-                            ).toLocaleTimeString()}`
+                          ? `${formatAMPM(
+                              new Date(Wednesday.start_time)
+                            )}- ${formatAMPM(new Date(Wednesday.end_time))}`
                           : "Off Day"}
                       </td>
                     </tr>
@@ -284,11 +287,9 @@ const DoctorDetails = ({ doc }) => {
                       <td>Thu</td>
                       <td className="text-right pr-0">
                         {Thursday && !Thursday.off_day
-                          ? `${new Date(
-                              Thursday.start_time
-                            ).toLocaleTimeString()}- ${new Date(
-                              Thursday.end_time
-                            ).toLocaleTimeString()}`
+                          ? `${formatAMPM(
+                              new Date(Thursday.start_time)
+                            )}- ${formatAMPM(new Date(Thursday.end_time))}`
                           : "Off Day"}
                       </td>
                     </tr>
@@ -296,11 +297,9 @@ const DoctorDetails = ({ doc }) => {
                       <td>Fri</td>
                       <td className="text-right pr-0">
                         {Friday && !Friday.off_day
-                          ? `${new Date(
-                              Friday.start_time
-                            ).toLocaleTimeString()}- ${new Date(
-                              Friday.end_time
-                            ).toLocaleTimeString()}`
+                          ? `${formatAMPM(
+                              new Date(Friday.start_time)
+                            )}- ${formatAMPM(new Date(Friday.end_time))}`
                           : "Off Day"}
                       </td>
                     </tr>
@@ -308,11 +307,9 @@ const DoctorDetails = ({ doc }) => {
                       <td>Sat</td>
                       <td className="text-right pr-0">
                         {Saturday && !Saturday.off_day
-                          ? `${new Date(
-                              Saturday.start_time
-                            ).toLocaleTimeString()}- ${new Date(
-                              Saturday.end_time
-                            ).toLocaleTimeString()}`
+                          ? `${formatAMPM(
+                              new Date(Saturday.start_time)
+                            )}- ${formatAMPM(new Date(Saturday.end_time))}`
                           : "Off Day"}
                       </td>
                     </tr>
@@ -425,7 +422,9 @@ const DoctorDetails = ({ doc }) => {
                   doctorStatus.map((item, index) => (
                     <div
                       className={`col-md-12 d-flex justify-content-between align-items-center ApointmentDate ${
-                        index === selectedDate && !item.off_day
+                        index === selectedDate &&
+                        !item.off_day &&
+                        item.status.includes("Available")
                           ? "selectedDate"
                           : null
                       }`}
@@ -441,11 +440,11 @@ const DoctorDetails = ({ doc }) => {
                         </div>
                         <div>
                           <p className="mb-1">
-                            {`${new Date(
-                              appointment.day[item.day].start_time
-                            ).toLocaleTimeString()} - ${new Date(
-                              appointment.day[item.day].end_time
-                            ).toLocaleTimeString()}`}
+                            {`${formatAMPM(
+                              new Date(appointment.day[item.day].start_time)
+                            )} - ${formatAMPM(
+                              new Date(appointment.day[item.day].end_time)
+                            )}`}
                           </p>
                         </div>
                       </div>
@@ -456,11 +455,19 @@ const DoctorDetails = ({ doc }) => {
                           <button
                             className={`${`${
                               item.status && item.status.includes("Available")
-                                ? "editProfile"
+                                ? index === selectedDate && !item.off_day
+                                  ? "editProfile selectedDate"
+                                  : "editProfile"
                                 : "friendsApointmentBtn disabled"
                             }`} `}
                           >
-                            {item.status}
+                            {`${
+                              index === selectedDate &&
+                              !item.off_day &&
+                              item.status.includes("Available")
+                                ? "Selected"
+                                : item.status
+                            }`}
                           </button>
                         )}
                       </div>
@@ -586,6 +593,7 @@ const DoctorDetails = ({ doc }) => {
                         type="number"
                         placeholder=""
                         required
+                        defaultValue={appointmentDetailsInfo.age}
                         onChange={(e) =>
                           setAppointmentDetailsInfo({
                             ...appointmentDetailsInfo,
@@ -693,7 +701,9 @@ const DoctorDetails = ({ doc }) => {
             <Card style={{ padding: "1rem" }}>
               <Card.Body>
                 <div className="newApointHead mb-4">
-                  <h2>Please Complete Your Payment</h2>
+                  <h2 className="newApointHeadH2">
+                    Please Complete Your Payment
+                  </h2>
                 </div>
                 <div className="col-md-12 ">
                   <div className="d-flex justify-content-center">
@@ -723,7 +733,11 @@ const DoctorDetails = ({ doc }) => {
                       </tr>
                       <tr>
                         <td>Advance Payable </td>
-                        <td>{appointmentResponse.advance_payable_amount}</td>
+                        <td>
+                          {Math.floor(
+                            appointmentResponse.advance_payable_amount
+                          )}
+                        </td>
                       </tr>
                       <tr>
                         <td>Total Payable Amount </td>
@@ -736,56 +750,6 @@ const DoctorDetails = ({ doc }) => {
                   <Link href={`${appointmentResponse.payment_link}`}>
                     <a className="findDocBtn">Make Payment</a>
                   </Link>
-                </div>
-              </Card.Body>
-            </Card>
-          </Modal>
-          <Modal show={showSuccess} onHide={showSuccessClose}>
-            <Card style={{ padding: "1rem" }}>
-              <Card.Body>
-                <div className="newApointHead mb-5">
-                  <h2>Appointment Successfully Created</h2>
-                </div>
-                <div className="col-md-12 selectedCard">
-                  <Table hover borderless>
-                    <tbody>
-                      <tr>
-                        <td>Patient Name</td>
-                        <td>Mark</td>
-                      </tr>
-                      <tr>
-                        <td>Age, Weight, Gender</td>
-                        <td>32 y/o, 70Kg, Male</td>
-                      </tr>
-                      <tr>
-                        <td>Appointment Date</td>
-                        <td>12/02/2021, Saturday</td>
-                      </tr>
-                      <tr>
-                        <td>Serial Number</td>
-                        <td>07</td>
-                      </tr>
-                      <tr>
-                        <td>Approx. Time</td>
-                        <td>12:30 am</td>
-                      </tr>
-                      <tr>
-                        <td>Doctor’s Name</td>
-                        <td>Dr. Placeholder Name</td>
-                      </tr>
-                    </tbody>
-                  </Table>
-                </div>
-                <div className="col-md-12 d-flex justify-content-between my-5">
-                  <button
-                    className="cancelBtn"
-                    onClick={() => router.push("/profile")}
-                  >
-                    Go to Profile
-                  </button>
-                  <button className="findDocBtn" onClick={showSuccessClose}>
-                    Okey
-                  </button>
                 </div>
               </Card.Body>
             </Card>

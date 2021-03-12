@@ -77,6 +77,18 @@ const docAppointmentDashboard = () => {
   };
 
   // console.log(appointmentSchedule);
+
+  function formatAMPM(date) {
+    var hours = date.getUTCHours();
+    var minutes = date.getUTCMinutes();
+    var ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    var strTime = hours + ":" + minutes + " " + ampm;
+    return strTime;
+  }
+
   if (loggedInUser.user_type === "DOCTOR") {
     return (
       <section>
@@ -93,28 +105,36 @@ const docAppointmentDashboard = () => {
             </div>
             <div className="col-lg-12 dashboardCard p-4">
               <div className="my-4">
-                <h5>Consultation Fee: {appointment.fee} BDT</h5>
+                <h5>Consultation Fee : {appointment && appointment.fee} BDT</h5>
                 <p>
                   You will recieve BDT ### per Consultation after adjusting x%
                   service charge.
                 </p>
               </div>
               <div className="my-4">
-                <h5>Follow-up Fee: {appointment.followup_fee} BDT</h5>
+                <h5>
+                  Follow-up Fee : {appointment && appointment.followup_fee} BDT
+                </h5>
                 <p>
                   You will recieve BDT ### per Consultation after adjusting x%
                   service charge.
                 </p>
               </div>
               <div className="my-4">
-                <h5>Follow-up Day limit: 7 Days</h5>
+                <h5>
+                  Follow-up Day limit :{" "}
+                  {appointment && appointment.followup_within} Days
+                </h5>
                 <p>
                   Patients who come back within this time period will be counted
                   as follow-up appointments
                 </p>
               </div>
               <div className="my-4">
-                <h5>Advanced Charge: {appointment.advance_fee_percentage}%</h5>
+                <h5>
+                  Advanced Charge :{" "}
+                  {appointment && appointment.advance_fee_percentage}%
+                </h5>
                 <p>
                   Patients will have to pay this percentage of charge when
                   creating an appointment. The rest will be collected after
@@ -150,8 +170,9 @@ const docAppointmentDashboard = () => {
                           "Off Day"
                         ) : (
                           <>
-                            {new Date(item.start_time).toLocaleTimeString()} -
-                            {new Date(item.end_time).toLocaleTimeString()}
+                            {`${formatAMPM(
+                              new Date(item.start_time)
+                            )} - ${formatAMPM(new Date(item.end_time))}`}
                           </>
                         )}
                       </p>
