@@ -1,11 +1,14 @@
 import { FormControl, InputGroup } from "react-bootstrap";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import CloseIcon from "@material-ui/icons/Close";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Swal from "sweetalert2";
 import { Spinner } from "react-bootstrap";
+import DaktarContext from "../../components/Context/Context";
 const SearchFriends = () => {
+  const { loggedInUser } = useContext(DaktarContext);
   const [searchInfo, setsearchInfo] = useState([]);
+  const [loadingState, setloadingState] = useState(false);
   const [searchData, setSearchData] = useState({
     user_type: "USER",
     key: "",
@@ -13,7 +16,8 @@ const SearchFriends = () => {
 
   const searchFriends = async (data) => {
     // console.log(data);
-    document.querySelector(".SpinnerDiv").style.display = "block";
+    // document.querySelector(".SpinnerDiv").style.display = "block";
+    setloadingState(true);
     try {
       const getToken = JSON.parse(localStorage.getItem("loginToken"));
       const friends = await fetch(
@@ -25,7 +29,7 @@ const SearchFriends = () => {
         }
       );
       const friendsData = await friends.json();
-      console.log(friendsData);
+      // console.log(friendsData);
       setsearchInfo(friendsData);
     } catch (err) {
       console.log(err);
@@ -101,50 +105,51 @@ const SearchFriends = () => {
               </div>
             </div>
             <div className="col-lg-12 mx-auto friendsApoint d-flex flex-wrap">
-              {searchInfo.length > 0 ? (
-                searchInfo.map((item) => (
-                  <div
-                    className="col-md-6 d-flex flex-wrap singleFiends"
-                    key={item._id}
-                  >
-                    <div className="pr-3">
-                      <img
-                        src={item.profile_pic}
-                        alt="userImg"
-                        className="img-fluid"
-                      />
-                    </div>
-                    <div className="px-1 d-flex flex-column justify-content-between flex-grow-1">
-                      <div className="d-flex justify-content-between flex-wrap ">
-                        <div>
-                          <h3>{item.fullname}</h3>
-                          <p>{item.gender}</p>
+              {searchInfo.length > 0
+                ? searchInfo.map((item) =>
+                    loggedInUser.friend.includes(item._id) &&
+                    loggedInUser._id ? null : (
+                      <div
+                        className="col-md-6 d-flex flex-wrap singleFiends"
+                        key={item._id}
+                      >
+                        {console.log()}
+                        <div className="pr-3">
+                          <img
+                            src={item.profile_pic}
+                            alt="userImg"
+                            className="img-fluid"
+                          />
                         </div>
-                        <div className="d-flex flex-column align-items-end">
-                          <MoreHorizIcon />
-                          {/* <button className="removeFriendsBtn">
-                          <CloseIcon /> Remove Freinds
-                        </button> */}
+                        <div className="px-1 d-flex flex-column justify-content-between flex-grow-1">
+                          <div className="d-flex justify-content-between flex-wrap ">
+                            <div>
+                              <h3>{item.fullname}</h3>
+                              <p>{item.gender}</p>
+                            </div>
+                            <div className="d-flex flex-column align-items-end">
+                              <MoreHorizIcon />
+                            </div>
+                          </div>
+                          <div className="">
+                            <button
+                              className="friendsApointmentBtn"
+                              onClick={() => addFriendsHandler(item._id)}
+                            >
+                              Add as Friend
+                            </button>
+                          </div>
                         </div>
                       </div>
-                      <div className="">
-                        <button
-                          className="friendsApointmentBtn"
-                          onClick={() => addFriendsHandler(item._id)}
-                        >
-                          Add as Friends
-                        </button>
+                    )
+                  )
+                : loadingState && (
+                    <div className="d-flex justify-content-center align-items-center w-100 h-50 ">
+                      <div className="SpinnerDiv">
+                        <Spinner animation="border" />
                       </div>
                     </div>
-                  </div>
-                ))
-              ) : (
-                <div className="d-flex justify-content-center align-items-center w-100 h-50 ">
-                  <div className="SpinnerDiv">
-                    <Spinner animation="border" />
-                  </div>
-                </div>
-              )}
+                  )}
             </div>
           </div>
         </div>

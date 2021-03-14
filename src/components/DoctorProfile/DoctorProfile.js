@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Card,
   Dropdown,
@@ -42,6 +42,10 @@ const DoctorProfile = () => {
     mobile_banking_info,
   } = loggedInUser;
 
+  const [expertiseArr, setExpertiseArr] = useState();
+  const [educationArr, setEducationArr] = useState();
+  const [achievementArr, setAchievementArr] = useState();
+  const [previousWorkArr, setpreviousWorkArr] = useState();
   const [saveChanges, setSaveChanges] = useState({});
   const [completed, setCompleted] = useState(true);
   const [show, setShow] = useState(false);
@@ -113,51 +117,67 @@ const DoctorProfile = () => {
   const overViewSubmitHandler = async (e) => {
     e.preventDefault();
     e.target.reset();
-    const getToken = JSON.parse(localStorage.getItem("loginToken"));
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/doctor/change_bio_address_practiceSince`,
-      {
-        method: "PUT",
-        headers: {
-          sobar_daktar_session: getToken,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(editInfo),
+
+    const filterValue =
+      expertiseArr &&
+      expertiseField.filter((item) => !expertiseArr.includes(item));
+
+    console.log(filterValue);
+    const newArr =
+      filterValue !== null
+        ? [...expertiseArr, ...filterValue]
+        : [...expertiseField];
+
+    console.log(newArr);
+    try {
+      const getToken = JSON.parse(localStorage.getItem("loginToken"));
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/doctor/change_bio_address_practiceSince`,
+        {
+          method: "PUT",
+          headers: {
+            sobar_daktar_session: getToken,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            expertise: newArr,
+          }),
+        }
+      );
+      const data = await res.json();
+      // console.log(data);
+      if (data.success === "yes") {
+        overviewHandleClose();
+        Swal.fire({
+          icon: "success",
+          title: "Successfully Save the Changes",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+        try {
+          const getToken = JSON.parse(localStorage.getItem("loginToken"));
+          const userRes = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/user`,
+            {
+              method: "GET",
+              headers: { sobar_daktar_session: getToken },
+              mode: "cors",
+            }
+          );
+          const userData = await userRes.json();
+          // console.log(data);
+          setLoggedInUser(userData);
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: data.msg,
+        });
       }
-    );
-    const data = await res.json();
-    // console.log(data);
-    if (data.success === "yes") {
-      overviewHandleClose();
-      Swal.fire({
-        icon: "success",
-        title: "Successfully Save the Changes",
-        showConfirmButton: false,
-        timer: 1000,
-      });
-      try {
-        const getToken = JSON.parse(localStorage.getItem("loginToken"));
-        const userRes = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/user`,
-          {
-            method: "GET",
-            headers: { sobar_daktar_session: getToken },
-            mode: "cors",
-          }
-        );
-        const userData = await userRes.json();
-        // console.log(data);
-        setLoggedInUser(userData);
-      } catch (err) {
-        console.log(err);
-      }
-    } else {
-      Swal.fire({
-        icon: "error",
-        title: data.msg,
-      });
-    }
+    } catch (err) {}
   };
 
   const submitHandler = async (e) => {
@@ -361,6 +381,18 @@ const DoctorProfile = () => {
   const addEducationHandler = async (e) => {
     e.preventDefault();
     e.target.reset();
+
+    const newArr = [
+      ...educationArr,
+      {
+        name: addNewEducation.name,
+        institution: addNewEducation.institution,
+        passing_year: addNewEducation.passing_year,
+        completed: completed,
+      },
+    ];
+    console.log(newArr);
+
     const getToken = JSON.parse(localStorage.getItem("loginToken"));
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/doctor/change_bio_address_practiceSince`,
@@ -372,14 +404,7 @@ const DoctorProfile = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          degree: [
-            {
-              name: addNewEducation.name,
-              institution: addNewEducation.institution,
-              passing_year: addNewEducation.passing_year,
-              completed: completed,
-            },
-          ],
+          degree: newArr,
         }),
       }
     );
@@ -420,6 +445,10 @@ const DoctorProfile = () => {
   const achievementsHandler = async (e) => {
     e.preventDefault();
     e.target.reset();
+
+    const newArr = [...achievementArr, addNewAchievements];
+    console.log(newArr);
+
     const getToken = JSON.parse(localStorage.getItem("loginToken"));
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/doctor/change_bio_address_practiceSince`,
@@ -431,7 +460,7 @@ const DoctorProfile = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          extra_degree: [addNewAchievements],
+          extra_degree: newArr,
         }),
       }
     );
@@ -469,9 +498,66 @@ const DoctorProfile = () => {
     }
   };
 
+  const achievementsDeleteHandler = async (item) => {
+    const updatedArr = achievementArr.filter((work) => item._id !== work._id);
+    console.log(updatedArr);
+    try {
+      const getToken = JSON.parse(localStorage.getItem("loginToken"));
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/doctor/change_bio_address_practiceSince`,
+        {
+          method: "PUT",
+          headers: {
+            sobar_daktar_session: getToken,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            extra_degree: updatedArr,
+          }),
+        }
+      );
+      const data = await res.json();
+      console.log(data);
+
+      if (data.success === "yes") {
+        Swal.fire({
+          icon: "success",
+          title: "Deleted Successfully",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+        try {
+          const getToken = JSON.parse(localStorage.getItem("loginToken"));
+          const userRes = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/user`,
+            {
+              method: "GET",
+              headers: { sobar_daktar_session: getToken },
+              mode: "cors",
+            }
+          );
+          const userData = await userRes.json();
+          // console.log(data);
+          setLoggedInUser(userData);
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: data.msg,
+        });
+      }
+    } catch (err) {}
+  };
   const previousWorkPlaceHandler = async (e) => {
     e.preventDefault();
     e.target.reset();
+
+    const newArr = [...previousWorkArr, addNewWorkPlace];
+    console.log(newArr);
+
     const getToken = JSON.parse(localStorage.getItem("loginToken"));
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/doctor/change_bio_address_practiceSince`,
@@ -483,7 +569,7 @@ const DoctorProfile = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          worked_at_previously: [addNewWorkPlace],
+          worked_at_previously: newArr,
         }),
       }
     );
@@ -493,7 +579,7 @@ const DoctorProfile = () => {
       workPlaceHandleClose();
       Swal.fire({
         icon: "success",
-        title: "Successfully Save the Changes",
+        title: "Work Place add Successfully",
         showConfirmButton: false,
         timer: 1000,
       });
@@ -521,8 +607,168 @@ const DoctorProfile = () => {
     }
   };
 
+  const previousWorkPlaceDeleteHandler = async (item) => {
+    const updatedArr = previousWorkArr.filter((work) => item._id !== work._id);
+    console.log(updatedArr);
+    try {
+      const getToken = JSON.parse(localStorage.getItem("loginToken"));
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/doctor/change_bio_address_practiceSince`,
+        {
+          method: "PUT",
+          headers: {
+            sobar_daktar_session: getToken,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            worked_at_previously: updatedArr,
+          }),
+        }
+      );
+      const data = await res.json();
+      console.log(data);
+
+      if (data.success === "yes") {
+        Swal.fire({
+          icon: "success",
+          title: "Deleted Successfully",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+        try {
+          const getToken = JSON.parse(localStorage.getItem("loginToken"));
+          const userRes = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/user`,
+            {
+              method: "GET",
+              headers: { sobar_daktar_session: getToken },
+              mode: "cors",
+            }
+          );
+          const userData = await userRes.json();
+          // console.log(data);
+          setLoggedInUser(userData);
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: data.msg,
+        });
+      }
+    } catch (err) {}
+  };
+
+  const currentWorkPlaceDeleteHandler = async () => {
+    try {
+      const getToken = JSON.parse(localStorage.getItem("loginToken"));
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/doctor/change_bio_address_practiceSince`,
+        {
+          method: "PUT",
+          headers: {
+            sobar_daktar_session: getToken,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            current_workplace: {},
+          }),
+        }
+      );
+      const data = await res.json();
+      console.log(data);
+
+      if (data.success === "yes") {
+        Swal.fire({
+          icon: "success",
+          title: "Deleted Successfully",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+        try {
+          const getToken = JSON.parse(localStorage.getItem("loginToken"));
+          const userRes = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/user`,
+            {
+              method: "GET",
+              headers: { sobar_daktar_session: getToken },
+              mode: "cors",
+            }
+          );
+          const userData = await userRes.json();
+          // console.log(data);
+          setLoggedInUser(userData);
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: data.msg,
+        });
+      }
+    } catch (err) {}
+  };
+
+  const removeEducationHandler = async (item) => {
+    const updatedArr = educationArr.filter((work) => item._id !== work._id);
+    console.log(updatedArr);
+    try {
+      const getToken = JSON.parse(localStorage.getItem("loginToken"));
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/doctor/change_bio_address_practiceSince`,
+        {
+          method: "PUT",
+          headers: {
+            sobar_daktar_session: getToken,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            degree: updatedArr,
+          }),
+        }
+      );
+      const data = await res.json();
+      console.log(data);
+
+      if (data.success === "yes") {
+        Swal.fire({
+          icon: "success",
+          title: "Deleted Successfully",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+        try {
+          const getToken = JSON.parse(localStorage.getItem("loginToken"));
+          const userRes = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/user`,
+            {
+              method: "GET",
+              headers: { sobar_daktar_session: getToken },
+              mode: "cors",
+            }
+          );
+          const userData = await userRes.json();
+          // console.log(data);
+          setLoggedInUser(userData);
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: data.msg,
+        });
+      }
+    } catch (err) {}
+  };
+
   const currentWorkPlaceHandler = async (e) => {
-    console.log(...loggedInUser.worked_at_previously);
+    // console.log(...loggedInUser.worked_at_previously);
     e.preventDefault();
     e.target.reset();
     const getToken = JSON.parse(localStorage.getItem("loginToken"));
@@ -658,10 +904,10 @@ const DoctorProfile = () => {
   };
 
   const [weekApointmentDetails, setWeekAppointmentDetails] = useState({});
+  // console.log(weekApointmentDetails);
 
   const appointmentForAWeekHandler = async (e) => {
     e.preventDefault();
-    console.log(weekApointmentDetails);
     try {
       const getToken = JSON.parse(localStorage.getItem("loginToken"));
       const res = await fetch(
@@ -711,6 +957,15 @@ const DoctorProfile = () => {
     } catch (err) {}
   };
 
+  useEffect(() => {
+    setExpertiseArr(expertise);
+    setEducationArr(degree);
+    setAchievementArr(extra_degree);
+    setpreviousWorkArr(worked_at_previously);
+  }, [loggedInUser]);
+
+  // console.log(expertiseArr, educationArr, achievementArr, previousWorkArr);
+  console.log(loggedInUser);
   return (
     <div className="doctorProfile">
       <div className="container">
@@ -957,7 +1212,9 @@ const DoctorProfile = () => {
                 {extra_degree.map((item) => (
                   <div className="px-3" key={item._id}>
                     <h6>{item.name}</h6>
-                    <p>{item.institution}, YEAR</p>
+                    <p>
+                      {item.institution}, {new Date(item.year).getFullYear()}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -1474,6 +1731,7 @@ const DoctorProfile = () => {
                     name="colors"
                     inputId="test123"
                     instanceId="test456"
+                    closeMenuOnSelect={false}
                     styles={style}
                     options={fakeOptions}
                     className="basic-multi-select"
@@ -1481,35 +1739,37 @@ const DoctorProfile = () => {
                     placeholder="Start Typing your fields"
                     onChange={(e) =>
                       e.map((item) =>
-                        setEditInfo({
-                          ...editInfo,
-                          expertise: editInfo.expertise
-                            ? [...editInfo.expertise, item.label]
-                            : [item.label],
-                        })
+                        SetExpertiseField([...expertiseField, item.label])
                       )
                     }
                   />
                 </Form.Group>
-
+                <div className="d-flex justify-content-between align-items-center my-3">
+                  <button type="submit" className="findDocBtn py-2">
+                    Save Expertise
+                  </button>
+                </div>
                 <Form.Group className="basicFormInput">
                   <Form.Label>Work Places</Form.Label>
-                  <button type="button" className="removeBtn2 py-3">
-                    <div>
-                      <h6>
-                        {loggedInUser.current_workplace &&
-                          loggedInUser.current_workplace.name}
-                      </h6>
-                      <p>
-                        {new Date(
-                          loggedInUser.current_workplace &&
-                            loggedInUser.current_workplace.work_since
-                        ).toDateString()}
-                        - Now
-                      </p>
-                    </div>
-                    <CloseIcon />
-                  </button>
+                  {loggedInUser.current_workplace && (
+                    <button type="button" className="removeBtn2 py-3">
+                      <div>
+                        <h6>
+                          {loggedInUser.current_workplace &&
+                            loggedInUser.current_workplace.name}
+                        </h6>
+                        <p>
+                          {new Date(
+                            loggedInUser.current_workplace &&
+                              loggedInUser.current_workplace.work_since
+                          ).toDateString()}
+                          - Now
+                        </p>
+                      </div>
+                      <CloseIcon onClick={currentWorkPlaceDeleteHandler} />
+                    </button>
+                  )}
+
                   {loggedInUser.worked_at_previously.map((item, index) => (
                     <button
                       type="button"
@@ -1523,51 +1783,53 @@ const DoctorProfile = () => {
                           {new Date(item.worked_till).toDateString()}
                         </p>
                       </div>
-                      <CloseIcon />
+                      <CloseIcon
+                        onClick={() => previousWorkPlaceDeleteHandler(item)}
+                      />
                     </button>
                   ))}
 
-                  <button
-                    type="button"
-                    className="addNewEmail"
-                    onClick={workPlaceHandleShow}
-                  >
-                    + Add new
-                  </button>
+                  <div>
+                    <button
+                      type="button"
+                      className="addNewEmail"
+                      onClick={workPlaceHandleShow}
+                    >
+                      + Add new
+                    </button>
+                  </div>
                 </Form.Group>
 
                 <Form.Group className="basicFormInput">
                   <Form.Label>Education Background</Form.Label>
-                  {loggedInUser.degree.map((item, index) => (
+                  {loggedInUser.degree &&
+                    loggedInUser.degree.map((item, index) => (
+                      <button
+                        type="button"
+                        className="removeBtn2 py-3"
+                        key={index}
+                      >
+                        <div>
+                          <h6>{item.institution}</h6>
+                          <p>
+                            {item.name} -
+                            {new Date(item.passing_year).toDateString()}
+                          </p>
+                        </div>
+                        <CloseIcon
+                          onClick={() => removeEducationHandler(item)}
+                        />
+                      </button>
+                    ))}
+                  <div>
                     <button
                       type="button"
-                      className="removeBtn2 py-3"
-                      key={index}
+                      className="addNewEmail"
+                      onClick={educationHandleShow}
                     >
-                      <div>
-                        <h6>{item.institution}</h6>
-                        <p>
-                          {item.name} -
-                          {new Date(item.passing_year).toDateString()}
-                        </p>
-                      </div>
-                      <CloseIcon />
+                      + Add new
                     </button>
-                  ))}
-                  <button type="button" className="removeBtn2 py-3">
-                    <div>
-                      <h6>Placeholder Medical College Name</h6>
-                      <p>Degree_Name, Passing Year</p>
-                    </div>
-                    <CloseIcon />
-                  </button>
-                  <button
-                    type="button"
-                    className="addNewEmail"
-                    onClick={educationHandleShow}
-                  >
-                    + Add new
-                  </button>
+                  </div>
                 </Form.Group>
 
                 <Form.Group className="basicFormInput">
@@ -1581,55 +1843,35 @@ const DoctorProfile = () => {
                       >
                         <div>
                           <h6>{item.name}</h6>
-                          <p>{item.institution}, Year</p>
+                          <p>
+                            {item.institution},
+                            {new Date(item.year).getFullYear()}
+                          </p>
                         </div>
-                        <CloseIcon />
+                        <CloseIcon
+                          onClick={() => achievementsDeleteHandler(item)}
+                        />
                       </button>
                     ))}
-                  <button type="button" className="removeBtn2 py-3">
-                    <div>
-                      <h6>Achievement Title</h6>
-                      <p>Institute_Name, Year</p>
-                    </div>
-                    <CloseIcon />
-                  </button>
-                  <button
-                    type="button"
-                    className="addNewEmail"
-                    onClick={achievementhandleShow}
-                  >
-                    + Add new
-                  </button>
+
+                  <div>
+                    <button
+                      type="button"
+                      className="addNewEmail"
+                      onClick={achievementhandleShow}
+                    >
+                      + Add new
+                    </button>
+                  </div>
                 </Form.Group>
 
-                <Form.Group className="basicFormInput">
-                  <Form.Label>Enter Password to Save Changes</Form.Label>
-                  <Form.Control
-                    onChange={passwordToSave}
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    required
-                  />
-                  <Form.Control.Feedback
-                    type="invalid"
-                    className="mb-3 password"
-                  >
-                    {!editInfo.password
-                      ? "Must have minimum 6 character with number"
-                      : ""}
-                  </Form.Control.Feedback>
-                </Form.Group>
-                <div className="d-flex justify-content-between align-items-center mt-5">
+                <div className="d-flex justify-content-end align-items-end mt-4">
                   <button
                     type="button"
                     className="cancelBtn"
                     onClick={overviewHandleClose}
                   >
                     Cancel
-                  </button>
-                  <button type="submit" className="findDocBtn">
-                    Save Changes
                   </button>
                 </div>
               </Form>
@@ -1676,6 +1918,20 @@ const DoctorProfile = () => {
                     name="Institution Name"
                     placeholder="Official Name of Institution"
                     required
+                  />
+                </Form.Group>
+                <Form.Group className="basicFormInput">
+                  <Form.Label>Year</Form.Label>
+                  <Form.Control
+                    type="date"
+                    placeholder="Date of Birth"
+                    name="date_of_birth"
+                    onChange={(e) =>
+                      setAddNewAchievements({
+                        ...addNewAchievements,
+                        year: e.target.value,
+                      })
+                    }
                   />
                 </Form.Group>
 
@@ -2056,12 +2312,12 @@ const DoctorProfile = () => {
                                 onChange={(e) =>
                                   setWeekAppointmentDetails({
                                     ...weekApointmentDetails,
-                                    start_time_hour: e.target.value.split(
-                                      ":"
-                                    )[0],
-                                    start_time_min: e.target.value.split(
-                                      ":"
-                                    )[1],
+                                    start_time_hour: parseInt(
+                                      e.target.value.split(":")[0]
+                                    ),
+                                    start_time_min: parseInt(
+                                      e.target.value.split(":")[1]
+                                    ),
                                   })
                                 }
                               />
@@ -2081,8 +2337,12 @@ const DoctorProfile = () => {
                                 onChange={(e) =>
                                   setWeekAppointmentDetails({
                                     ...weekApointmentDetails,
-                                    end_time_hour: e.target.value.split(":")[0],
-                                    end_time_min: e.target.value.split(":")[1],
+                                    end_time_hour: parseInt(
+                                      e.target.value.split(":")[0]
+                                    ),
+                                    end_time_min: parseInt(
+                                      e.target.value.split(":")[1]
+                                    ),
                                   })
                                 }
                               />

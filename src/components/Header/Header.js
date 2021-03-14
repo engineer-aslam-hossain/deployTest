@@ -62,7 +62,7 @@ const Header = () => {
             </a>
           </Link>
         </div>
-        <Form inline className="mx-auto">
+        {/* <Form inline className="mx-auto">
           <InputGroup className="searchInputGroup">
             <FormControl
               placeholder="Search...."
@@ -76,11 +76,11 @@ const Header = () => {
               </InputGroup.Text>
             </InputGroup.Append>
           </InputGroup>
-        </Form>
+        </Form> */}
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="d-flex justify-content-end align-items-center ">
+          <Nav className="d-flex justify-content-end align-items-center ml-auto">
             <Form.Group controlId="exampleForm.ControlSelect1" className="mb-0">
               <Form.Control
                 as="select"

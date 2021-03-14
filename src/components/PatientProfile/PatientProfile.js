@@ -343,7 +343,6 @@ const PatientProfile = () => {
     }
   };
 
-  console.log(searchData);
   return (
     <div className="patientProfile">
       <div className="container">

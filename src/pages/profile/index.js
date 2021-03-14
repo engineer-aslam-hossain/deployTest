@@ -22,10 +22,14 @@ const profile = () => {
   } else {
     return (
       <section className="profile">
-        {loggedInUser.user_type === "DOCTOR" ? (
+        {loggedInUser === undefined ? (
+          <div className="d-flex justify-content-center align-items-center h-50">
+            <Spinner animation="border" />
+          </div>
+        ) : loggedInUser.user_type === "DOCTOR" ? (
           <DoctorProfile />
         ) : (
-          <PatientProfile />
+          loggedInUser.user_type === "USER" && <PatientProfile />
         )}
       </section>
     );

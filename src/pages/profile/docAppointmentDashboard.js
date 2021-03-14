@@ -21,7 +21,7 @@ const docAppointmentDashboard = () => {
   });
 
   const [appointmentSchedule, setAppointmentSchedule] = useState([]);
-  console.log(loggedInUser);
+  // console.log(loggedInUser);
   const handleAppointmentSchedule = async () => {
     try {
       const getToken = JSON.parse(localStorage.getItem("loginToken"));

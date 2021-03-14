@@ -64,7 +64,7 @@ const IOSSwitch = withStyles((theme) => ({
 const ConfigureAppointments = () => {
   const [active, setActive] = useState(1);
   const { loggedInUser, setLoggedInUser } = useContext(DaktarContext);
-  // console.log(loggedInUser);
+
   const [appointmentDetails, setAppointmentDetails] = useState({
     fee: 0,
     time_per_patient: 0,
@@ -72,7 +72,7 @@ const ConfigureAppointments = () => {
     followup_fee: 0,
     advance_fee_percentage: 0,
   });
-
+  // console.log(appointmentDetails);
   const [saturday, setSaturday] = useState({
     start_time_hour: 0,
     start_time_min: 0,
@@ -578,17 +578,6 @@ const ConfigureAppointments = () => {
                 </Form>
               </div>
             </div>
-          ) : loggedInUser.appointment === null ? (
-            <div className="col-md-12 my-4 px-0">
-              <h4 className="creditTitle">WEEK Schedule</h4>
-              <div className="Credits px-0">
-                <div className="col-lg-12 weekScheduleForm">
-                  <Card>
-                    <h1>hello</h1>
-                  </Card>
-                </div>
-              </div>
-            </div>
           ) : (
             <div className="col-lg-12">
               <Form
@@ -614,12 +603,12 @@ const ConfigureAppointments = () => {
                                 onChange={(e) =>
                                   setSaturday({
                                     ...saturday,
-                                    start_time_hour: e.target.value.split(
-                                      ":"
-                                    )[0],
-                                    start_time_min: e.target.value.split(
-                                      ":"
-                                    )[1],
+                                    start_time_hour: parseInt(
+                                      parseInt(e.target.value.split(":")[0])
+                                    ),
+                                    start_time_min: parseInt(
+                                      parseInt(e.target.value.split(":")[1])
+                                    ),
                                   })
                                 }
                               />
@@ -635,8 +624,12 @@ const ConfigureAppointments = () => {
                                 onChange={(e) =>
                                   setSaturday({
                                     ...saturday,
-                                    end_time_hour: e.target.value.split(":")[0],
-                                    end_time_min: e.target.value.split(":")[1],
+                                    end_time_hour: parseInt(
+                                      e.target.value.split(":")[0]
+                                    ),
+                                    end_time_min: parseInt(
+                                      e.target.value.split(":")[1]
+                                    ),
                                   })
                                 }
                               />
@@ -672,12 +665,12 @@ const ConfigureAppointments = () => {
                                 onChange={(e) =>
                                   setSunday({
                                     ...sunday,
-                                    start_time_hour: e.target.value.split(
-                                      ":"
-                                    )[0],
-                                    start_time_min: e.target.value.split(
-                                      ":"
-                                    )[1],
+                                    start_time_hour: parseInt(
+                                      e.target.value.split(":")[0]
+                                    ),
+                                    start_time_min: parseInt(
+                                      e.target.value.split(":")[1]
+                                    ),
                                   })
                                 }
                               />
@@ -693,8 +686,12 @@ const ConfigureAppointments = () => {
                                 onChange={(e) =>
                                   setSunday({
                                     ...sunday,
-                                    end_time_hour: e.target.value.split(":")[0],
-                                    end_time_min: e.target.value.split(":")[1],
+                                    end_time_hour: parseInt(
+                                      e.target.value.split(":")[0]
+                                    ),
+                                    end_time_min: parseInt(
+                                      e.target.value.split(":")[1]
+                                    ),
                                   })
                                 }
                               />
@@ -730,12 +727,12 @@ const ConfigureAppointments = () => {
                                 onChange={(e) =>
                                   setMonday({
                                     ...monday,
-                                    start_time_hour: e.target.value.split(
-                                      ":"
-                                    )[0],
-                                    start_time_min: e.target.value.split(
-                                      ":"
-                                    )[1],
+                                    start_time_hour: parseInt(
+                                      e.target.value.split(":")[0]
+                                    ),
+                                    start_time_min: parseInt(
+                                      e.target.value.split(":")[1]
+                                    ),
                                   })
                                 }
                               />
@@ -751,8 +748,12 @@ const ConfigureAppointments = () => {
                                 onChange={(e) =>
                                   setMonday({
                                     ...monday,
-                                    end_time_hour: e.target.value.split(":")[0],
-                                    end_time_min: e.target.value.split(":")[1],
+                                    end_time_hour: parseInt(
+                                      e.target.value.split(":")[0]
+                                    ),
+                                    end_time_min: parseInt(
+                                      e.target.value.split(":")[1]
+                                    ),
                                   })
                                 }
                               />
@@ -788,12 +789,12 @@ const ConfigureAppointments = () => {
                                 onChange={(e) =>
                                   setTuesday({
                                     ...Tuesday,
-                                    start_time_hour: e.target.value.split(
-                                      ":"
-                                    )[0],
-                                    start_time_min: e.target.value.split(
-                                      ":"
-                                    )[1],
+                                    start_time_hour: parseInt(
+                                      e.target.value.split(":")[0]
+                                    ),
+                                    start_time_min: parseInt(
+                                      e.target.value.split(":")[1]
+                                    ),
                                   })
                                 }
                               />
@@ -809,8 +810,12 @@ const ConfigureAppointments = () => {
                                 onChange={(e) =>
                                   setTuesday({
                                     ...Tuesday,
-                                    end_time_hour: e.target.value.split(":")[0],
-                                    end_time_min: e.target.value.split(":")[1],
+                                    end_time_hour: parseInt(
+                                      e.target.value.split(":")[0]
+                                    ),
+                                    end_time_min: parseInt(
+                                      e.target.value.split(":")[1]
+                                    ),
                                   })
                                 }
                               />
@@ -846,12 +851,12 @@ const ConfigureAppointments = () => {
                                 onChange={(e) =>
                                   setWednesDay({
                                     ...WednesDay,
-                                    start_time_hour: e.target.value.split(
-                                      ":"
-                                    )[0],
-                                    start_time_min: e.target.value.split(
-                                      ":"
-                                    )[1],
+                                    start_time_hour: parseInt(
+                                      e.target.value.split(":")[0]
+                                    ),
+                                    start_time_min: parseInt(
+                                      e.target.value.split(":")[1]
+                                    ),
                                   })
                                 }
                               />
@@ -867,8 +872,12 @@ const ConfigureAppointments = () => {
                                 onChange={(e) =>
                                   setWednesDay({
                                     ...WednesDay,
-                                    end_time_hour: e.target.value.split(":")[0],
-                                    end_time_min: e.target.value.split(":")[1],
+                                    end_time_hour: parseInt(
+                                      e.target.value.split(":")[0]
+                                    ),
+                                    end_time_min: parseInt(
+                                      e.target.value.split(":")[1]
+                                    ),
                                   })
                                 }
                               />
@@ -904,12 +913,12 @@ const ConfigureAppointments = () => {
                                 onChange={(e) =>
                                   setThursday({
                                     ...Thursday,
-                                    start_time_hour: e.target.value.split(
-                                      ":"
-                                    )[0],
-                                    start_time_min: e.target.value.split(
-                                      ":"
-                                    )[1],
+                                    start_time_hour: parseInt(
+                                      e.target.value.split(":")[0]
+                                    ),
+                                    start_time_min: parseInt(
+                                      e.target.value.split(":")[1]
+                                    ),
                                   })
                                 }
                               />
@@ -925,8 +934,12 @@ const ConfigureAppointments = () => {
                                 onChange={(e) =>
                                   setThursday({
                                     ...Thursday,
-                                    end_time_hour: e.target.value.split(":")[0],
-                                    end_time_min: e.target.value.split(":")[1],
+                                    end_time_hour: parseInt(
+                                      e.target.value.split(":")[0]
+                                    ),
+                                    end_time_min: parseInt(
+                                      e.target.value.split(":")[1]
+                                    ),
                                   })
                                 }
                               />
@@ -962,12 +975,12 @@ const ConfigureAppointments = () => {
                                 onChange={(e) =>
                                   setFriday({
                                     ...Friday,
-                                    start_time_hour: e.target.value.split(
-                                      ":"
-                                    )[0],
-                                    start_time_min: e.target.value.split(
-                                      ":"
-                                    )[1],
+                                    start_time_hour: parseInt(
+                                      e.target.value.split(":")[0]
+                                    ),
+                                    start_time_min: parseInt(
+                                      e.target.value.split(":")[1]
+                                    ),
                                   })
                                 }
                               />
@@ -983,8 +996,12 @@ const ConfigureAppointments = () => {
                                 onChange={(e) =>
                                   setFriday({
                                     ...Friday,
-                                    end_time_hour: e.target.value.split(":")[0],
-                                    end_time_min: e.target.value.split(":")[1],
+                                    end_time_hour: parseInt(
+                                      e.target.value.split(":")[0]
+                                    ),
+                                    end_time_min: parseInt(
+                                      e.target.value.split(":")[1]
+                                    ),
                                   })
                                 }
                               />
