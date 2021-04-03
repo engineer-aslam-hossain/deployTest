@@ -13,7 +13,7 @@ const PatientRequiredForm = ({ nextStep, inputChange, values }) => {
   const submitHandler = async (e) => {
     e.preventDefault();
     e.target.reset();
-
+    console.log(values);
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/auth/user_signup`,
@@ -22,6 +22,7 @@ const PatientRequiredForm = ({ nextStep, inputChange, values }) => {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
+            mode: "no-cors",
           },
           body: JSON.stringify(values),
         }

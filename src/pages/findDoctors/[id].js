@@ -86,6 +86,7 @@ const DoctorDetails = ({ doc }) => {
         `${process.env.API_BASE_URL}/patient/get_doctor_available_status?doctor_id=${_id}`
       );
       const data = await getStatus.json();
+      console.log(data);
       setDoctorStatus(data);
     } catch (err) {
       console.log(err);

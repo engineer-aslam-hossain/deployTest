@@ -1,11 +1,13 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-regular-svg-icons";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import DaktarContext from "../Context/Context";
+import { Card, Modal } from "react-bootstrap";
 
 const Profile = ({ handleShow }) => {
-  const { loggedInUser, setLoggedInUser } = useContext(DaktarContext);
+  const { loggedInUser, socket, incomingCall } = useContext(DaktarContext);
+
   return (
     <>
       <div className="col-md-12 mb-4 px-0">

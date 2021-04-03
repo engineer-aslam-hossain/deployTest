@@ -8,8 +8,11 @@ import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import DaktarContext from "../Context/Context";
 
+import { makeStyles } from "@material-ui/core/styles";
+import Badge from "@material-ui/core/Badge";
+
 const Header = () => {
-  const { loggedInUser } = useContext(DaktarContext);
+  const { loggedInUser, socket } = useContext(DaktarContext);
 
   const router = useRouter();
   const isActive = (route) => {
@@ -38,6 +41,24 @@ const Header = () => {
     );
     const data = await res.json();
     console.log(data);
+  };
+
+  const notificationHandler = async () => {
+    try {
+      const getToken = JSON.parse(localStorage.getItem("loginToken"));
+      const myNotifications = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/user/get_all_my_notification`,
+        {
+          method: "GET",
+          headers: { sobar_daktar_session: getToken },
+          mode: "cors",
+        }
+      );
+      const myNotificationsData = await myNotifications.json();
+      console.log(myNotificationsData);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -96,7 +117,7 @@ const Header = () => {
               <a className="text-decoration-none">Find Doctor</a>
             </Link>
             {loggedInUser.user_type ? (
-              <button className="headerBtn">
+              <button className="headerBtn" onClick={notificationHandler}>
                 <NotificationsNoneIcon />
               </button>
             ) : (

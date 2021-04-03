@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Head from "next/head";
 import { ThemeProvider } from "@material-ui/core/styles";
@@ -9,8 +9,8 @@ import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import Layout from "../components/Layout/Layout";
 import "../../node_modules/slick-carousel/slick/slick.css";
 import "../../node_modules/slick-carousel/slick/slick-theme.css";
-
 import { ContextProvider } from "../components/Context/Context";
+import io from "socket.io-client";
 
 export default function MyApp(props) {
   const { Component, pageProps } = props;

@@ -1274,6 +1274,16 @@ button.callNowBtn {
   padding: 0.5rem 2rem;
 }
 
+a.startAppointment {
+  background-color: #0f9635;
+  color: white !important;
+  border-radius: 4px;
+  outline: none;
+  border: none;
+  text-decoration: none !important;
+  padding: 0.5rem 2rem;
+}
+
 .weekViewColumn {
   border-right: 1px solid #e7e7e7;
 }
@@ -1350,3 +1360,123 @@ section.findDoctors {
   /* display: none; */
 }
 /* Find Doc styles end */
+
+.callingModal .modal-content {
+  width: 18rem;
+  margin: auto;
+}
+
+.callingModal .card {
+  background-color: #f5f5f5;
+}
+
+.callWindow p,
+.callAppointFor p {
+  font-size: 12px;
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.callWindow h4 {
+  font-size: 1.2rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.callDocImgDiv img {
+  width: 8rem;
+}
+.callDocImgDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 8rem;
+  height: 8rem;
+  border-radius: 90%;
+  overflow: hidden;
+  margin: 0 auto;
+  background-color: #f5f5f5;
+  border: 1px solid #e7e7e7;
+}
+
+.callAppointFor {
+  margin: 2rem 0;
+}
+.callAppointFor h6 {
+  font-size: 1rem;
+  text-align: center;
+}
+
+button.answerCallBtn {
+  border: 0;
+  outline: 0;
+  background-color: #45b500;
+  color: white;
+  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+}
+button.answerCallBtn img {
+  width: 2rem;
+}
+
+.prescriptionCard {
+  border: 1px solid #d2d2d2;
+  border-radius: 0.5rem;
+}
+
+button.addBtn {
+  border: none;
+  outline: none;
+  background: #3a61c3;
+  font-weight: 600;
+  font-size: 1rem;
+  color: white;
+  padding: 0.5rem 1rem;
+  width: 13rem;
+  text-decoration: none !important;
+  border-radius: 4px;
+  box-shadow: 2px 5px 5px rgba(0, 0, 0, 0.2);
+  transition: 0.6s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+h5.prescriptionLabel {
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.medicine {
+  border: 1px solid #ababab;
+  border-radius: 4px;
+  margin-right: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.medicine p {
+  margin-bottom: 5px;
+}
+.closeIcon {
+  border: 1px solid #ababab;
+  border-radius: 4px;
+}
+
+.closeIcon .MuiSvgIcon-root {
+  color: #ff0000;
+}
+
+.addDrugCard h6 {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.addDrugCard label.form-check-label {
+  font-size: 12px;
+  font-weight: 400;
+  margin-right: 1rem;
+}

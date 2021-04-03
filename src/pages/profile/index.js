@@ -10,8 +10,13 @@ const profile = () => {
   const { loggedInUser } = useContext(DaktarContext);
   const router = useRouter();
 
-  if (loggedInUser.success === "no") {
-    router.push("/Login");
+  if (!loggedInUser.fullname) {
+    console.log(loggedInUser);
+    try {
+      // router.push("/Login");
+    } catch (err) {
+      console.log(err);
+    }
     return (
       <section className="profile">
         <div className="d-flex justify-content-center align-items-center h-50">
