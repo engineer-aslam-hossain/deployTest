@@ -143,6 +143,7 @@ const StartAppointment = () => {
 
   const searchMedicine = async (e) => {
     e.preventDefault();
+    console.log(e);
     setMedicineName(e.target.value);
     setDrugInfo({
       ...drugInfo,
@@ -303,6 +304,7 @@ const StartAppointment = () => {
 
   const drugSubmitHandler = (e) => {
     e.preventDefault();
+    // console.log(e);
     setMedicineList([
       ...medicineList,
       {
@@ -969,6 +971,9 @@ const StartAppointment = () => {
                         placeholder="Write medicine name here..."
                         onFocus={searchMedicine}
                         onChange={(e) => searchMedicine(e)}
+                        onKeyPress={(e) => {
+                          e.key === "Enter" && e.preventDefault();
+                        }}
                       />
                       <div className="my-3">
                         {medicines &&
@@ -978,6 +983,9 @@ const StartAppointment = () => {
                               className="medicineName mb-0"
                               key={index}
                               onClick={() => medicineSelection(item.brand_name)}
+                              onKeyPress={(e) => {
+                                e.key === "Enter" && e.preventDefault();
+                              }}
                             >
                               <h6>
                                 {item.brand_name}
@@ -1015,6 +1023,9 @@ const StartAppointment = () => {
                               dosageListHandler(drugInfo.dosage.dosage_type)
                             }
                             onChange={(e) => getDosageList(e)}
+                            onKeyPress={(e) => {
+                              e.key === "Enter" && e.preventDefault();
+                            }}
                           />
                         </Form.Group>
                         <div className="my-3 listOfEntry">
@@ -1086,6 +1097,9 @@ const StartAppointment = () => {
                                 }
                                 placeholder="Select days"
                                 onFocus={() => setDurationList(daysList)}
+                                onKeyPress={(e) => {
+                                  e.key === "Enter" && e.preventDefault();
+                                }}
                                 onChange={(e) =>
                                   setDrugInfo({
                                     ...drugInfo,
@@ -1122,6 +1136,9 @@ const StartAppointment = () => {
                                 }
                                 placeholder="Select Months"
                                 onFocus={() => setDurationList(monthList)}
+                                onKeyPress={(e) => {
+                                  e.key === "Enter" && e.preventDefault();
+                                }}
                                 onChange={(e) =>
                                   setDrugInfo({
                                     ...drugInfo,
@@ -1158,6 +1175,9 @@ const StartAppointment = () => {
                                 }
                                 placeholder="Select Years"
                                 onFocus={() => setDurationList(yearList)}
+                                onKeyPress={(e) => {
+                                  e.key === "Enter" && e.preventDefault();
+                                }}
                                 onChange={(e) =>
                                   setDrugInfo({
                                     ...drugInfo,
@@ -1329,6 +1349,9 @@ const StartAppointment = () => {
                             drugInfo.direction &&
                             drugInfo.direction.direction_value
                           }
+                          onKeyPress={(e) => {
+                            e.key === "Enter" && e.preventDefault();
+                          }}
                           onChange={(e) =>
                             setDrugInfo({
                               ...drugInfo,
@@ -1498,6 +1521,9 @@ const StartAppointment = () => {
                       <Form.Control
                         type="text"
                         placeholder=""
+                        onKeyPress={(e) => {
+                          e.key === "Enter" && e.preventDefault();
+                        }}
                         onChange={(e) =>
                           setDrugInfo({
                             ...drugInfo,
