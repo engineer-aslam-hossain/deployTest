@@ -1482,13 +1482,32 @@ h5.prescriptionLabel {
   margin-right: 1rem;
 }
 
-p.medicineName {
-  padding: 0.2rem 1rem;
+.medicineName {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
 }
 
-p.medicineName:hover {
-  background-color: lightgray;
-  border-radius: 1rem;
+.medicineName h6 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+
+.medicineName h6 span {
+  font-size: 12px;
+  font-weight: 400;
+  margin: 0 0.5rem;
+}
+
+.medicineName p {
+  margin-bottom: 0;
+  color: #ce6300;
+  font-size: 12px;
+}
+
+.medicineName:hover {
+  background-color: #efefef;
+  /* border-radius: 1rem; */
   cursor: pointer;
 }
 

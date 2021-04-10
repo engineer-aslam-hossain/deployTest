@@ -64,15 +64,15 @@ const StartAppointment = () => {
 
   const [drugInfo, setDrugInfo] = useState({
     dosage: {
-      dosage_type: "",
+      dosage_type: "Write Yourself",
       dosage_value: "",
     },
     duration: {
-      duration_type: "",
+      duration_type: "Continue till next notice",
       duration_value: "",
     },
     direction: {
-      direction_type: "",
+      direction_type: "Write Yourself",
       direction_value: "",
     },
   });
@@ -127,9 +127,15 @@ const StartAppointment = () => {
         dosage_value: e.target.value,
       },
     });
-    const filterdList = hourlyDosageList.filter((item) =>
-      item.includes(e.target.value)
-    );
+    const filterdList =
+      drugInfo.dosage.dosage_type === "hourly"
+        ? hourlyDosageList.filter((item) => item.includes(e.target.value))
+        : drugInfo.dosage.dosage_type === "1/0 format"
+        ? zeroOneFormat.filter((item) => item.includes(e.target.value))
+        : drugInfo.dosage.dosage_type === "presets"
+        ? hourlyDosageList.filter((item) => item.includes(e.target.value))
+        : [];
+
     setDosageList(filterdList);
   };
 
@@ -138,14 +144,24 @@ const StartAppointment = () => {
   const searchMedicine = async (e) => {
     e.preventDefault();
     setMedicineName(e.target.value);
+    console.log(e.target.value);
+    const getToken = JSON.parse(localStorage.getItem("loginToken"));
     const res = await fetch(
-      `https://restcountries.eu/rest/v2/name/${e.target.value}`
+      `${process.env.API_BASE_URL}/admin/get_medicine?${
+        e.target.value && `name=${e.target.value}`
+      }`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          sobar_daktar_session: getToken,
+        },
+      }
     );
 
-    const countries = await res.json();
-    setMedicines(countries);
-
-    // console.log(countries);
+    const medicines = await res.json();
+    console.log(medicines);
+    setMedicines(medicines);
   };
 
   const dosageHandler = (item) => {
@@ -192,6 +208,7 @@ const StartAppointment = () => {
   };
 
   const medicineSelection = (name) => {
+    console.log("clicked");
     setMedicineName(name);
     setMedicines([]);
     setDrugInfo({
@@ -371,6 +388,20 @@ const StartAppointment = () => {
         // console.log(data);
       }
     );
+  };
+  const dosageListHandler = (item) => {
+    item === "hourly"
+      ? setDosageList(hourlyDosageList)
+      : item === "1/0 format"
+      ? setDosageList(zeroOneFormat)
+      : item === "presets"
+      ? setDosageList(hourlyDosageList)
+      : setDosageList([]);
+  };
+
+  const emptyHandler = () => {
+    setMedicines([]);
+    setDosageList([]);
   };
 
   // console.log(apppointmentById);
@@ -913,19 +944,24 @@ const StartAppointment = () => {
                         type="text"
                         value={medicineName}
                         placeholder="Write medicine name here..."
+                        onFocus={searchMedicine}
                         onChange={(e) => searchMedicine(e)}
                       />
                       <div className="my-3">
                         {medicines &&
                           medicines.length > 0 &&
                           medicines.map((item, index) => (
-                            <p
+                            <div
                               className="medicineName mb-0"
                               key={index}
-                              onClick={() => medicineSelection(item.name)}
+                              onClick={() => medicineSelection(item.brand_name)}
                             >
-                              {item.name}
-                            </p>
+                              <h6>
+                                {item.brand_name}
+                                <span>{`( ${item.generic_name} )`} </span>
+                              </h6>
+                              <p>{item.pharmaceutical_company_name} </p>
+                            </div>
                           ))}
                       </div>
                     </Form.Group>
@@ -936,110 +972,41 @@ const StartAppointment = () => {
                     </div>
 
                     <div className="dosageType">
-                      {drugInfo.dosage &&
-                      drugInfo.dosage.dosage_type === "hourly" ? (
-                        <Fragment>
-                          <Form.Group controlId="helloooasfds">
-                            <Form.Control
-                              type="text"
-                              value={
-                                drugInfo.dosage && drugInfo.dosage.dosage_value
-                              }
-                              placeholder="Choose a hourly format"
-                              onFocus={() => setDosageList(hourlyDosageList)}
-                              onChange={(e) => getDosageList(e)}
-                            />
-                          </Form.Group>
-                          <div className="my-3 listOfEntry">
-                            {dosageList &&
-                              dosageList.length > 0 &&
-                              dosageList.map((item, index) => (
-                                <p
-                                  className="medicineName mb-0"
-                                  key={index}
-                                  onClick={() => dosageValueHandler(item)}
-                                >
-                                  {item}
-                                </p>
-                              ))}
-                          </div>
-                        </Fragment>
-                      ) : drugInfo.dosage.dosage_type === "1/0 format" ? (
-                        <Fragment>
-                          <Form.Group controlId="helloooasfds">
-                            <Form.Control
-                              type="text"
-                              value={
-                                drugInfo.dosage && drugInfo.dosage.dosage_value
-                              }
-                              placeholder="Choose a 1/0 format"
-                              onFocus={() => setDosageList(zeroOneFormat)}
-                              onChange={(e) => getDosageList(e)}
-                            />
-                          </Form.Group>
-                          <div className="my-3 listOfEntry">
-                            {dosageList &&
-                              dosageList.length > 0 &&
-                              dosageList.map((item, index) => (
-                                <p
-                                  className="medicineName mb-0"
-                                  key={index}
-                                  onClick={() => dosageValueHandler(item)}
-                                >
-                                  {item}
-                                </p>
-                              ))}
-                          </div>
-                        </Fragment>
-                      ) : drugInfo.dosage.dosage_type === "presets" ? (
-                        <Fragment>
-                          <Form.Group controlId="helloooasfds">
-                            <Form.Control
-                              type="text"
-                              value={
-                                drugInfo.dosage && drugInfo.dosage.dosage_value
-                              }
-                              placeholder="Choose a presets format"
-                              onFocus={() => setDosageList(hourlyDosageList)}
-                              onChange={(e) => getDosageList(e)}
-                            />
-                          </Form.Group>
-                          <div className="my-3 listOfEntry">
-                            {dosageList &&
-                              dosageList.length > 0 &&
-                              dosageList.map((item, index) => (
-                                <p
-                                  className="medicineName mb-0"
-                                  key={index}
-                                  onClick={() => dosageValueHandler(item)}
-                                >
-                                  {item}
-                                </p>
-                              ))}
-                          </div>
-                        </Fragment>
-                      ) : (
-                        <Fragment>
-                          <Form.Group controlId="helloooasfds">
-                            <Form.Control
-                              type="text"
-                              value={
-                                drugInfo.dosage && drugInfo.dosage.dosage_value
-                              }
-                              placeholder="Write Yourself"
-                              onChange={(e) =>
-                                setDrugInfo({
-                                  ...drugInfo,
-                                  dosage: {
-                                    ...drugInfo.dosage,
-                                    dosage_value: e.target.value,
-                                  },
-                                })
-                              }
-                            />
-                          </Form.Group>
-                        </Fragment>
-                      )}
+                      <Fragment>
+                        <Form.Group controlId="helloooasfds">
+                          <Form.Control
+                            type="text"
+                            value={
+                              drugInfo.dosage && drugInfo.dosage.dosage_value
+                            }
+                            placeholder={`${
+                              drugInfo.dosage.dosage_type === "hourly"
+                                ? "choose a hourly Formate"
+                                : drugInfo.dosage.dosage_type === "1/0 format"
+                                ? "choose a  1/0 format"
+                                : drugInfo.dosage.dosage_type === "presets"
+                                ? "choose a  presets Format"
+                                : "Write Yourself"
+                            }`}
+                            onFocus={() =>
+                              dosageListHandler(drugInfo.dosage.dosage_type)
+                            }
+                            onChange={(e) => getDosageList(e)}
+                          />
+                        </Form.Group>
+                        <div className="my-3 listOfEntry">
+                          {dosageList.length > 0 &&
+                            dosageList.map((item, index) => (
+                              <p
+                                className="medicineName mb-0"
+                                key={index}
+                                onClick={() => dosageValueHandler(item)}
+                              >
+                                {item}
+                              </p>
+                            ))}
+                        </div>
+                      </Fragment>
                     </div>
                     <div className="d-flex">
                       <Form.Group controlId="hellooorwrwqe">
@@ -1203,7 +1170,7 @@ const StartAppointment = () => {
                                   drugInfo.duration &&
                                   drugInfo.duration.duration_value
                                 }
-                                placeholder="Write Yourself"
+                                placeholder="Continue till next notice"
                               />
                             </Form.Group>
                           </Fragment>
