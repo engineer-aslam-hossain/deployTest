@@ -144,6 +144,10 @@ const StartAppointment = () => {
   const searchMedicine = async (e) => {
     e.preventDefault();
     setMedicineName(e.target.value);
+    setDrugInfo({
+      ...drugInfo,
+      name: e.target.value,
+    });
     console.log(e.target.value);
     const getToken = JSON.parse(localStorage.getItem("loginToken"));
     const res = await fetch(
@@ -208,7 +212,7 @@ const StartAppointment = () => {
   };
 
   const medicineSelection = (name) => {
-    console.log("clicked");
+    // console.log("clicked");
     setMedicineName(name);
     setMedicines([]);
     setDrugInfo({
@@ -402,6 +406,25 @@ const StartAppointment = () => {
   const emptyHandler = () => {
     setMedicines([]);
     setDosageList([]);
+  };
+
+  const modalClose = () => {
+    handleClose();
+    setDrugInfo({
+      dosage: {
+        dosage_type: "Write Yourself",
+        dosage_value: "",
+      },
+      duration: {
+        duration_type: "Continue till next notice",
+        duration_value: "",
+      },
+      direction: {
+        direction_type: "Write Yourself",
+        direction_value: "",
+      },
+    });
+    setMedicineName("");
   };
 
   // console.log(apppointmentById);
@@ -927,7 +950,7 @@ const StartAppointment = () => {
               </div>
             </div>
           </div>
-          <Modal show={show} onHide={handleClose}>
+          <Modal show={show} onHide={modalClose}>
             <Card style={{ padding: "1rem" }} className="addDrugCard">
               <Card.Body>
                 <div>
@@ -1489,7 +1512,7 @@ const StartAppointment = () => {
                       <button
                         className="cancelBtn"
                         type="button"
-                        onClick={handleClose}
+                        onClick={modalClose}
                       >
                         Close
                       </button>
