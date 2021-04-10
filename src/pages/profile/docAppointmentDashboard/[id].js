@@ -640,6 +640,11 @@ const StartAppointment = () => {
                     aria-describedby="basic-addon2"
                     className="searchFriends"
                     onChange={(e) => setDisease(e.target.value)}
+                    onKeyPress={(e) => {
+                      e.key === "Enter" &&
+                        disease.length > 0 &&
+                        setDiseasesList([...diseasesList, disease]);
+                    }}
                   />
                 </div>
                 <div className="col-lg-3 pr-0">
@@ -699,6 +704,11 @@ const StartAppointment = () => {
                     aria-describedby="basic-addon2"
                     className="searchFriends"
                     onChange={(e) => setAdvice(e.target.value)}
+                    onKeyPress={(e) => {
+                      e.key === "Enter" &&
+                        advice.length > 0 &&
+                        setAdviceList([...adviceList, advice]);
+                    }}
                   />
                 </div>
                 <div className="col-lg-3 pr-0">
@@ -757,6 +767,11 @@ const StartAppointment = () => {
                     aria-describedby="basic-addon2"
                     className="searchFriends"
                     onChange={(e) => setSymtoms(e.target.value)}
+                    onKeyPress={(e) => {
+                      e.key === "Enter" &&
+                        symtoms.length > 0 &&
+                        setSymtomsList([...symtomsList, symtoms]);
+                    }}
                   />
                 </div>
                 <div className="col-lg-3 pr-0">
@@ -814,6 +829,11 @@ const StartAppointment = () => {
                     aria-describedby="basic-addon2"
                     className="searchFriends"
                     onChange={(e) => setExamination(e.target.value)}
+                    onKeyPress={(e) => {
+                      e.key === "Enter" &&
+                        examination.length > 0 &&
+                        setExaminationList([...examinationList, examination]);
+                    }}
                   />
                 </div>
                 <div className="col-lg-3 pr-0">
@@ -871,6 +891,14 @@ const StartAppointment = () => {
                     aria-describedby="basic-addon2"
                     className="searchFriends"
                     onChange={(e) => setInvestigation(e.target.value)}
+                    onKeyPress={(e) => {
+                      e.key === "Enter" &&
+                        investigation.length > 0 &&
+                        setInvestigationList([
+                          ...investigationList,
+                          investigation,
+                        ]);
+                    }}
                   />
                 </div>
                 <div className="col-lg-3 pr-0">
@@ -931,6 +959,11 @@ const StartAppointment = () => {
                     aria-describedby="basic-addon2"
                     className="searchFriends"
                     onChange={(e) => setTest(e.target.value)}
+                    onKeyPress={(e) => {
+                      e.key === "Enter" &&
+                        test.length > 0 &&
+                        setTestList([...testList, test]);
+                    }}
                   />
                 </div>
                 <div className="col-lg-3 pr-0">
