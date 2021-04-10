@@ -1464,6 +1464,7 @@ h5.prescriptionLabel {
 .closeIcon {
   border: 1px solid #ababab;
   border-radius: 4px;
+  cursor: pointer;
 }
 
 .closeIcon .MuiSvgIcon-root {
@@ -1479,4 +1480,35 @@ h5.prescriptionLabel {
   font-size: 12px;
   font-weight: 400;
   margin-right: 1rem;
+}
+
+p.medicineName {
+  padding: 0.2rem 1rem;
+}
+
+p.medicineName:hover {
+  background-color: lightgray;
+  border-radius: 1rem;
+  cursor: pointer;
+}
+
+.medicineMid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+button#medicineDropdown {
+  background-color: white !important;
+  color: #474747;
+  box-shadow: none;
+  border: 1px solid #ababab;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.listOfEntry {
+  max-height: 20rem;
+  background-color: transparent;
+  overflow-y: scroll;
+  border-radius: 0.5rem;
 }

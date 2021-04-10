@@ -7,7 +7,7 @@ import { faEdit } from "@fortawesome/free-regular-svg-icons";
 import Link from "next/link";
 
 const docAppointmentDashboard = () => {
-  const { loggedInUser, socket } = useContext(DaktarContext);
+  const { loggedInUser } = useContext(DaktarContext);
   const { appointment } = loggedInUser;
 
   const router = useRouter();
@@ -71,7 +71,7 @@ const docAppointmentDashboard = () => {
       );
       const data = await getStatus.json();
       setAppointmentsForAday(data);
-      console.log(data);
+      // console.log(data);
     } catch (err) {
       console.log(err);
     }
@@ -90,22 +90,7 @@ const docAppointmentDashboard = () => {
     return strTime;
   }
 
-  const callToClient = (item) => {
-    socket.emit(
-      "callUser",
-      {
-        doctor_id: loggedInUser._id,
-        userToCall: item.patient_id._id,
-        link: "item.patient_id._id",
-        doctor_name: loggedInUser.fullname,
-        patient_name: item.patient_id.fullname,
-        doctor_profile_pic: loggedInUser.profile_pic,
-      },
-      (data) => {
-        // console.log(data);
-      }
-    );
-  };
+  // console.log(appointmentsForAday);
 
   if (loggedInUser.user_type === "DOCTOR") {
     return (
@@ -244,7 +229,7 @@ const docAppointmentDashboard = () => {
                           <div>
                             <Link
                               href={`/profile/docAppointmentDashboard/${[
-                                1234,
+                                item._id,
                               ]}`}
                             >
                               <a className="startAppointment">
