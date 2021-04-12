@@ -315,6 +315,7 @@ const StartAppointment = () => {
         comment: drugInfo.comment,
       },
     ]);
+    handleClose();
   };
 
   const deleteHandler = (index) => {
@@ -395,6 +396,16 @@ const StartAppointment = () => {
       }
     );
   };
+  const durationListHandler = (item) => {
+    item === "Days"
+      ? setDurationList(daysList)
+      : item === "Months"
+      ? setDurationList(monthList)
+      : item === "Years"
+      ? setDurationList(yearList)
+      : setDurationList([]);
+  };
+
   const dosageListHandler = (item) => {
     item === "hourly"
       ? setDosageList(hourlyDosageList)
@@ -405,9 +416,13 @@ const StartAppointment = () => {
       : setDosageList([]);
   };
 
-  const emptyHandler = () => {
-    setMedicines([]);
-    setDosageList([]);
+  const emptyHandler = (e) => {
+    console.log();
+    if (e.target.tagName !== "INPUT") {
+      setMedicines([]);
+      setDosageList([]);
+      setDurationList([]);
+    }
   };
 
   const modalClose = () => {
@@ -985,7 +1000,7 @@ const StartAppointment = () => {
               </div>
             </div>
           </div>
-          <Modal show={show} onHide={modalClose}>
+          <Modal show={show} onHide={modalClose} onClick={emptyHandler}>
             <Card style={{ padding: "1rem" }} className="addDrugCard">
               <Card.Body>
                 <div>
@@ -1118,139 +1133,55 @@ const StartAppointment = () => {
                         <h6>Duration</h6>
                       </div>
                       <div>
-                        {drugInfo.duration &&
-                        drugInfo.duration.duration_type === "Days" ? (
-                          <Fragment>
-                            <Form.Group controlId="helloooasfds">
-                              <Form.Control
-                                type="text"
-                                value={
-                                  drugInfo.duration &&
-                                  drugInfo.duration.duration_value
-                                }
-                                placeholder="Select days"
-                                onFocus={() => setDurationList(daysList)}
-                                onKeyPress={(e) => {
-                                  e.key === "Enter" && e.preventDefault();
-                                }}
-                                onChange={(e) =>
-                                  setDrugInfo({
-                                    ...drugInfo,
-                                    duration: {
-                                      ...drugInfo.duration,
-                                      duration_value: e.target.value,
-                                    },
-                                  })
-                                }
-                              />
-                            </Form.Group>
-                            <div className="my-3 listOfEntry">
-                              {durationList &&
-                                durationList.length > 0 &&
-                                durationList.map((item, index) => (
-                                  <p
-                                    className="medicineName mb-0"
-                                    key={index}
-                                    onClick={() => durationValueHandler(item)}
-                                  >
-                                    {item}
-                                  </p>
-                                ))}
-                            </div>
-                          </Fragment>
-                        ) : drugInfo.duration.duration_type === "Months" ? (
-                          <Fragment>
-                            <Form.Group controlId="helasfds">
-                              <Form.Control
-                                type="text"
-                                value={
-                                  drugInfo.duration &&
-                                  drugInfo.duration.duration_value
-                                }
-                                placeholder="Select Months"
-                                onFocus={() => setDurationList(monthList)}
-                                onKeyPress={(e) => {
-                                  e.key === "Enter" && e.preventDefault();
-                                }}
-                                onChange={(e) =>
-                                  setDrugInfo({
-                                    ...drugInfo,
-                                    duration: {
-                                      ...drugInfo.duration,
-                                      duration_value: e.target.value,
-                                    },
-                                  })
-                                }
-                              />
-                            </Form.Group>
-                            <div className="my-3 listOfEntry">
-                              {durationList &&
-                                durationList.length > 0 &&
-                                durationList.map((item, index) => (
-                                  <p
-                                    className="medicineName mb-0"
-                                    key={index}
-                                    onClick={() => durationValueHandler(item)}
-                                  >
-                                    {item}
-                                  </p>
-                                ))}
-                            </div>
-                          </Fragment>
-                        ) : drugInfo.duration.duration_type === "Years" ? (
-                          <Fragment>
-                            <Form.Group controlId="helasfds">
-                              <Form.Control
-                                type="text"
-                                value={
-                                  drugInfo.duration &&
-                                  drugInfo.duration.duration_value
-                                }
-                                placeholder="Select Years"
-                                onFocus={() => setDurationList(yearList)}
-                                onKeyPress={(e) => {
-                                  e.key === "Enter" && e.preventDefault();
-                                }}
-                                onChange={(e) =>
-                                  setDrugInfo({
-                                    ...drugInfo,
-                                    duration: {
-                                      ...drugInfo.duration,
-                                      duration_value: e.target.value,
-                                    },
-                                  })
-                                }
-                              />
-                            </Form.Group>
-                            <div className="my-3 listOfEntry">
-                              {durationList &&
-                                durationList.length > 0 &&
-                                durationList.map((item, index) => (
-                                  <p
-                                    className="medicineName mb-0"
-                                    key={index}
-                                    onClick={() => durationValueHandler(item)}
-                                  >
-                                    {item}
-                                  </p>
-                                ))}
-                            </div>
-                          </Fragment>
-                        ) : (
-                          <Fragment>
-                            <Form.Group controlId="helloooasfds">
-                              <Form.Control
-                                type="text"
-                                disabled
-                                value={
-                                  drugInfo.duration &&
-                                  drugInfo.duration.duration_value
-                                }
-                                placeholder="Continue till next notice"
-                              />
-                            </Form.Group>
-                          </Fragment>
-                        )}
+                        <Fragment>
+                          <Form.Group controlId="helloooasfds">
+                            <Form.Control
+                              type="text"
+                              value={
+                                drugInfo.duration &&
+                                drugInfo.duration.duration_value
+                              }
+                              placeholder={`${
+                                drugInfo.duration.duration_type === "Days"
+                                  ? "Select Days"
+                                  : drugInfo.duration.duration_type === "Months"
+                                  ? "Select Months"
+                                  : drugInfo.duration.duration_type === "Years"
+                                  ? "Select Years"
+                                  : "Continue till next notice"
+                              }`}
+                              onFocus={() =>
+                                durationListHandler(
+                                  drugInfo.duration.duration_type
+                                )
+                              }
+                              onKeyPress={(e) => {
+                                e.key === "Enter" && e.preventDefault();
+                              }}
+                              onChange={(e) =>
+                                setDrugInfo({
+                                  ...drugInfo,
+                                  duration: {
+                                    ...drugInfo.duration,
+                                    duration_value: e.target.value,
+                                  },
+                                })
+                              }
+                            />
+                          </Form.Group>
+                          <div className="my-3 listOfEntry">
+                            {durationList.length > 0 &&
+                              durationList.map((item, index) => (
+                                <p
+                                  className="medicineName mb-0"
+                                  key={index}
+                                  onClick={() => durationValueHandler(item)}
+                                >
+                                  {item}
+                                </p>
+                              ))}
+                          </div>
+                        </Fragment>
                       </div>
                       <div className="d-flex">
                         <Form.Group controlId="safdsafphellooo">

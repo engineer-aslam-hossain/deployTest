@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import StarIcon from "@material-ui/icons/Star";
 import { Spinner } from "react-bootstrap";
+import Link from "next/link";
+
 const Appointments = ({ appointments }) => {
   console.log(appointments);
 
@@ -29,49 +31,56 @@ const Appointments = ({ appointments }) => {
             appointments.map(
               (appointment) =>
                 appointment.appointment_type === "FRESH" && (
-                  <div
-                    className="col-md-12 px-0 singleAppointments"
+                  <Link
+                    href={`/profile/patientAppointments/${[appointment._id]}`}
                     key={appointment._id}
                   >
-                    <div className="col-md-12 d-flex px-0 flex-wrap">
-                      <div className="px-4">
-                        <img
-                          src={
-                            appointment.doctor_id &&
-                            appointment.doctor_id.profile_pic
-                          }
-                          alt="userImg"
-                          className="img-fluid"
-                        />
-                      </div>
-                      <div className="px-4 d-flex flex-column justify-content-between w-75">
-                        <div>
-                          <h3>
-                            {appointment.doctor_id &&
-                              appointment.doctor_id.fullname}
-                          </h3>
-                          <p className="apointmentType mt-2">New Appointment</p>
+                    <div
+                      className="col-md-12 px-0 singleAppointments"
+                      key={appointment._id}
+                    >
+                      <div className="col-md-12 d-flex px-0 flex-wrap">
+                        <div className="px-4">
+                          <img
+                            src={
+                              appointment.doctor_id &&
+                              appointment.doctor_id.profile_pic
+                            }
+                            alt="userImg"
+                            className="img-fluid"
+                          />
                         </div>
-                        <div className="d-flex justify-content-between flex-wrap mt-3">
-                          <div className="d-flex align-items-end">
-                            <h5>{Math.floor(appointment.patient_due)} BDT</h5>
-                          </div>
+                        <div className="px-4 d-flex flex-column justify-content-between w-75">
                           <div>
-                            <h6>
-                              {formatAMPM(
-                                new Date(appointment.appointment_time)
-                              )}
-                            </h6>
-                            <h6>
-                              {new Date(
-                                appointment.appointment_time
-                              ).toDateString()}
-                            </h6>
+                            <h3>
+                              {appointment.doctor_id &&
+                                appointment.doctor_id.fullname}
+                            </h3>
+                            <p className="apointmentType mt-2">
+                              New Appointment
+                            </p>
+                          </div>
+                          <div className="d-flex justify-content-between flex-wrap mt-3">
+                            <div className="d-flex align-items-end">
+                              <h5>{Math.floor(appointment.patient_due)} BDT</h5>
+                            </div>
+                            <div>
+                              <h6>
+                                {formatAMPM(
+                                  new Date(appointment.appointment_time)
+                                )}
+                              </h6>
+                              <h6>
+                                {new Date(
+                                  appointment.appointment_time
+                                ).toDateString()}
+                              </h6>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 )
             )
           ) : (

@@ -1531,3 +1531,20 @@ button#medicineDropdown {
   overflow-y: scroll;
   border-radius: 0.5rem;
 }
+
+.patientDetails span,
+.prescritionTop {
+  border-bottom: 1px solid #ababab;
+}
+
+.prescriptionFooter {
+  border-top: 1px solid #ababab;
+  padding-top: 1rem;
+}
+
+#pdf_content {
+  width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  letter-spacing: 0px;
+}
