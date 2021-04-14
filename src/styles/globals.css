@@ -875,6 +875,11 @@ button.removeFriendsBtn {
 .PatientEditModal .modal-dialog {
   max-width: 30rem !important;
 }
+
+.PatientEditModal .invalid-feedback {
+  display: block;
+}
+
 button.cancelBtn {
   border: 0;
   outline: 0;

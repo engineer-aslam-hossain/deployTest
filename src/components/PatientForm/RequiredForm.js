@@ -12,8 +12,7 @@ const PatientRequiredForm = ({ nextStep, inputChange, values }) => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    e.target.reset();
-    console.log(values);
+
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/auth/user_signup`,

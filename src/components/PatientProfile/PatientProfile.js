@@ -42,6 +42,11 @@ const PatientProfile = () => {
   const deleteMailhandleShow = () => setdeleteMailShow(true);
   const addMailhandleClose = () => setAddMailShow(false);
   const addMailhandleShow = () => setAddMailShow(true);
+
+  const nameValidation = /^([a-zA-Z]{3,30}\s*)+/;
+  const passValidation = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+  const mailValidation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
   const passwordToSave = (e) => {
     setEditInfo({
       ...editInfo,
@@ -437,8 +442,8 @@ const PatientProfile = () => {
                     required
                   />
                   <Form.Control.Feedback type="invalid" className="name">
-                    {!editInfo.fullname
-                      ? "FullName must be start with atleast 6 character"
+                    {!nameValidation.test(editInfo.fullname)
+                      ? "FullName must be start with atleast 3 character"
                       : ""}
                   </Form.Control.Feedback>
                 </Form.Group>
@@ -480,7 +485,7 @@ const PatientProfile = () => {
                     type="invalid"
                     className="phone_number"
                   >
-                    {!editInfo.phone_number
+                    {editInfo.phone_number && editInfo.phone_number.length < 11
                       ? "Must have atleast 11 number"
                       : ""}
                   </Form.Control.Feedback>
@@ -534,7 +539,11 @@ const PatientProfile = () => {
                         </Dropdown>
                       </InputGroup.Append>
                       <Form.Control.Feedback type="invalid" className="number">
-                        {!editInfo.phone ? "must have atleast 11 number" : ""}
+                        {editInfo.mobile_banking_info &&
+                        editInfo.mobile_banking_info.number &&
+                        editInfo.mobile_banking_info.number.length < 11
+                          ? "must have atleast 11 number"
+                          : ""}
                       </Form.Control.Feedback>
                     </InputGroup>
                   </div>
@@ -552,6 +561,11 @@ const PatientProfile = () => {
                       })
                     }
                   />
+                  <Form.Control.Feedback type="invalid" className="name">
+                    {editInfo.nid && editInfo.nid.length < 10
+                      ? "NID number should have more or equal to 10 number"
+                      : ""}
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group controlId="formBasicMobile">
                   <Form.Label>Gender</Form.Label>
@@ -585,9 +599,6 @@ const PatientProfile = () => {
                       })
                     }
                   />
-                  <Form.Control.Feedback type="invalid" className="phone">
-                    {!editInfo.phone ? "must have atleast 11 number" : ""}
-                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group className="basicFormInput">
                   <Form.Label>Enter Password to Save Changes</Form.Label>
@@ -602,7 +613,8 @@ const PatientProfile = () => {
                     type="invalid"
                     className="mb-3 password"
                   >
-                    {!editInfo.password
+                    {editInfo.password &&
+                    !passValidation.test(editInfo.password)
                       ? "Must have minimum 6 character with number"
                       : ""}
                   </Form.Control.Feedback>
@@ -645,7 +657,8 @@ const PatientProfile = () => {
                     type="invalid"
                     className="mb-3 password"
                   >
-                    {!editInfo.password
+                    {editInfo.password &&
+                    !passValidation.test(editInfo.password)
                       ? "Must have minimum 6 character with number"
                       : ""}
                   </Form.Control.Feedback>
@@ -668,7 +681,8 @@ const PatientProfile = () => {
                     type="invalid"
                     className="mb-3 password"
                   >
-                    {!editInfo.password
+                    {changePass.new_password &&
+                    !passValidation.test(changePass.new_password)
                       ? "Must have minimum 6 character with number"
                       : ""}
                   </Form.Control.Feedback>
@@ -691,7 +705,8 @@ const PatientProfile = () => {
                     type="invalid"
                     className="mb-3 password"
                   >
-                    {!editInfo.password
+                    {changePass.confirm_password &&
+                    !passValidation.test(changePass.confirm_password)
                       ? "Must have minimum 6 character with number"
                       : ""}
                   </Form.Control.Feedback>
@@ -792,7 +807,7 @@ const PatientProfile = () => {
                     type="invalid"
                     className="mb-3 password"
                   >
-                    {!editEmail.email
+                    {editEmail.email && !mailValidation.test(editEmail.email)
                       ? "Must have minimum 6 character with number"
                       : ""}
                   </Form.Control.Feedback>
@@ -815,7 +830,8 @@ const PatientProfile = () => {
                     type="invalid"
                     className="mb-3 password"
                   >
-                    {!editEmail.password
+                    {editEmail.password &&
+                    !passValidation.test(editEmail.password)
                       ? "Must have minimum 6 character with number"
                       : ""}
                   </Form.Control.Feedback>

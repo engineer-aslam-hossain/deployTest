@@ -20,7 +20,6 @@ const PatientSkipForm = ({ inputChange, values, setDoctorInfo }) => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    e.target.reset();
     const getToken = JSON.parse(localStorage.getItem("loginToken"));
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/user/change_personal_info`,

@@ -19,7 +19,6 @@ const RequiredForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    e.target.reset();
 
     try {
       const res = await fetch(

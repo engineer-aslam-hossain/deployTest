@@ -11,8 +11,6 @@ const DoctorLoginForm = ({ inputChange, values, show, target }) => {
   // console.log(loggedInUser);
   const submitHandler = async (e) => {
     e.preventDefault();
-    e.target.reset();
-
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/auth/doctor_signin`,

@@ -11,9 +11,9 @@ const profile = () => {
   const router = useRouter();
 
   if (!loggedInUser.fullname) {
-    console.log(loggedInUser);
+    // console.log(loggedInUser);
     try {
-      // router.push("/Login");
+      router.push("/Login");
     } catch (err) {
       console.log(err);
     }

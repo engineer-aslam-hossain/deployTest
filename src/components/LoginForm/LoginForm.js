@@ -7,13 +7,11 @@ import Swal from "sweetalert2";
 
 const LoginForm = ({ inputChange, values, show, target }) => {
   const router = useRouter();
-  // console.log(router);
+  console.log(values);
   const { setLoggedInUser } = useContext(DaktarContext);
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    e.target.reset();
-
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/auth/user_signin`,
@@ -83,7 +81,7 @@ const LoginForm = ({ inputChange, values, show, target }) => {
             required
           />
           <Form.Control.Feedback type="invalid" className="email">
-            {!values.email ? "please provide an valid email" : ""}
+            {"please provide an valid email"}
           </Form.Control.Feedback>
         </Form.Group>
         <Form.Group className="basicFormInput">

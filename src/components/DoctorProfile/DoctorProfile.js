@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
+  Button,
   Card,
   Dropdown,
   Form,
@@ -86,6 +87,10 @@ const DoctorProfile = () => {
   const workPlaceHandleClose = () => setWorkPlaceShow(false);
   const workPlaceHandleShow = () => setWorkPlaceShow(true);
 
+  const nameValidation = /^([a-zA-Z]{3,30}\s*)+/;
+  const passValidation = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+  const mailValidation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
   const fakeOptions = [
     { value: "ExpertiseField", label: "ExpertiseField" },
     { value: "ExpertiseField1", label: "ExpertiseField1" },
@@ -116,8 +121,6 @@ const DoctorProfile = () => {
 
   const overViewSubmitHandler = async (e) => {
     e.preventDefault();
-    e.target.reset();
-
     const filterValue =
       expertiseArr &&
       expertiseField.filter((item) => !expertiseArr.includes(item));
@@ -182,99 +185,110 @@ const DoctorProfile = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    e.target.reset();
     const getToken = JSON.parse(localStorage.getItem("loginToken"));
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/user/change_personal_info`,
-      {
-        method: "PUT",
-        headers: {
-          sobar_daktar_session: getToken,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(editInfo),
-      }
-    );
-    const data = await res.json();
-    if (data.success === "yes") {
-      Swal.fire({
-        icon: "success",
-        title: "Successfully Save the Changes",
-        showConfirmButton: false,
-        timer: 1000,
-      });
-      handleClose();
 
-      try {
-        const getToken = JSON.parse(localStorage.getItem("loginToken"));
-        const userRes = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/user`,
-          {
-            method: "GET",
-            headers: { sobar_daktar_session: getToken },
-            mode: "cors",
-          }
-        );
-        const userData = await userRes.json();
-        setLoggedInUser(userData);
-      } catch (err) {
-        console.log(err);
-      }
-    } else {
-      Swal.fire({
-        icon: "error",
-        title: data.msg,
-      });
+    let isInputValid;
+
+    if (editInfo.fullname) {
+      const nameValidation = /^([a-zA-Z]{3,30}\s*)+/;
+      isInputValid = nameValidation.test(editInfo.fullname);
     }
-
-    if (genderSelect) {
-      const getToken = JSON.parse(localStorage.getItem("loginToken"));
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/user/change_language_gender`,
-        {
-          method: "PUT",
-          headers: {
-            sobar_daktar_session: getToken,
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            gender: genderSelect,
-          }),
-        }
-      );
-      const data = await res.json();
-      if (data.success === "yes") {
-        setSaveChanges(data);
-
-        try {
-          const getToken = JSON.parse(localStorage.getItem("loginToken"));
-          const userRes = await fetch(
-            `${process.env.NEXT_PUBLIC_BASE_URL}/user`,
-            {
-              method: "GET",
-              headers: { sobar_daktar_session: getToken },
-              mode: "cors",
-            }
-          );
-          const userData = await userRes.json();
-
-          setLoggedInUser(userData);
-        } catch (err) {
-          console.log(err);
-        }
-      } else {
-      }
-      console.log(data);
+    if (editInfo.password) {
+      const passValidation = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+      isInputValid = passValidation.test(editInfo.password);
     }
-    setGenderSelect("");
-    setEditInfo({});
+    console.log(isInputValid);
+
+    // const res = await fetch(
+    //   `${process.env.NEXT_PUBLIC_BASE_URL}/user/change_personal_info`,
+    //   {
+    //     method: "PUT",
+    //     headers: {
+    //       sobar_daktar_session: getToken,
+    //       Accept: "application/json",
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(editInfo),
+    //   }
+    // );
+    // const data = await res.json();
+    // if (data.success === "yes") {
+    //   Swal.fire({
+    //     icon: "success",
+    //     title: "Successfully Save the Changes",
+    //     showConfirmButton: false,
+    //     timer: 1000,
+    //   });
+    //   handleClose();
+
+    //   try {
+    //     const getToken = JSON.parse(localStorage.getItem("loginToken"));
+    //     const userRes = await fetch(
+    //       `${process.env.NEXT_PUBLIC_BASE_URL}/user`,
+    //       {
+    //         method: "GET",
+    //         headers: { sobar_daktar_session: getToken },
+    //         mode: "cors",
+    //       }
+    //     );
+    //     const userData = await userRes.json();
+    //     setLoggedInUser(userData);
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // } else {
+    //   Swal.fire({
+    //     icon: "error",
+    //     title: data.msg,
+    //   });
+    // }
+
+    // if (genderSelect) {
+    //   const getToken = JSON.parse(localStorage.getItem("loginToken"));
+    //   const res = await fetch(
+    //     `${process.env.NEXT_PUBLIC_BASE_URL}/user/change_language_gender`,
+    //     {
+    //       method: "PUT",
+    //       headers: {
+    //         sobar_daktar_session: getToken,
+    //         Accept: "application/json",
+    //         "Content-Type": "application/json",
+    //       },
+    //       body: JSON.stringify({
+    //         gender: genderSelect,
+    //       }),
+    //     }
+    //   );
+    //   const data = await res.json();
+    //   if (data.success === "yes") {
+    //     setSaveChanges(data);
+
+    //     try {
+    //       const getToken = JSON.parse(localStorage.getItem("loginToken"));
+    //       const userRes = await fetch(
+    //         `${process.env.NEXT_PUBLIC_BASE_URL}/user`,
+    //         {
+    //           method: "GET",
+    //           headers: { sobar_daktar_session: getToken },
+    //           mode: "cors",
+    //         }
+    //       );
+    //       const userData = await userRes.json();
+
+    //       setLoggedInUser(userData);
+    //     } catch (err) {
+    //       console.log(err);
+    //     }
+    //   } else {
+    //   }
+    //   console.log(data);
+    // }
+    // setGenderSelect("");
+    // setEditInfo({});
   };
 
   const addEmailHandler = async (e) => {
     e.preventDefault();
-    e.target.reset();
     const getToken = JSON.parse(localStorage.getItem("loginToken"));
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/user/add_email`,
@@ -327,7 +341,6 @@ const DoctorProfile = () => {
 
   const deleteEmailHandler = async (e) => {
     e.preventDefault();
-    e.target.reset();
     const getToken = JSON.parse(localStorage.getItem("loginToken"));
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/user/delete_email`,
@@ -380,8 +393,6 @@ const DoctorProfile = () => {
 
   const addEducationHandler = async (e) => {
     e.preventDefault();
-    e.target.reset();
-
     const newArr = [
       ...educationArr,
       {
@@ -444,8 +455,6 @@ const DoctorProfile = () => {
 
   const achievementsHandler = async (e) => {
     e.preventDefault();
-    e.target.reset();
-
     const newArr = [...achievementArr, addNewAchievements];
     console.log(newArr);
 
@@ -553,8 +562,6 @@ const DoctorProfile = () => {
   };
   const previousWorkPlaceHandler = async (e) => {
     e.preventDefault();
-    e.target.reset();
-
     const newArr = [...previousWorkArr, addNewWorkPlace];
     console.log(newArr);
 
@@ -770,7 +777,6 @@ const DoctorProfile = () => {
   const currentWorkPlaceHandler = async (e) => {
     // console.log(...loggedInUser.worked_at_previously);
     e.preventDefault();
-    e.target.reset();
     const getToken = JSON.parse(localStorage.getItem("loginToken"));
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/doctor/change_bio_address_practiceSince`,
@@ -822,7 +828,6 @@ const DoctorProfile = () => {
 
   const passwordChangeHandler = async (e) => {
     e.preventDefault();
-    e.target.reset();
     const getToken = JSON.parse(localStorage.getItem("loginToken"));
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/user/change_personal_info`,
@@ -965,7 +970,7 @@ const DoctorProfile = () => {
   }, [loggedInUser]);
 
   // console.log(expertiseArr, educationArr, achievementArr, previousWorkArr);
-  console.log(loggedInUser);
+  console.log(editInfo);
   return (
     <div className="doctorProfile">
       <div className="container">
@@ -1304,13 +1309,16 @@ const DoctorProfile = () => {
                     defaultValue={loggedInUser.fullname}
                     name="fullname"
                     onChange={(e) =>
-                      setEditInfo({ ...editInfo, fullname: e.target.value })
+                      setEditInfo({
+                        ...editInfo,
+                        fullname: e.target.value,
+                      })
                     }
                     required
                   />
                   <Form.Control.Feedback type="invalid" className="name">
-                    {!editInfo.fullname
-                      ? "FullName must be start with atleast 6 character"
+                    {!nameValidation.test(editInfo.fullname)
+                      ? "FullName must be start with atleast 3 character"
                       : ""}
                   </Form.Control.Feedback>
                 </Form.Group>
@@ -1351,7 +1359,7 @@ const DoctorProfile = () => {
                     type="invalid"
                     className="phone_number"
                   >
-                    {!editInfo.phone_number
+                    {editInfo.phone_number && editInfo.phone_number.length < 11
                       ? "Must have atleast 11 number"
                       : ""}
                   </Form.Control.Feedback>
@@ -1405,7 +1413,11 @@ const DoctorProfile = () => {
                         </Dropdown>
                       </InputGroup.Append>
                       <Form.Control.Feedback type="invalid" className="number">
-                        {!editInfo.phone ? "must have atleast 11 number" : ""}
+                        {editInfo.mobile_banking_info &&
+                        editInfo.mobile_banking_info.number &&
+                        editInfo.mobile_banking_info.number.length < 11
+                          ? "must have atleast 11 number"
+                          : ""}
                       </Form.Control.Feedback>
                     </InputGroup>
                   </div>
@@ -1463,9 +1475,10 @@ const DoctorProfile = () => {
                       })
                     }
                   />
-                  <Form.Control.Feedback type="invalid" className="phone">
-                    {!editInfo.phone ? "must have atleast 11 number" : ""}
-                  </Form.Control.Feedback>
+                  <Form.Control.Feedback
+                    type="invalid"
+                    className="phone"
+                  ></Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group className="basicFormInput">
                   <Form.Label>Enter Password to Save Changes</Form.Label>
@@ -1480,7 +1493,8 @@ const DoctorProfile = () => {
                     type="invalid"
                     className="mb-3 password"
                   >
-                    {!editInfo.password
+                    {editInfo.password &&
+                    !passValidation.test(editInfo.password)
                       ? "Must have minimum 6 character with number"
                       : ""}
                   </Form.Control.Feedback>
@@ -1493,9 +1507,27 @@ const DoctorProfile = () => {
                   >
                     Cancel
                   </button>
-                  <button type="submit" className="findDocBtn">
-                    Save Changes
-                  </button>
+                  {(editInfo.fullname &&
+                    nameValidation.test(editInfo.fullname)) ||
+                  (editInfo.phone_number &&
+                    editInfo.phone_number.length > 10) ||
+                  (editInfo.mobile_banking_info &&
+                    editInfo.mobile_banking_info.number.length > 10) ||
+                  (editInfo.nid && editInfo.nid.length >= 10) ||
+                  genderSelect ||
+                  editInfo.date_of_birth ? (
+                    <Button type="submit" className="findDocBtn saveChanges">
+                      Save Changes
+                    </Button>
+                  ) : (
+                    <Button
+                      type="button"
+                      className="findDocBtn saveChanges"
+                      disabled
+                    >
+                      Save Changes
+                    </Button>
+                  )}
                 </div>
               </Form>
             </Card>
@@ -1523,7 +1555,8 @@ const DoctorProfile = () => {
                     type="invalid"
                     className="mb-3 password"
                   >
-                    {!editInfo.password
+                    {editInfo.password &&
+                    !passValidation.test(editInfo.password)
                       ? "Must have minimum 6 character with number"
                       : ""}
                   </Form.Control.Feedback>
@@ -1546,7 +1579,8 @@ const DoctorProfile = () => {
                     type="invalid"
                     className="mb-3 password"
                   >
-                    {!editInfo.password
+                    {changePass.new_password &&
+                    !passValidation.test(changePass.new_password)
                       ? "Must have minimum 6 character with number"
                       : ""}
                   </Form.Control.Feedback>
@@ -1569,7 +1603,8 @@ const DoctorProfile = () => {
                     type="invalid"
                     className="mb-3 password"
                   >
-                    {!editInfo.password
+                    {changePass.confirm_password &&
+                    !passValidation.test(changePass.confirm_password)
                       ? "Must have minimum 6 character with number"
                       : ""}
                   </Form.Control.Feedback>
@@ -1621,7 +1656,8 @@ const DoctorProfile = () => {
                     type="invalid"
                     className="mb-3 password"
                   >
-                    {!editInfo.password
+                    {deleteEmail.password &&
+                    !passValidation.test(deleteEmail.password)
                       ? "Must have minimum 6 character with number"
                       : ""}
                   </Form.Control.Feedback>
@@ -1670,8 +1706,8 @@ const DoctorProfile = () => {
                     type="invalid"
                     className="mb-3 password"
                   >
-                    {!editEmail.email
-                      ? "Must have minimum 6 character with number"
+                    {editEmail.email && !mailValidation.test(editEmail.email)
+                      ? "Enter a valid Email"
                       : ""}
                   </Form.Control.Feedback>
                 </Form.Group>
@@ -1693,7 +1729,8 @@ const DoctorProfile = () => {
                     type="invalid"
                     className="mb-3 password"
                   >
-                    {!editEmail.password
+                    {editEmail.password &&
+                    !passValidation.test(editEmail.password)
                       ? "Must have minimum 6 character with number"
                       : ""}
                   </Form.Control.Feedback>

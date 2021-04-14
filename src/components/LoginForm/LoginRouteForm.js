@@ -25,8 +25,11 @@ const LoginRouteForm = () => {
     if (e.target.name === "email") {
       const validation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       isInputValid = validation.test(e.target.value);
-      !isInputValid &&
-        document.querySelector(".email").style.setProperty("display", "block");
+      isInputValid
+        ? document.querySelector(".email").style.setProperty("display", "none")
+        : document
+            .querySelector(".email")
+            .style.setProperty("display", "block");
     }
     if (e.target.name === "password") {
       isInputValid = true;

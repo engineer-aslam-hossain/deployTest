@@ -8,7 +8,6 @@ const SkipForm = ({ nextStep, inputChange, values, setDoctorInfo }) => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    e.target.reset();
     try {
       const getToken = JSON.parse(localStorage.getItem("loginToken"));
       const res = await fetch(
